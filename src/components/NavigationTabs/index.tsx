@@ -126,7 +126,7 @@ export function AddRemoveTabs({
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <StyledHistoryLink
-          to={'/stake'}
+          to={poolLink}
           onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
