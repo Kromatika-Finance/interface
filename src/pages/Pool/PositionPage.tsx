@@ -295,7 +295,8 @@ function countZeroes(x: string | number) {
   return counter
 }
 
-function commafy(num: number | string) {
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
   const str = num.toString().split('.')
   if (str[0].length >= 4) {
     str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
@@ -303,10 +304,19 @@ function commafy(num: number | string) {
   return str.join('.')
 }
 
-function shouldntUseCommafy(x: string | number) {
-  const number = x.toString()
-  if (number.charAt(0) == '0' && number.charAt(1) == '.') return true
-  return false
+function formatPrice(value: string | number | undefined) {
+  if (value == undefined) return undefined
+
+  if (Number(value) > 9) return commafy(Number(value).toFixed())
+  const numberOfZeros = countZeroes(Number(value).toFixed(20))
+
+  if (3 > numberOfZeros && numberOfZeros > 0) return commafy(Number(value).toFixed(3))
+
+  if (Number(value) >= 1) return commafy(Number(value).toFixed(1))
+
+  if (commafy(Number(value).toFixed(3)) != '0.000') return commafy(Number(value).toFixed(3))
+
+  return 0
 }
 
 // snapshots a src img into a canvas
@@ -429,7 +439,6 @@ export function PositionPage({
 
   // handle manual inversion
   const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
-
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
@@ -644,7 +653,6 @@ export function PositionPage({
         console.error(error)
       })
   }, [chainId, feeValue0, feeValue1, limitManager, account, tokenId, addTransaction, library])
-
   const cancel = useCallback(() => {
     if (!chainId || !feeValue0 || !feeValue1 || !limitManager || !account || !tokenId || !library) return
 
@@ -785,26 +793,35 @@ export function PositionPage({
     : Number(pool?.token0Price.toSignificant(10)) * token0USD
 
   const targetPriceUSD = inverted
-    ? Number(pool?.token1Price.toSignificant(10)) * token1USD
-    : Number(pool?.token0Price.toSignificant(10)) * token0USD
+    ? token1USD / Number(priceUpper?.toSignificant(10))
+    : token0USD / Number(priceUpper?.toSignificant(10))
 
   const invertedToken0Price = pool?.token0Price.invert().toFixed(10)
   const invertedToken1Price = pool?.token1Price.invert().toFixed(10)
 
-  const currentPriceInUSD = token1USD && token1USD / Number(pool?.token1Price.toSignificant(10))
+  const currentPriceInUSD = inverted
+    ? token1USD / Number(pool?.token1Price.toSignificant(10))
+    : token0USD / Number(pool?.token0Price.toSignificant(10))
   const targetPriceInUSD = token1USD / Number(priceUpper?.toSignificant(4))
-  const token1PriceUSD = (Number(price1?.toFixed(2)) * Number(feeValue1?.toSignificant(1))).toString() // target value in usd
+  const token1PriceUSD = (Number(price1?.toSignificant(10)) * Number(feeValue1?.toSignificant(10))).toFixed(1)
 
-  const feeValue0USD = (Number(feeValue0?.toSignificant(6)) * Number(currentPriceInUSD)).toFixed(1)
+  const feeValue0USD = Number(feeValue0?.toSignificant(6)) * Number(currentPriceInUSD)
+
   const currencyCreatedEventAmountUSD = (Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD).toFixed(1)
   const targetPriceLimitOrder =
     currencyCreatedEventAmount &&
     (Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * Number(token1USD)).toFixed(1)
 
-  const numberOfZeroes = countZeroes(currentPriceInUSD.toFixed(10))
-  const leftover = currentPriceInUSD.toFixed(10).substring(2 + numberOfZeroes)
-  const numberOfZeroesTargetPrice = countZeroes(targetPriceInUSD.toFixed(10))
-  const leftoverTargetPrice = targetPriceInUSD.toFixed(10).substring(2 + numberOfZeroesTargetPrice)
+  const serviceFeePaidUSD =
+    serviceFeePaidKrom &&
+    kromPriceUSD &&
+    Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(3))
+
+  const collectedValue0USD = collectedValue0 && token0 && Number(collectedValue0?.toSignificant(3)) * token0USD
+
+  const token0AmountUSD = token0USD
+    ? token0USD * Number(feeValue0?.toSignificant(6))
+    : currentPriceInUSD * Number(feeValue0?.toSignificant(6))
 
   function modalHeader() {
     return (
@@ -842,6 +859,46 @@ export function PositionPage({
   }
 
   const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+
+  const limitTrade0USD = inverted
+    ? token0USD
+      ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD
+      : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
+    : token1USD
+    ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
+    : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
+
+  const limitTrade1USD = inverted
+    ? currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token1USD
+    : currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token0USD
+
+  const tokenPosition0 =
+    currencyCreatedEventAmount?.currency && unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
+
+  const limitOrder0USD =
+    tokenPosition0 == currency0?.symbol
+      ? token0USD
+        ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD
+        : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
+      : token1USD
+      ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
+      : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
+
+  const limitOrder1USD =
+    tokenPosition0 == currency0?.symbol
+      ? currencyCreatedEventAmount &&
+        Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token1USD
+      : currencyCreatedEventAmount &&
+        Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token0USD
+
+  const currentPriceInUSDFixed = currentPriceInUSD.toFixed(20)
+  let currentPriceInUSDFormatted = ''
+  if (Number(currentPriceInUSDFormatted) > 9)
+    currentPriceInUSDFormatted = commafy(Number(currentPriceInUSDFixed).toFixed()) || ''
+  const numberOfZeros = countZeroes(currentPriceInUSDFixed)
+  const leftoverDigits = currentPriceInUSDFixed.toString().substring(2 + numberOfZeros)
+
+  if (3 > numberOfZeros && numberOfZeros > 0) currentPriceInUSDFormatted = Number(currentPriceInUSDFixed).toFixed(6)
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
@@ -967,7 +1024,26 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
-                          <TYPE.main>{inverted ? feeValue0?.toSignificant(6) : feeValue1?.toSignificant(6)}</TYPE.main>
+                          <TYPE.main>
+                            {inverted ? commafy(feeValue0?.toSignificant(6)) : commafy(feeValue1?.toSignificant(6))}
+                            {'  '} &nbsp;
+                          </TYPE.main>
+                          <TYPE.darkGray>
+                            <TYPE.darkGray>
+                              {' '}
+                              {inverted ? (
+                                feeValue0USD ? (
+                                  <span> (${formatPrice(feeValue0USD)})</span>
+                                ) : (
+                                  ''
+                                )
+                              ) : token1PriceUSD ? (
+                                <span> (${formatPrice(token1PriceUSD)})</span>
+                              ) : (
+                                ''
+                              )}{' '}
+                            </TYPE.darkGray>{' '}
+                          </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main fontSize={11}>
@@ -980,7 +1056,26 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyBase} />
                         <RowFixed>
-                          <TYPE.main>{inverted ? feeValue1?.toSignificant(6) : feeValue0?.toSignificant(6)}</TYPE.main>
+                          <TYPE.main>
+                            {inverted ? commafy(feeValue1?.toSignificant(5)) : commafy(feeValue0?.toSignificant(5))}{' '}
+                            &nbsp;
+                          </TYPE.main>
+
+                          <TYPE.darkGray>
+                            {' '}
+                            {inverted ? (
+                              token1PriceUSD ? (
+                                <span> (${formatPrice(token1PriceUSD)})</span>
+                              ) : (
+                                ''
+                              )
+                            ) : feeValue0USD ? (
+                              <span> (${formatPrice(feeValue0USD)})</span>
+                            ) : (
+                              ''
+                            )}{' '}
+                          </TYPE.darkGray>
+
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main color={theme.text2} fontSize={11}>
@@ -1014,6 +1109,17 @@ export function PositionPage({
                           : pool && commafy(pool.token0Price?.toSignificant(6))}
                       </span>
                     </TYPE.mediumHeader>
+                    <TYPE.gray>
+                      {currentPriceInUSD && numberOfZeros <= 2 ? <span>(${formatPrice(currentPriceInUSD)})</span> : ''}
+                      {numberOfZeros > 2 ? (
+                        <span>
+                          ($ 0.0<sub>{numberOfZeros}</sub>
+                          {leftoverDigits.substring(0, 4)})
+                        </span>
+                      ) : (
+                        ''
+                      )}
+                    </TYPE.gray>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -1036,6 +1142,7 @@ export function PositionPage({
                       {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
                       {''}{' '}
                     </TYPE.mediumHeader>
+                    <TYPE.darkGray>{targetPriceUSD ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}</TYPE.darkGray>
 
                     <ExtentsText>
                       {' '}
@@ -1079,11 +1186,13 @@ export function PositionPage({
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}
+                        {limitOrder0USD ? <span>(${formatPrice(limitOrder0USD)}) </span> : ' '}
                         for{' '}
                         {targetPrice && currencyCreatedEventAmount
                           ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
                           : ''}{' '}
-                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}↗
+                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
+                        {limitOrder1USD ? <span> (${formatPrice(limitOrder1USD)}) </span> : ''}↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -1103,9 +1212,11 @@ export function PositionPage({
                     <TYPE.subHeader>
                       <Trans>
                         Collected {collectedValue0 ? commafy(collectedValue0?.toSignificant(3)) : ''}{' '}
-                        {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''} and{' '}
+                        {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''}
+                        {collectedValue0USD ? <span> (${formatPrice(collectedValue0USD)}) </span> : ' '} and{' '}
                         {collectedValue1 ? commafy(collectedValue1?.toFixed(6)) : ''}{' '}
                         {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''}
+                        {collectedAmount1USD ? <span> (${formatPrice(collectedAmount1USD)})</span> : ''}
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -1127,6 +1238,7 @@ export function PositionPage({
                       <Trans>
                         Paid {serviceFeePaidKrom?.toSignificant(2)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
+                        {serviceFeePaidUSD ? <span>(${formatPrice(serviceFeePaidUSD)}) </span> : ' '}
                         service fees ↗
                       </Trans>
                     </TYPE.subHeader>
