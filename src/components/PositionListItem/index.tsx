@@ -136,6 +136,15 @@ interface PositionListItemProps {
   isUnderfunded: boolean
 }
 
+function isToken0Stable(token0: Token | undefined): boolean {
+  if (token0 == undefined) return false
+  const stables = [DAI, USDC, USDT]
+  let flag = false
+
+  stables.forEach((stable) => (stable && stable.symbol && stable?.symbol == token0.symbol ? (flag = true) : ''))
+  return flag
+}
+
 export function getPriceOrderingFromPositionForUI(position?: Position): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
@@ -312,6 +321,8 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
   const leftoverTargetPrice =
     numberOfZeroesTargetPrice && targetPriceUSD.toFixed(20).substring(2 + numberOfZeroesTargetPrice)
 
+  const isTokenStable = isToken0Stable(pool?.token0) ?? undefined
+
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
@@ -334,7 +345,9 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
           <Trans>
             {inverted ? commafy(pool?.token1Price.toSignificant(3)) : commafy(pool?.token0Price.toSignificant(6))}{' '}
             <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />{' '}
-            <DollarValues>{currentPriceUSD ? <span>(${formatPrice(currentPriceUSD)})</span> : ''} </DollarValues>
+            <DollarValues>
+              {currentPriceUSD && !isTokenStable ? <span>(${formatPrice(currentPriceUSD)})</span> : ''}{' '}
+            </DollarValues>
           </Trans>
         </RangeText>{' '}
       </RowBetween>
@@ -348,7 +361,9 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
           <Trans>
             {commafy(priceUpper?.toSignificant(3))} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}
             <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />{' '}
-            <DollarValues>{targetPriceUSD ? <span>(${formatPrice(targetPriceUSD)})</span> : ''} </DollarValues>{' '}
+            <DollarValues>
+              {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}{' '}
+            </DollarValues>{' '}
           </Trans>
         </RangeText>
       </RowBetween>

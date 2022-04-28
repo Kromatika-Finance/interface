@@ -213,18 +213,15 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
   }
 
-  return useMemo(
-    () => ({
-      currencies,
-      currencyBalances,
-      parsedAmount,
-      inputError,
-      v2Trade,
-      bestTrade: bestTrade ?? undefined,
-      allowedSlippage,
-    }),
-    [allowedSlippage, bestTrade, currencies, currencyBalances, inputError, parsedAmount, v2Trade]
-  )
+  return {
+    allowedSlippage,
+    bestTrade,
+    currencies,
+    currencyBalances,
+    inputError,
+    parsedAmount,
+    v2Trade,
+  }
 }
 
 function parseCurrencyFromURLParameter(urlParam: any): string {

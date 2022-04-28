@@ -16,7 +16,7 @@ import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
-import { KROM } from 'constants/tokens'
+import { DAI, KROM, USDC, USDT } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
@@ -317,6 +317,15 @@ function formatPrice(value: string | number | undefined) {
   if (commafy(Number(value).toFixed(3)) != '0.000') return commafy(Number(value).toFixed(3))
 
   return 0
+}
+
+function isToken0Stable(token0: Token | undefined): boolean {
+  if (token0 == undefined) return false
+  const stables = [DAI, USDC, USDT]
+  let flag = false
+
+  stables.forEach((stable) => (stable && stable.symbol && stable?.symbol == token0.symbol ? (flag = true) : ''))
+  return flag
 }
 
 // snapshots a src img into a canvas
@@ -788,29 +797,16 @@ export function PositionPage({
   const collectedAmount0USD = Number(collectedValue0?.toSignificant(6)) * token0USD
   const collectedAmount1USD = Number(collectedValue1?.toSignificant(6)) * token1USD
 
-  const currentPriceUSD = inverted
-    ? Number(pool?.token1Price.toSignificant(10)) * token1USD
-    : Number(pool?.token0Price.toSignificant(10)) * token0USD
-
   const targetPriceUSD = inverted
     ? token1USD / Number(priceUpper?.toSignificant(10))
     : token0USD / Number(priceUpper?.toSignificant(10))
 
-  const invertedToken0Price = pool?.token0Price.invert().toFixed(10)
-  const invertedToken1Price = pool?.token1Price.invert().toFixed(10)
-
   const currentPriceInUSD = inverted
     ? token1USD / Number(pool?.token1Price.toSignificant(10))
     : token0USD / Number(pool?.token0Price.toSignificant(10))
-  const targetPriceInUSD = token1USD / Number(priceUpper?.toSignificant(4))
   const token1PriceUSD = (Number(price1?.toSignificant(10)) * Number(feeValue1?.toSignificant(10))).toFixed(1)
 
   const feeValue0USD = Number(feeValue0?.toSignificant(6)) * Number(currentPriceInUSD)
-
-  const currencyCreatedEventAmountUSD = (Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD).toFixed(1)
-  const targetPriceLimitOrder =
-    currencyCreatedEventAmount &&
-    (Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * Number(token1USD)).toFixed(1)
 
   const serviceFeePaidUSD =
     serviceFeePaidKrom &&
@@ -818,10 +814,7 @@ export function PositionPage({
     Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(3))
 
   const collectedValue0USD = collectedValue0 && token0 && Number(collectedValue0?.toSignificant(3)) * token0USD
-
-  const token0AmountUSD = token0USD
-    ? token0USD * Number(feeValue0?.toSignificant(6))
-    : currentPriceInUSD * Number(feeValue0?.toSignificant(6))
+  const isTokenStable = isToken0Stable(pool?.token0) ?? undefined
 
   function modalHeader() {
     return (
@@ -1109,9 +1102,13 @@ export function PositionPage({
                           : pool && commafy(pool.token0Price?.toSignificant(6))}
                       </span>
                     </TYPE.mediumHeader>
-                    <TYPE.gray>
-                      {currentPriceInUSD && numberOfZeros <= 2 ? <span>(${formatPrice(currentPriceInUSD)})</span> : ''}
-                      {numberOfZeros > 2 ? (
+                    <TYPE.darkGray>
+                      {!isTokenStable && currentPriceInUSD && numberOfZeros <= 2 ? (
+                        <span>(${formatPrice(currentPriceInUSD)})</span>
+                      ) : (
+                        ''
+                      )}
+                      {numberOfZeros > 2 && !isTokenStable ? (
                         <span>
                           ($ 0.0<sub>{numberOfZeros}</sub>
                           {leftoverDigits.substring(0, 4)})
@@ -1119,7 +1116,7 @@ export function PositionPage({
                       ) : (
                         ''
                       )}
-                    </TYPE.gray>
+                    </TYPE.darkGray>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -1142,7 +1139,9 @@ export function PositionPage({
                       {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
                       {''}{' '}
                     </TYPE.mediumHeader>
-                    <TYPE.darkGray>{targetPriceUSD ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}</TYPE.darkGray>
+                    <TYPE.darkGray>
+                      {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}
+                    </TYPE.darkGray>
 
                     <ExtentsText>
                       {' '}
