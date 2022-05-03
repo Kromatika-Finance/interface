@@ -7,24 +7,38 @@ import {
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
+  DAI_POLYGON,
   ETH2X_FLI,
   ExtendedEther,
   FEI,
   FRAX,
   FXS,
+  nativeOnChain,
   renBTC,
   TRIBE,
   USDC,
   USDC_ARBITRUM,
   USDC_OPTIMISM,
+  USDC_POLYGON,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
+  USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
+  WBTC_POLYGON,
+  WETH_POLYGON,
+  WETH_POLYGON_MUMBAI,
   WETH9_EXTENDED,
+  WRAPPED_NATIVE_CURRENCY,
 } from './tokens'
+
+const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
+  Object.entries(WRAPPED_NATIVE_CURRENCY)
+    .map(([key, value]) => [key, [value]])
+    .filter(Boolean)
+)
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -48,6 +62,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     DAI_ARBITRUM_ONE,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
+  ],
+  [SupportedChainId.POLYGON]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON],
+    DAI_POLYGON,
+    USDC_POLYGON,
+    USDT_POLYGON,
+    WETH_POLYGON,
   ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
@@ -112,6 +133,20 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
   ],
+  [SupportedChainId.POLYGON]: [
+    nativeOnChain(SupportedChainId.POLYGON),
+    WETH_POLYGON,
+    USDC_POLYGON,
+    DAI_POLYGON,
+    USDT_POLYGON,
+    WBTC_POLYGON,
+  ],
+  [SupportedChainId.POLYGON_MUMBAI]: [
+    nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI] as Token,
+    WETH_POLYGON_MUMBAI,
+  ],
+
   [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
 }
 

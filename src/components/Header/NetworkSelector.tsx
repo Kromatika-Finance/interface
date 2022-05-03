@@ -148,6 +148,10 @@ const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
       return <Trans>Optimism Gateway</Trans>
+    case SupportedChainId.POLYGON:
+      return <Trans>Polygon Bridge</Trans>
+    case SupportedChainId.POLYGON_MUMBAI:
+      return <Trans>Polygon Bridge</Trans>
     default:
       return <Trans>Bridge</Trans>
   }
@@ -160,6 +164,10 @@ const ExplorerText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
       return <Trans>Optimistic Etherscan</Trans>
+    case SupportedChainId.POLYGON:
+      return <Trans>Polygon Scan</Trans>
+    case SupportedChainId.POLYGON_MUMBAI:
+      return <Trans>Polygon Mumbai Testnet Scan</Trans>
     default:
       return <Trans>Explorer</Trans>
   }
@@ -200,6 +208,7 @@ export default function NetworkSelector() {
     const active = chainId === targetChain
     const hasExtendedInfo = L2_CHAIN_IDS.includes(targetChain)
     const isOptimism = targetChain === SupportedChainId.OPTIMISM
+    const isNotPolygon = targetChain !== SupportedChainId.POLYGON
     const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
     const RowContent = () => (
       <FlyoutRow onClick={handleRowClick} active={active}>
@@ -209,7 +218,7 @@ export default function NetworkSelector() {
       </FlyoutRow>
     )
     const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
-    if (active && hasExtendedInfo) {
+    if (active && hasExtendedInfo && isNotPolygon) {
       return (
         <ActiveRowWrapper>
           <RowContent />
@@ -245,6 +254,7 @@ export default function NetworkSelector() {
           <Row targetChain={SupportedChainId.MAINNET} />
           <Row targetChain={SupportedChainId.OPTIMISM} />
           <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row targetChain={SupportedChainId.POLYGON} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>

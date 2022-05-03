@@ -3,7 +3,9 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
 import { TWO_PERCENT } from 'constants/misc'
+import { nativeOnChain } from 'constants/tokens'
 import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
@@ -129,7 +131,7 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     independentField,
@@ -139,7 +141,13 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     recipient,
   } = useMarketState()
 
-  const inputCurrency = useCurrency(inputCurrencyId)
+  //if (chainId === SupportedChainId.POLYGON) Field.INPUT = nativeOnChain(chainId)
+
+  const newInputAddress = chainId ? nativeOnChain(chainId) : undefined
+  const inputCurrency2 = useCurrency(inputCurrencyId)
+
+  const inputCurrency =
+    outputCurrencyId == null && inputCurrency2?.wrapped.name == 'WETH' ? newInputAddress : inputCurrency2
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null

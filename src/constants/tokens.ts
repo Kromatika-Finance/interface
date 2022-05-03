@@ -1,4 +1,5 @@
-import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
+import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
+import invariant from 'tiny-invariant'
 
 import { KROM_TOKEN_ADDRESSES, UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
@@ -31,6 +32,13 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
+export const DAI_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
 export const USDC = new Token(
   SupportedChainId.MAINNET,
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -48,6 +56,13 @@ export const USDC_ARBITRUM = new Token(
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  6,
+  'USDC',
+  'USD//C'
+)
+export const USDC_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
   6,
   'USDC',
   'USD//C'
@@ -73,6 +88,13 @@ export const USDT_OPTIMISM = new Token(
   'USDT',
   'Tether USD'
 )
+export const USDT_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+  6,
+  'USDT',
+  'Tether USD'
+)
 export const WBTC = new Token(
   SupportedChainId.MAINNET,
   '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
@@ -90,6 +112,13 @@ export const WBTC_ARBITRUM_ONE = new Token(
 export const WBTC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x68f180fcCe6836688e9084f035309E29Bf0A2095',
+  8,
+  'WBTC',
+  'Wrapped BTC'
+)
+export const WBTC_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
   8,
   'WBTC',
   'Wrapped BTC'
@@ -136,6 +165,21 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
+export const WETH_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+
+export const WETH_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
 export const KROM: { [chainId: number]: Token } = {
   [SupportedChainId.KOVAN]: new Token(
     SupportedChainId.KOVAN,
@@ -179,6 +223,20 @@ export const KROM: { [chainId: number]: Token } = {
     'KROM',
     'Kromatika'
   ),
+  [SupportedChainId.POLYGON]: new Token(
+    SupportedChainId.POLYGON,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.POLYGON],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+  [SupportedChainId.POLYGON_MUMBAI]: new Token(
+    SupportedChainId.POLYGON_MUMBAI,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.POLYGON_MUMBAI],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
 }
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
@@ -218,6 +276,66 @@ export const WETH9_EXTENDED: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether'
   ),
+  [SupportedChainId.POLYGON]: new Token(
+    SupportedChainId.POLYGON,
+    '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.POLYGON_MUMBAI]: new Token(
+    SupportedChainId.POLYGON,
+    '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+}
+
+export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
+  ...(WETH9 as Record<SupportedChainId, Token>),
+  [SupportedChainId.OPTIMISM]: new Token(
+    SupportedChainId.OPTIMISM,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.ARBITRUM_ONE]: new Token(
+    SupportedChainId.ARBITRUM_ONE,
+    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
+    SupportedChainId.ARBITRUM_RINKEBY,
+    '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.POLYGON]: new Token(
+    SupportedChainId.POLYGON,
+    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+    18,
+    'WMATIC',
+    'Wrapped MATIC'
+  ),
+  [SupportedChainId.POLYGON_MUMBAI]: new Token(
+    SupportedChainId.POLYGON_MUMBAI,
+    '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+    18,
+    'WMATIC',
+    'Wrapped MATIC'
+  ),
 }
 
 export class ExtendedEther extends Ether {
@@ -230,5 +348,38 @@ export class ExtendedEther extends Ether {
 
   public static onChain(chainId: number): ExtendedEther {
     return this._cachedEther[chainId] ?? (this._cachedEther[chainId] = new ExtendedEther(chainId))
+  }
+}
+
+const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
+
+export function nativeOnChain(chainId: number): NativeCurrency {
+  return (
+    cachedNativeCurrency[chainId] ??
+    (cachedNativeCurrency[chainId] = isMatic(chainId)
+      ? new MaticNativeCurrency(chainId)
+      : ExtendedEther.onChain(chainId))
+  )
+}
+
+function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
+  return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
+}
+
+class MaticNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isMatic(this.chainId)) throw new Error('Not matic')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isMatic(chainId)) throw new Error('Not matic')
+    super(chainId, 18, 'MATIC', 'Polygon Matic')
   }
 }

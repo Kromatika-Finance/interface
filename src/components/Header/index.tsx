@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -10,7 +11,7 @@ import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/ho
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import { useETHBalances } from 'state/wallet/hooks'
+import { useCurrencyBalance, useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import ComingSoon from '../../../src/assets/images/coming-soon.png'
@@ -282,6 +283,8 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const isPolygon = SupportedChainId.POLYGON === chainId || SupportedChainId.POLYGON_MUMBAI === chainId
+
   const [darkMode] = useDarkModeManager()
   const { white, black } = useTheme()
 
@@ -368,7 +371,9 @@ export default function Header() {
           <AccountElement active={!!account}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
+                <Trans>
+                  {userEthBalance?.toSignificant(3)} {isPolygon ? 'MATIC' : 'ETH'}
+                </Trans>
               </BalanceText>
             ) : null}
             <Web3Status />

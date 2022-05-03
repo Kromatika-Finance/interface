@@ -4,11 +4,11 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import MaticLogo from '../../assets/svg/polygon_logo.svg'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
-
-type Network = 'ethereum' | 'arbitrum' | 'optimism'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
@@ -18,6 +18,8 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'arbitrum'
     case SupportedChainId.OPTIMISM:
       return 'optimism'
+    case SupportedChainId.POLYGON:
+      return 'polygon'
     default:
       return 'ethereum'
   }
@@ -28,7 +30,12 @@ export const getTokenLogoURL = (
   chainId: SupportedChainId = SupportedChainId.MAINNET
 ): string | void => {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM]
+  const networksWithUrls = [
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.MAINNET,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.POLYGON,
+  ]
   if (networksWithUrls.includes(chainId)) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
