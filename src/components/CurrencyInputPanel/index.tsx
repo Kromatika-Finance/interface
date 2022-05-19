@@ -190,6 +190,39 @@ interface CurrencyInputPanelProps {
   price?: Price<Currency, Currency> | undefined
 }
 
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+function formatPrice(value: string | number | undefined) {
+  if (value == undefined) return undefined
+
+  if (Number(value) > 9) return commafy(Number(value).toFixed())
+  const numberOfZeros = countZeroes(Number(value).toFixed(20))
+
+  if (3 > numberOfZeros && numberOfZeros > 0) return commafy(Number(value).toFixed(3))
+
+  if (Number(value) >= 1) return commafy(Number(value).toFixed(1))
+
+  if (commafy(Number(value).toFixed(3)) != '0.000') return commafy(Number(value).toFixed(3))
+
+  return 0
+}
+function countZeroes(x: string | number) {
+  let counter = 0
+  for (let i = 2; i < x.toString().length; i++) {
+    if (x.toString().charAt(i) != '0') return counter
+
+    counter++
+  }
+  return counter
+}
+
 export default function CurrencyInputPanel({
   value,
   onUserInput,
@@ -311,7 +344,7 @@ export default function CurrencyInputPanel({
                         renderBalance(selectedCurrencyBalance)
                       ) : (
                         <Trans>
-                          Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)} {currency.symbol}
+                          Balance: {formatPrice(formatCurrencyAmount(selectedCurrencyBalance, 4))} {currency.symbol}
                         </Trans>
                       )
                     ) : null}

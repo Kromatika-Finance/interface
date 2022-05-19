@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Rounding, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
@@ -39,6 +39,15 @@ const ArrowWrapper = styled.div`
   z-index: 2;
 `
 
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
 export default function SwapModalHeader({
   trade,
   serviceFee,
@@ -64,6 +73,18 @@ export default function SwapModalHeader({
 
   const fiatValueInput = useUSDCValue(inputAmount)
 
+  const renderPrice = (price: CurrencyAmount<Currency>) => {
+    const number = +price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+    if (number < 0.1) return commafy(price.toSignificant(1, undefined, Rounding.ROUND_HALF_UP))
+
+    if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
+
+    if (number < 1000) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+
+    if (number < 100000) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+    return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+  }
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
@@ -93,6 +114,13 @@ export default function SwapModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
+
+      <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
+        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+          <Trans>Current Price</Trans>
+        </TYPE.body>
+        <TradePrice price={trade.route.midPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+      </RowBetween>
       {priceAmount ? (
         <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
           <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
@@ -101,13 +129,6 @@ export default function SwapModalHeader({
           <TradePrice price={priceAmount} showInverted={showInverted} setShowInverted={setShowInverted} />
         </RowBetween>
       ) : null}
-
-      <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-          <Trans>Current Price</Trans>
-        </TYPE.body>
-        <TradePrice price={trade.route.midPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-      </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
         <AdvancedSwapDetails
@@ -142,7 +163,7 @@ export default function SwapModalHeader({
           <Trans>
             Output is estimated. You will receive at least{' '}
             <b>
-              {outputAmount ? outputAmount.toSignificant(6) : 0} {outputAmount?.currency.symbol}
+              {outputAmount ? renderPrice(outputAmount) : 0} {outputAmount?.currency.symbol}
             </b>{' '}
             when the current market price reaches your target price.
           </Trans>

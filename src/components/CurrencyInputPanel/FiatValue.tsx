@@ -1,11 +1,44 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Rounding } from '@uniswap/sdk-core'
 import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
 
 import useTheme from '../../hooks/useTheme'
 import { TYPE } from '../../theme'
 import { warningSeverity } from '../../utils/prices'
+
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+function formatPrice(value: string | number | undefined) {
+  if (value == undefined) return undefined
+
+  if (Number(value) > 9) return commafy(Number(value).toFixed())
+  const numberOfZeros = countZeroes(Number(value).toFixed(20))
+
+  if (3 > numberOfZeros && numberOfZeros > 0) return commafy(Number(value).toFixed(3))
+
+  if (Number(value) >= 1) return commafy(Number(value).toFixed(1))
+
+  if (commafy(Number(value).toFixed(3)) != '0.000') return commafy(Number(value).toFixed(3))
+
+  return 0
+}
+function countZeroes(x: string | number) {
+  let counter = 0
+  for (let i = 2; i < x.toString().length; i++) {
+    if (x.toString().charAt(i) != '0') return counter
+
+    counter++
+  }
+  return counter
+}
 
 export function FiatValue({
   fiatValue,
@@ -26,9 +59,12 @@ export function FiatValue({
 
   return (
     <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
-      {fiatValue ? (
+      {fiatValue && formatPrice(fiatValue?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))?.toString() != '0' ? (
         <Trans>
-          $<HoverInlineText text={fiatValue?.toSignificant(6, { groupSeparator: ',' })} />
+          $
+          <HoverInlineText
+            text={formatPrice(fiatValue?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))?.toString()}
+          />
         </Trans>
       ) : (
         ''

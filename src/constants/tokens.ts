@@ -212,7 +212,7 @@ export const KROM: { [chainId: number]: Token } = {
     KROM_TOKEN_ADDRESSES[SupportedChainId.POLYGON],
     18,
     'KROM',
-    'Kromatika'
+    'Kromatika (PoS)'
   ),
 }
 export const WETH_POLYGON_MUMBAI = new Token(

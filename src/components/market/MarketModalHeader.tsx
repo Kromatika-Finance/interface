@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Rounding, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
@@ -38,6 +38,28 @@ const ArrowWrapper = styled.div`
   border-color: ${({ theme }) => theme.bg0};
   z-index: 2;
 `
+
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+const renderPrice = (price: CurrencyAmount<Currency>) => {
+  const number = +price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+  if (number < 0.1) return commafy(price.toSignificant(1, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1000) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 100000) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+  return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+}
 
 export default function MarketModalHeader({
   trade,
@@ -155,7 +177,7 @@ export default function MarketModalHeader({
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
-                {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                {renderPrice(trade.minimumAmountOut(allowedSlippage))} {trade.outputAmount.currency.symbol}
               </b>{' '}
               or the transaction will revert.
             </Trans>

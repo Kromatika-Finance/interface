@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
@@ -293,6 +294,28 @@ const StyledPrice = styled.span`
   top: -2px;
 `
 
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+const renderPrice = (price: Price<Currency, Token>) => {
+  const number = +price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+  if (number < 0.1) return commafy(price.toSignificant(1, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1000) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 100000) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+  return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+}
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -396,7 +419,14 @@ export default function Header() {
                         height="20px"
                         style={{ position: 'relative', top: '2px', marginRight: '5px' }}
                       />
-                      <StyledPrice> {kromPrice?.toSignificant(3)}$</StyledPrice>
+                      <StyledPrice>
+                        {' '}
+                        {kromPrice?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP) != '0' ? (
+                          <span>${kromPrice ? renderPrice(kromPrice) : ''}</span>
+                        ) : (
+                          ''
+                        )}
+                      </StyledPrice>
                     </Trans>
                   </BalanceText>
                 ) : null}

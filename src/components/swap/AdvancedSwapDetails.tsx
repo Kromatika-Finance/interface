@@ -1,6 +1,6 @@
 import { formatEther, formatUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Rounding, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
@@ -23,6 +23,14 @@ interface AdvancedSwapDetailsProps {
   outputAmount: CurrencyAmount<Currency> | undefined
 }
 
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
 function TextWithLoadingPlaceholder({
   syncing,
   width,
@@ -52,6 +60,19 @@ export function AdvancedSwapDetails({
 
   const gasAmount = useNetworkGasPrice()
 
+  const renderPrice = (price: CurrencyAmount<Currency>) => {
+    const number = +price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+    if (number < 0.1) return commafy(price.toSignificant(1, undefined, Rounding.ROUND_HALF_UP))
+
+    if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
+
+    if (number < 1000) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+
+    if (number < 100000) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+    return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+  }
+
   return trade && priceAmount ? (
     <AutoColumn gap="8px">
       <TransactionDetailsLabel fontWeight={500} fontSize={14}>
@@ -65,7 +86,7 @@ export function AdvancedSwapDetails({
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {serviceFee ? `${serviceFee.toSignificant(8)} ${serviceFee.currency.symbol}` : '-'}
+            {serviceFee ? `${renderPrice(serviceFee)} ${serviceFee.currency.symbol}` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -78,7 +99,7 @@ export function AdvancedSwapDetails({
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {outputAmount?.toSignificant(6)} {outputAmount?.currency.symbol}
+            {outputAmount && renderPrice(outputAmount)} {outputAmount?.currency.symbol}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
