@@ -54,9 +54,15 @@ const renderPrice = (price: CurrencyAmount<Currency>) => {
 
   if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
 
-  if (number < 1000) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+  if (number < 10) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
 
-  if (number < 100000) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+  if (number < 100) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1000) return commafy(price.toSignificant(5, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 10000) return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 100000) return commafy(price.toSignificant(7, undefined, Rounding.ROUND_HALF_UP))
 
   return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
 }

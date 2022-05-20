@@ -67,9 +67,15 @@ const renderPrice = (price: Price<Currency, Token> | Price<Currency, Currency>) 
 
   if (number < 1) return price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP)
 
-  if (number < 1000) return price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP)
+  if (number < 10) return price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP)
 
-  if (number < 100000) return price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+  if (number < 100) return price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+
+  if (number < 1000) return price.toSignificant(5, undefined, Rounding.ROUND_HALF_UP)
+
+  if (number < 10000) return price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP)
+
+  if (number < 100000) return price.toSignificant(7, undefined, Rounding.ROUND_HALF_UP)
 
   return price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP)
 }
@@ -104,7 +110,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
           <Trans>
             {Number(usdValue) ? (
               formatPrice(Number(usdValue)) != '0' ? (
-                <span>(${formatPrice(Number(usdValue))})</span>
+                <span>(${commafy(Number(usdValue).toFixed(2))})</span>
               ) : (
                 ''
               )

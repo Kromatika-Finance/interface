@@ -309,9 +309,13 @@ const renderPrice = (price: Price<Currency, Token>) => {
 
   if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
 
-  if (number < 1000) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+  if (number < 10) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
 
-  if (number < 100000) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+  if (number < 100) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 10000) return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 100000) return commafy(price.toSignificant(7, undefined, Rounding.ROUND_HALF_UP))
 
   return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
 }
@@ -422,7 +426,9 @@ export default function Header() {
                       <StyledPrice>
                         {' '}
                         {kromPrice?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP) != '0' ? (
-                          <span>${kromPrice ? renderPrice(kromPrice) : ''}</span>
+                          <span>
+                            ${kromPrice ? kromPrice?.toSignificant(2, undefined, Rounding.ROUND_HALF_UP) : ''}
+                          </span>
                         ) : (
                           ''
                         )}

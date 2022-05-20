@@ -40,6 +40,25 @@ function countZeroes(x: string | number) {
   return counter
 }
 
+const renderPrice = (price: CurrencyAmount<Currency>) => {
+  const number = +price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP)
+  if (number < 0.1) return commafy(price.toSignificant(1, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1) return commafy(price.toSignificant(2, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 10) return commafy(price.toSignificant(3, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 100) return commafy(price.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 1000) return commafy(price.toSignificant(5, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 10000) return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+
+  if (number < 100000) return commafy(price.toSignificant(7, undefined, Rounding.ROUND_HALF_UP))
+
+  return commafy(price.toSignificant(6, undefined, Rounding.ROUND_HALF_UP))
+}
+
 export function FiatValue({
   fiatValue,
   priceImpact,
@@ -59,12 +78,10 @@ export function FiatValue({
 
   return (
     <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
-      {fiatValue && formatPrice(fiatValue?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))?.toString() != '0' ? (
+      {fiatValue && renderPrice(fiatValue)?.toString() != '0' ? (
         <Trans>
           $
-          <HoverInlineText
-            text={formatPrice(fiatValue?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP))?.toString()}
-          />
+          <HoverInlineText text={renderPrice(fiatValue)?.toString()} />
         </Trans>
       ) : (
         ''
