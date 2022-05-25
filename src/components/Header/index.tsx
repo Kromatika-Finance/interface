@@ -423,16 +423,7 @@ export default function Header() {
                         height="20px"
                         style={{ position: 'relative', top: '2px', marginRight: '5px' }}
                       />
-                      <StyledPrice>
-                        {' '}
-                        {kromPrice?.toSignificant(4, undefined, Rounding.ROUND_HALF_UP) != '0' ? (
-                          <span>
-                            ${kromPrice ? kromPrice?.toSignificant(2, undefined, Rounding.ROUND_HALF_UP) : ''}
-                          </span>
-                        ) : (
-                          ''
-                        )}
-                      </StyledPrice>
+                      <StyledPrice> {kromPrice?.toSignificant(2)}$</StyledPrice>
                     </Trans>
                   </BalanceText>
                 ) : null}

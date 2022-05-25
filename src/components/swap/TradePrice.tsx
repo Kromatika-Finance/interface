@@ -84,7 +84,6 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
   const usdcPrice = useUSDCPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
-  const usdcPrice2 = useUSDCPrice(showInverted ? price.quoteCurrency : price.baseCurrency)
 
   let formattedPrice: string
   try {
@@ -93,7 +92,6 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
     formattedPrice = '0'
   }
 
-  const usdValue = usdcPrice2 ? Number(formattedPrice) * Number(renderPrice(usdcPrice2)) : 0
   const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
   const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`
   const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted])
@@ -105,19 +103,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       <Text fontWeight={500} fontSize={14} color={theme.text1}>
         {text}
       </Text>{' '}
-      {usdValue ? (
+      {usdcPrice && (
         <TYPE.darkGray>
-          <Trans>
-            {Number(usdValue) ? (
-              formatPrice(Number(usdValue)) != '0' ? (
-                <span>(${commafy(Number(usdValue).toFixed(2))})</span>
-              ) : (
-                ''
-              )
-            ) : (
-              ''
-            )}
-          </Trans>
+          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>{' '}
         </TYPE.darkGray>
       ) : null}
     </StyledPriceContainer>
