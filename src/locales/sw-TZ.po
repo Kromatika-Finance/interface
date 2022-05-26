@@ -2936,6 +2936,10 @@ msgstr "Ishara {0}"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr ""
 
+#: src/components/Header/index.tsx
+msgid "${0}"
+msgstr "${0}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Imeongezwa na mtumiaji"

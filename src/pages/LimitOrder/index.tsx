@@ -368,21 +368,23 @@ export default function LimitOrder({ history }: RouteComponentProps) {
 
   const allTransactions = useAllTransactions()
 
-  const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
-
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId),
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+
+  console.log('before urlLoadedTokens ---------------------------------------------------')
+
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
   )
+
+  console.log('urlLoadedTokens')
+  console.log(urlLoadedTokens)
+
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
@@ -414,10 +416,13 @@ export default function LimitOrder({ history }: RouteComponentProps) {
 
   const aToken = currencies && currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined
   const bToken = currencies && currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined
-
+  console.log('stigam ovde 1')
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
-
+  console.log('stigam ovde 2')
   const gasAmount = useNetworkGasPrice()
+
+  console.log('gasAmount -------------------------------')
+  console.log(gasAmount?.toSignificant(10))
 
   const {
     wrapType,
@@ -427,14 +432,18 @@ export default function LimitOrder({ history }: RouteComponentProps) {
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
 
-  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
+  /*const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [
       trade instanceof V3Trade ? !trade?.swaps : undefined,
       V3TradeState.LOADING === v3TradeState,
       V3TradeState.SYNCING === v3TradeState,
     ],
     [trade, v3TradeState]
-  )
+  ) */
+
+  const routeNotFound = trade instanceof V3Trade ? !trade?.swaps : undefined
+  const routeIsLoading = V3TradeState.LOADING === v3TradeState
+  const routeIsSyncing = V3TradeState.SYNCING === v3TradeState
 
   const fiatValueInput = useUSDCValue(parsedAmounts.input)
   const fiatValueOutput = useUSDCValue(parsedAmounts.output)

@@ -24,17 +24,16 @@ export function usePools(
 ): [PoolState, Pool | null][] {
   const { chainId } = useActiveWeb3React()
 
-  const transformed: ([Token, Token, FeeAmount] | null)[] = useMemo(() => {
-    return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
-      if (!chainId || !currencyA || !currencyB || !feeAmount) return null
+  const transformed: ([Token, Token, FeeAmount] | null)[] = poolKeys.map(([currencyA, currencyB, feeAmount]) => {
+    if (!chainId || !currencyA || !currencyB || !feeAmount) return null
 
-      const tokenA = currencyA?.wrapped
-      const tokenB = currencyB?.wrapped
-      if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null
-      const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-      return [token0, token1, feeAmount]
-    })
-  }, [chainId, poolKeys])
+    const tokenA = currencyA?.wrapped
+    const tokenB = currencyB?.wrapped
+
+    if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null
+    const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+    return [token0, token1, feeAmount]
+  })
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]

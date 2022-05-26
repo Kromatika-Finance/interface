@@ -28,11 +28,14 @@ import { useV3SwapPools } from 'hooks/useV3SwapPools'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { useToggleModal } from 'state/application/hooks'
+import { addPopup, ApplicationModal } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { tryParseTick } from 'state/mint/v3/utils'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
 import { useNetworkGasPrice, useUserTickOffset, useUserTickSize } from 'state/user/hooks'
+import { switchToNetwork } from 'utils/switchToNetwork'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
@@ -265,10 +268,12 @@ export function useDerivedSwapInfo(): {
 
   const bestTrade = v3Trade.trade
 
-  const inputAmount = useMemo(() => {
+  /*const inputAmount = useMemo(() => {
     return tryParseAmount(inputValue, inputCurrency ?? undefined)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue, inputCurrencyId])
+  }, [inputValue, inputCurrencyId])   */
+
+  const inputAmount = tryParseAmount(inputValue, inputCurrency ?? undefined)
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -379,6 +384,9 @@ export function useDerivedSwapInfo(): {
 
     return CurrencyAmount.fromRawAmount(KROM[chainId], estimatedServiceFeeResult?.[0])
   }, [chainId, estimatedServiceFeeResult])
+
+  console.log('parsedAmount')
+  console.log(parsedAmount)
 
   const price = useMemo(() => {
     if (!parsedAmounts.input || !parsedAmounts.output) return undefined
@@ -600,16 +608,38 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
 export function useDefaultsFromURLSearch():
   | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
   | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const parsedQs = useParsedQueryString()
+
+  const [userChangedNetwork, setUserChangedNetwork] = useState(false)
+
   const [result, setResult] = useState<
     { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
   >()
 
+  if (parsedQs.chainId && parsedQs.chainId != chainId?.toString()) {
+    library &&
+      !userChangedNetwork &&
+      switchToNetwork({ library, chainId: +parsedQs.chainId })
+        .then(() => setUserChangedNetwork(true))
+        .catch((error) => {
+          console.error('Failed to switch networks', error)
+          dispatch(
+            addPopup({
+              content: { failedSwitchNetwork: parsedQs?.chainId ? +parsedQs.chainId : 1 },
+              key: `failed-network-switch`,
+            })
+          )
+        })
+  }
+
+  // make it render conditionaly & wait for the networKChange
+
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
+
     const inputCurrencyId = parsed[Field.INPUT].currencyId ?? undefined
     const outputCurrencyId = parsed[Field.OUTPUT].currencyId ?? undefined
 
