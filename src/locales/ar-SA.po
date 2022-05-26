@@ -2938,7 +2938,7 @@ msgstr ""
 
 #: src/components/Header/index.tsx
 msgid "${0}"
-msgstr "${0}"
+msgstr ""
 
 
 #: src/components/SearchModal/CurrencyList.tsx
