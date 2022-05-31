@@ -29,7 +29,7 @@ msgstr ""
 #: src/pages/Market/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
-msgstr "${0}"
+msgstr "$"
 
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
