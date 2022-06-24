@@ -24,6 +24,7 @@ import {
   RedirectToLimitOrder,
 } from './LimitOrder/redirects'
 import Market from './Market'
+import MarketSwapBox from './Market/marketswapbox'
 import { RedirectToMarket } from './Market/redirects'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
@@ -91,15 +92,18 @@ export default function App() {
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
-        <AppWrapper>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
-            <Switch>
+        <Switch>
+          <Route exact path="/widgetswap" component={MarketSwapBox} />
+          <Route exact path="/widgetswap/:lightMode" component={MarketSwapBox} />
+
+          <AppWrapper>
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            <BodyWrapper>
+              <Popups />
+              <Polling />
+              <TopLevelModals />
               <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
               <Route exact strict path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
@@ -119,10 +123,10 @@ export default function App() {
               />
               <Route component={RedirectPathToLimitOrderOnly} />
               <Route component={RedirectPathToSwapOnly} />
-            </Switch>
-            <Marginer />
-          </BodyWrapper>
-        </AppWrapper>
+              <Marginer />
+            </BodyWrapper>
+          </AppWrapper>
+        </Switch>
       </Web3ReactManager>
     </ErrorBoundary>
   )

@@ -36,6 +36,10 @@ const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
   position: relative;
+
+  @media screen and (max-width: 410px) {
+    height: 650px;
+  }
 `
 
 const Footer = styled.div`
