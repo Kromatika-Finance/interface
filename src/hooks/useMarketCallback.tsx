@@ -272,7 +272,6 @@ export function useMarketCallback(
     if (swapCalls.state == V3TradeState.LOADING) {
       return { state: MarketCallbackState.LOADING, callback: null, error: null }
     }
-
     return {
       state: MarketCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {

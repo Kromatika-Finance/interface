@@ -13,7 +13,7 @@ import market from './market/reducer'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import multicall from './multicall/reducer'
-import { routingApi0x } from './quote/slice'
+import { routingApi0x, routingApiServer } from './quote/slice'
 import { routingApiInch } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
@@ -37,12 +37,14 @@ const store = configureStore({
     logs,
     [dataApi.reducerPath]: dataApi.reducer,
     [routingApi0x.reducerPath]: routingApi0x.reducer,
+    [routingApiServer.reducerPath]: routingApiServer.reducer,
     [routingApiInch.reducerPath]: routingApiInch.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
       .concat(dataApi.middleware)
       .concat(routingApi0x.middleware)
+      .concat(routingApiServer.middleware)
       .concat(routingApiInch.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),

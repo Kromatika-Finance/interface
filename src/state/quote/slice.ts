@@ -10,7 +10,7 @@ import { SupportedChainId } from 'constants/chains'
 import qs from 'qs'
 import { AppState } from 'state'
 
-import { GetQuote0xResult } from './types'
+import { GetBetterTradeResult, GetQuote0xResult } from './types'
 
 // List of supported 0x protocols
 export const CHAIN_0x_URL: Record<number, string> = {
@@ -71,4 +71,60 @@ export const routingApi0x = createApi({
   }),
 })
 
+const dynamicBaseServerQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions
+) => {
+  //  const chainId = (api.getState() as AppState).application.chainId
+
+  //const queryUrl = chainId ? CHAIN_0x_URL[chainId] : undefined
+  const queryUrl = 'http://localhost:4000'
+
+  // gracefully handle scenarios where data to generate the URL is missing
+  if (!queryUrl) {
+    return retry.fail({
+      error: {
+        status: 400,
+        statusText: 'Bad Request',
+        data: 'No project ID received',
+      },
+    })
+  }
+
+  console.log('herer ------')
+  const result = await fetchBaseQuery({ baseUrl: queryUrl })(args, api, extraOptions)
+  console.log('result')
+  console.log(result)
+  return result
+}
+
+export const routingApiServer = createApi({
+  reducerPath: 'routingApiServer',
+  baseQuery: dynamicBaseServerQuery,
+  endpoints: (build) => ({
+    getSwapServer: build.query<
+      GetBetterTradeResult,
+      {
+        chainId: string
+        queryArg: {
+          fromTokenAddress: string
+          toTokenAddress: string
+          fromAddress: string
+          slippage: string | null
+          amount: string | null
+          outputSpecified: boolean
+          skipValidation: boolean
+        }
+      }
+    >({
+      query: (args) => {
+        const { queryArg } = args
+        return `/getSwap?${qs.stringify(queryArg, { skipNulls: true })}`
+      },
+    }),
+  }),
+})
+
+export const { useGetSwapServerQuery } = routingApiServer
 export const { useGetSwap0xQuery } = routingApi0x

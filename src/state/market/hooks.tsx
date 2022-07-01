@@ -162,6 +162,9 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
+  console.log('v2Trade')
+  console.log(v2Trade)
+
   const bestTrade = v2Trade == undefined ? undefined : v2Trade.trade
 
   const currencyBalances = useMemo(

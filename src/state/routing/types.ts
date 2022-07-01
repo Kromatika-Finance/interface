@@ -20,6 +20,47 @@ export type SwapTransaction = {
   gasUseEstimateUSD: string
 }
 
+export type OneInchTransaction = {
+  fromToken: string
+  toToken: string
+  toTokenAmount: string
+  fromTokenAmount: string
+  protocols: string
+  tx: {
+    from: string
+    to: string
+    data: string
+    value: string
+    gasPrice: string
+    gas: string
+  }
+}
+
+export type ZeroXTransaction = {
+  chainId: number
+  price: string
+  guaranteedPrice: string
+  estimatedPriceImpact: string
+  to: string
+  data: string
+  value: number
+  gas: number
+  estimatedGas: number
+  gasPrice: number
+  protocolFee: number
+  minimumProtocolFee: number
+  buyTokenAddress: string
+  sellTokenAddress: string
+  buyAmount: number
+  sellAmount: number
+  sources: []
+  orders: []
+  allowanceTarget: string
+  decodedUniqueId: string
+  sellTokenToEthRate: string
+  buyTokenToEthRate: number
+}
+
 export type PoolInRoute = {
   name: string
   part: string

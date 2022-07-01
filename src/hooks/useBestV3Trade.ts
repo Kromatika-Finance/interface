@@ -1,11 +1,13 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import axios from 'axios'
 import { ChainName } from 'constants/chains'
 import { BETTER_TRADE_LESS_HOPS_THRESHOLD, TWO_PERCENT } from 'constants/misc'
-import { useMemo } from 'react'
-import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
+import { assertValidExecutionArguments } from 'graphql/execution/execute'
+import { useMemo, useState } from 'react'
+import { useBetterTradeAPITrade } from 'state/quote/useQuoteAPITrade'
+import { OneInchTransaction, SwapTransaction, V3TradeState, ZeroXTransaction } from 'state/routing/types'
 import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import { isTradeBetter } from 'utils/isTradeBetter'
@@ -15,6 +17,49 @@ import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 import { useUSDCValue } from './useUSDCPrice'
 import { useActiveWeb3React } from './web3'
+
+async function fetchBetterTrade() {
+  const obj = await axios.post('http://localhost:4000/getSwap', {
+    fromTokenAddress: '0x3af33bEF05C2dCb3C7288b77fe1C8d2AeBA4d789',
+    toTokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    amount: '1000000000000000000',
+    fromAddress: '0x24eB627ee33429d8213b60701deB2950145E0F83',
+    slippage: '0.5',
+  })
+
+  const data = obj.data
+  return Promise.resolve(data)
+}
+
+function GetBetterTrade(): SwapTransaction | undefined {
+  const response = fetchBetterTrade()
+
+  const [betterTrades, setBetterTrades] = useState()
+
+  response.then((response) => setBetterTrades(response)).catch((e) => console.log(e))
+  console.log(betterTrades)
+
+  return undefined // {
+  // from: betterTrades ? betterTrades.sellTokenAddress : undefined,
+  // to: betterTrades ? betterTrades.buyTokenAddress : undefined,
+  // data: betterTrades ? betterTrades.betterTrades : undefined,
+  // value: betterTrades ? betterTrades.value : undefined,
+  // gas: betterTrades ? betterTrades.gas : undefined,
+  // type: 3,
+  // gasUseEstimateUSD: betterTrades ? betterTrades.estimatedGas : undefined, //
+
+  //}
+}
+
+function thirtySecondsPassed(lastRequest: number) {
+  const secondBetweenTwoDate = Math.abs((new Date().getTime() - lastRequest) / 1000)
+
+  return secondBetweenTwoDate >= 30 ? true : false
+}
+
+function requestParamsChanged(oldRequest: any, newRequest: any) {
+  return oldRequest == newRequest ? false : true
+}
 
 export function useBestMarketTrade(
   tradeType: TradeType,
@@ -32,7 +77,31 @@ export function useBestMarketTrade(
   const debouncedAmount = useDebounce(amountSpecified, 100)
 
   const routingAPIEnabled = useRoutingAPIEnabled()
-  const routingAPITrade = use0xQuoteAPITrade(
+  // const [lastRequestTimestamp, setLastRequestTimestamp] = useState(new Date().getTime())
+
+  // if (thirtySecondsPassed(lastRequestTimestamp) || requestParamsChanged(1, 1)) {
+  //   const response = fetchBetterTrade()
+  //   response.then((response) => setBetterTrades(response)).catch((e) => console.log(e))
+  //   console.log('!------ MAKING REQUEST -------!')
+  //   setLastRequestTimestamp(new Date().getTime())
+  //   // cache the request
+  // }
+
+  // const [betterTrades, setBetterTrades] = useState<any>()
+
+  // // this should be adapted for 1inch
+  // const txn = {
+  //   from: betterTrades ? betterTrades.sellTokenAddress : undefined,
+  //   to: betterTrades ? betterTrades.buyTokenAddress : undefined,
+  //   data: betterTrades ? betterTrades.betterTrades : undefined,
+  //   value: betterTrades ? betterTrades.value : undefined,
+  //   gas: betterTrades ? betterTrades.gas : undefined,
+  //   type: 3,
+  //   gasUseEstimateUSD: betterTrades ? betterTrades.estimatedGas : undefined, // not true at the moment
+  // }
+
+  // ============================================================================
+  const betterTrade = useBetterTradeAPITrade(
     tradeType,
     null,
     true,
@@ -40,7 +109,6 @@ export function useBestMarketTrade(
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )
-
   const nameOfNetwork = useMemo(() => {
     if (!chainId) return undefined
     return ChainName[chainId]
@@ -55,61 +123,48 @@ export function useBestMarketTrade(
     return nameOfNetwork.toUpperCase().concat('_UNISWAP_V2,').concat(nameOfNetwork.toUpperCase()).concat('_UNISWAP_V3')
   }, [nameOfNetwork])
 
-  // use 1inch with only v2,v3
   const uniswapAPITrade = useInchQuoteAPITrade(
     tradeType,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency,
     protocols
   )
+  // ============================================================================
 
-  const swapAPITrade = useInchQuoteAPITrade(
-    tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
-  )
+  // const swapAPITrade = useInchQuoteAPITrade(
+  //   tradeType,
+  //   routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+  //   otherCurrency
+  // )
 
-  const isLoading = routingAPITrade.state === V3TradeState.LOADING || swapAPITrade.state === V3TradeState.LOADING
+  // const isLoading = routingAPITrade.state === V3TradeState.LOADING || swapAPITrade.state === V3TradeState.LOADING
 
-  const betterTrade = useMemo(() => {
-    try {
-      // compare if tradeB is better than tradeA
-      return !isLoading
-        ? isTradeBetter(swapAPITrade.trade, routingAPITrade.trade, BETTER_TRADE_LESS_HOPS_THRESHOLD)
-          ? routingAPITrade
-          : swapAPITrade
-        : undefined
-    } catch (e) {
-      // v3 trade may be debouncing or fetching and have different
-      // inputs/ouputs than v2
-      console.log('Error')
-      return undefined
-    }
-  }, [isLoading, routingAPITrade, swapAPITrade])
-
-  const debouncing =
-    betterTrade?.trade &&
-    amountSpecified &&
-    (tradeType === TradeType.EXACT_INPUT
-      ? !betterTrade?.trade.inputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(betterTrade?.trade.inputAmount.currency) ||
-        !otherCurrency?.equals(betterTrade?.trade.outputAmount.currency)
-      : !betterTrade?.trade.outputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(betterTrade?.trade.outputAmount.currency) ||
-        !otherCurrency?.equals(betterTrade?.trade.inputAmount.currency))
+  // const betterTrade = useMemo(() => {
+  //   try {
+  //     // compare if tradeB is better than tradeA
+  //     return !isLoading
+  //       ? isTradeBetter(swapAPITrade.trade, routingAPITrade.trade, BETTER_TRADE_LESS_HOPS_THRESHOLD)
+  //         ? routingAPITrade
+  //         : swapAPITrade
+  //       : undefined
+  //   } catch (e) {
+  //     // v3 trade may be debouncing or fetching and have different
+  //     // inputs/ouputs than v2
+  //     console.log('Error')
+  //     return undefined
+  //   }
+  // }, [isLoading, routingAPITrade, swapAPITrade])
 
   const savings = useUSDCValue(uniswapAPITrade.trade?.outputAmount)
 
   return useMemo(
     () => ({
-      state: betterTrade ? betterTrade.state : V3TradeState.LOADING,
+      state: betterTrade?.state ? V3TradeState.VALID : V3TradeState.LOADING, //V3TradeState.VALID, //response ? (response != undefined ? V3TradeState.VALID : V3TradeState.INVALID) : V3TradeState.LOADING,
       trade: betterTrade?.trade,
       tx: betterTrade?.tx,
       savings,
-      ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
-      ...(isLoading ? { state: V3TradeState.LOADING } : {}),
     }),
-    [betterTrade, debouncing, isLoading, savings]
+    [betterTrade, savings]
   )
 }
 
