@@ -198,57 +198,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Trans>Transaction Settings</Trans>
             </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Gasless Mode</Trans>
-                </TYPE.black>
-                <QuestionHelper text={<Trans>Enables gasless transactions by compensating them with KROM.</Trans>} />
-              </RowFixed>
-              {isGaslessEnabledForNetwork ? (
-                <Toggle
-                  id="toggle-expert-mode-button"
-                  isActive={gaslessMode}
-                  toggle={
-                    gaslessMode
-                      ? () => {
-                          toggleGaslessMode()
-                          setShowConfirmation(false)
-                        }
-                      : () => {
-                          toggle()
-                          setShowConfirmation(true)
-                        }
-                  }
-                />
-              ) : (
-                <Trans>Coming Soon</Trans>
-              )}
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Frontrun Protection</Trans>
-                </TYPE.black>
-                <QuestionHelper text={<Trans>Prevents front-running of swaps</Trans>} />
-              </RowFixed>
-              <Trans>Coming Soon</Trans>
-              {/* <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              /> */}
-            </RowBetween>
           </AutoColumn>
         </MenuFlyout>
       )}

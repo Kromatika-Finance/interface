@@ -33,7 +33,7 @@ import NetworkSelector from './NetworkSelector'
 import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
-  display: grid;
+  display: flex;
   grid-template-columns: 120px 1fr 120px;
   align-items: center;
   justify-content: space-between;
@@ -330,80 +330,10 @@ export default function Header() {
   return (
     <HeaderFrame showBackground={true}>
       <ClaimModal />
-      <Title href=".">
-        <UniIcon>
-          <MainLogo>
-            <Logo
-              fill={darkMode ? white : black}
-              transform="scale(9)"
-              width="100px"
-              height="35px"
-              title="logo"
-              z-index="1"
-              viewBox="0 0 350 840"
-            />
-          </MainLogo>
-          <PhoneLogo>
-            <PhoneScreenLogo fill={darkMode ? white : black} width="100px" height="35px" title="logo" z-index="1" />
-          </PhoneLogo>
-        </UniIcon>
+      <Title>
+        <span style={{ color: '#3366CC', fontSize: '25px', fontWeight: 'bolder', paddingLeft: '10px' }}>METADEXA</span>
       </Title>
-      <HeaderLinks>
-        <StyledNavLink
-          id={`pool-nav-link`}
-          to={'/pool'}
-          isActive={(match, { pathname }) =>
-            Boolean(match) ||
-            pathname.startsWith('/add') ||
-            pathname.startsWith('/remove') ||
-            pathname.startsWith('/increase') ||
-            pathname.startsWith('/find')
-          }
-        >
-          <Trans>Dashboard</Trans>
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-          <Trans>Limit</Trans>
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Swap</Trans>
-        </StyledNavLink>
-        {/* <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage> */}
-      </HeaderLinks>
-
       <HeaderControls>
-        <HeaderElement>
-          {chainId && (
-            <ExternalLink href={pools[chainId]}>
-              <KromPriceStyled>
-                {kromPrice ? (
-                  <BalanceText
-                    style={{
-                      flexShrink: 0,
-                      userSelect: 'none',
-                      backgroundColor: darkMode ? '#212429' : '#F5F5F5',
-                      borderRadius: '10px',
-                      padding: '9px 8px',
-                      color: darkMode ? 'white' : 'black',
-                    }}
-                    fontWeight={500}
-                  >
-                    <Trans>
-                      {' '}
-                      <img
-                        src={tokenLogo}
-                        width="20px"
-                        height="20px"
-                        style={{ position: 'relative', top: '2px', marginRight: '5px' }}
-                      />
-                      <StyledPrice> ${kromPrice?.toSignificant(2)}</StyledPrice>
-                    </Trans>
-                  </BalanceText>
-                ) : null}
-              </KromPriceStyled>
-            </ExternalLink>
-          )}
-        </HeaderElement>
         <HeaderElement>
           <NetworkSelector />
         </HeaderElement>
