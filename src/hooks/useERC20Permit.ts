@@ -6,7 +6,7 @@ import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 
 import { KROMATIKA_ROUTER_ADDRESSES, LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
-import { DAI, KROM, UNI, USDC } from '../constants/tokens'
+import { DAI, UNI, USDC } from '../constants/tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -38,7 +38,6 @@ const PERMITTABLE_TOKENS: {
     [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     [UNI[1].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-    [KROM[1].address]: { type: PermitType.AMOUNT, name: 'Kromatika', version: '1' },
   },
   [4]: {
     ['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
@@ -53,7 +52,6 @@ const PERMITTABLE_TOKENS: {
   },
   [42]: {
     [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-    [KROM[42].address]: { type: PermitType.AMOUNT, name: 'Kromatika', version: '1' },
   },
 }
 

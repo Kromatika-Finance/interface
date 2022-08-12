@@ -24,19 +24,10 @@ const HoverText = styled(TYPE.main)`
 `
 
 export default function MarketHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
-
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <RowFixed>
-          <HoverText>
-            <Box>
-              PRO Mode
-              <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
-            </Box>
-          </HoverText>
-        </RowFixed>
+        <RowFixed></RowFixed>
         <RowFixed>
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>

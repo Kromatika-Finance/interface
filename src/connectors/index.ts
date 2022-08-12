@@ -51,6 +51,6 @@ export const portis = new PortisConnector({
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
-  appName: 'Kromatika',
+  appName: 'MetaDexa',
   appLogoUrl: UNISWAP_LOGO_URL,
 })

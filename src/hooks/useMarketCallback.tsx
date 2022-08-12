@@ -14,7 +14,6 @@ import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
 import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
-import { KROMATIKA_METASWAP_ADDRESSES, SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -22,7 +21,6 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useKromatikaMetaswap, useKromatikaRouter, useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import { useGaslessCallback } from './useGaslessCallback'
@@ -214,14 +212,14 @@ function marketErrorToUserReadableMessage(error: any): ReactNode {
           <Trans>
             An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If
             that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer
-            and rebase tokens are incompatible with Kromatika.
+            and rebase tokens are incompatible with Metadexa.
           </Trans>
         )
       }
       return (
         <Trans>
           Unknown error{reason ? `: "${reason}"` : ''}. Try increasing your slippage tolerance. Note: fee on transfer
-          and rebase tokens are incompatible with Kromatika.
+          and rebase tokens are incompatible with Metadexa.
         </Trans>
       )
   }

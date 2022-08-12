@@ -160,7 +160,7 @@ const ToggleMenuItem = styled.button`
   }
 `
 
-const CODE_LINK = 'https://github.com/Kromatika-Finance/interface'
+const CODE_LINK = 'https://github.com/metadexa'
 
 function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
   const { to, onClick } = useLocationLinkProps(locale)
@@ -223,13 +223,13 @@ export default function Menu() {
             default:
               return (
                 <MenuFlyout>
-                  <MenuItem href="https://kromatika.finance/">
+                  <MenuItem href="https://metadexa.io/">
                     <div>
                       <Trans>About</Trans>
                     </div>
                     <Info opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://docs.kromatika.finance/">
+                  <MenuItem href="https://docs.metadexa.io/">
                     <div>
                       <Trans>Docs</Trans>
                     </div>

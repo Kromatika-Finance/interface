@@ -53,10 +53,6 @@ export const TREASURY_FEE_ADDRESS: AddressMap = {
   [SupportedChainId.KOVAN]: '0x9aE8F90f58a6bc41B469b386a0A49eBb94897fAE',
 }
 
-export const SKROMATIKA_ADDRESS: AddressMap = {
-  [SupportedChainId.KOVAN]: '0xEcf12A780a922A8963A8f044e489F499Bf6494e7',
-}
-
 export const STAKING_ADDRESS: AddressMap = {
   [SupportedChainId.KOVAN]: '0x24C2F4d4e81620dBbC46E02d3DAc9A9c095DcF8C',
 }

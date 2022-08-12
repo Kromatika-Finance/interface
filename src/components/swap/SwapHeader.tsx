@@ -32,14 +32,7 @@ export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <RowFixed>
-          <HoverText>
-            <Box>
-              PRO Mode
-              <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
-            </Box>
-          </HoverText>
-        </RowFixed>
+        <RowFixed></RowFixed>
       </RowBetween>
     </StyledSwapHeader>
   )

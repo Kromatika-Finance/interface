@@ -87,7 +87,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                 <LinkWrapper>
                   <ExternalLink
                     id="create-github-issue-link"
-                    href={`https://github.com/Kromatika-Finance/interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
+                    href={`https://github.com/metadexa/interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
                       `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``
                     )}`}
                     target="_blank"

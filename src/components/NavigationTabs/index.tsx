@@ -68,19 +68,6 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active }: { active: 'limitorder' | 'pool' }) {
-  return (
-    <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
-      <StyledNavLink id={`swap-nav-link`} to={'/#/limitorder'} isActive={() => active === 'limitorder'}>
-        <Trans>Swap</Trans>
-      </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        <Trans>Pool</Trans>
-      </StyledNavLink>
-    </Tabs>
-  )
-}
-
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
@@ -146,9 +133,9 @@ export function AddRemoveTabs({
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : remove ? (
-            <Trans>Withdraw KROM</Trans>
+            <Trans>Withdraw UNI</Trans>
           ) : (
-            <Trans>Deposit KROM</Trans>
+            <Trans>Deposit UNI</Trans>
           )}
         </TYPE.mediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>

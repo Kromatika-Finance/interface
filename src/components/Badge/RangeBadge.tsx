@@ -48,7 +48,7 @@ export default function RangeBadge({
           </Badge>
         </MouseoverTooltip>
       ) : isUnderfunded ? (
-        <MouseoverTooltip text={<Trans>Trades not processing. Please fund your account with KROM.</Trans>}>
+        <MouseoverTooltip text={<Trans>Trades not processing. Please fund your account with UNI.</Trans>}>
           <Badge variant={BadgeVariant.NEGATIVE}>
             <AlertCircle width={14} height={14} />
             &nbsp;

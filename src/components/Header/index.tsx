@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { KROM } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { darken } from 'polished'
@@ -17,7 +16,6 @@ import styled from 'styled-components/macro'
 
 import ComingSoon from '../../../src/assets/images/coming-soon.png'
 import ComingSoonLight from '../../../src/assets/images/coming-soon-light.png'
-import tokenLogo from '../../assets/images/krom_logo.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ReactComponent as PhoneScreenLogo } from '../../assets/svg/phone-logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -174,13 +172,6 @@ const UNIAmount = styled(AccountElement)`
   background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
 `
 
-const KromPriceStyled = styled.div`
-  font-weight: 500;
-  width: 110px;
-  display: flex;
-  justify-content: center;
-`
-
 const UNIWrapper = styled.span`
   width: fit-content;
   position: relative;
@@ -309,10 +300,6 @@ export default function Header() {
   const showClaimPopup = useShowClaimPopup()
 
   const scrollY = useScrollPosition()
-
-  const kromToken = chainId ? KROM[chainId] : undefined
-
-  const kromPrice = useUSDCPrice(kromToken)
 
   const pools: { [chainId: number]: string } = {
     [SupportedChainId.MAINNET]: 'https://info.uniswap.org/#/pools/0x6ae0cdc5d2b89a8dcb99ad6b3435b3e7f7290077',

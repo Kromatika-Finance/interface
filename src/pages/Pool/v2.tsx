@@ -12,8 +12,6 @@ import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -137,7 +135,6 @@ export default function Pool() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
         <VoteCard>
           <CardBGImage />
           <CardNoise />

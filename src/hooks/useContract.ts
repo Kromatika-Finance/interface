@@ -38,7 +38,6 @@ import {
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
-  SKROMATIKA_ADDRESS,
   STAKING_ADDRESS,
   STAKING_DISTRIBUTOR_ADDRESS,
   TREASURY_FEE_ADDRESS,
@@ -89,10 +88,6 @@ export function useContract<T extends Contract = Contract>(
       return null
     }
   }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
-}
-
-export function useSKromatikaContract() {
-  return useContract<SKromatika>(SKROMATIKA_ADDRESS, SKROMATIKA_ABI, true)
 }
 
 export function useNewStakingContract() {

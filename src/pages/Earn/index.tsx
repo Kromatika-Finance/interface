@@ -80,7 +80,7 @@ export default function Earn() {
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>
-                  <Trans>Read more about KROM</Trans>
+                  <Trans>Read more about UNI</Trans>
                 </TYPE.white>
               </ExternalLink>
             </AutoColumn>

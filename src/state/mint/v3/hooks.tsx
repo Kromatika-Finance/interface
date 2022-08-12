@@ -15,7 +15,7 @@ import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useNetworkGasPrice, useUserGasPrice } from 'state/user/hooks'
+import { useNetworkGasPrice } from 'state/user/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'

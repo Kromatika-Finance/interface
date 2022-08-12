@@ -1,6 +1,6 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 
-import { KROM_TOKEN_ADDRESSES, UNI_ADDRESS } from './addresses'
+import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
 export const AMPL = new Token(
@@ -164,65 +164,14 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
-export const KROM: { [chainId: number]: Token } = {
-  [SupportedChainId.KOVAN]: new Token(
-    SupportedChainId.KOVAN,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.KOVAN],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
-    SupportedChainId.OPTIMISTIC_KOVAN,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.OPTIMISTIC_KOVAN],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-  [SupportedChainId.OPTIMISM]: new Token(
-    SupportedChainId.OPTIMISM,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.OPTIMISM],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
-    SupportedChainId.ARBITRUM_RINKEBY,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.ARBITRUM_RINKEBY],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-  [SupportedChainId.ARBITRUM_ONE]: new Token(
-    SupportedChainId.ARBITRUM_ONE,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.ARBITRUM_ONE],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-  [SupportedChainId.MAINNET]: new Token(
-    SupportedChainId.MAINNET,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.MAINNET],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-  [SupportedChainId.POLYGON]: new Token(
-    SupportedChainId.POLYGON,
-    KROM_TOKEN_ADDRESSES[SupportedChainId.POLYGON],
-    18,
-    'KROM',
-    'Kromatika'
-  ),
-}
 
 export const WETH: { [chainId: number]: Token } = {
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
     '0x4200000000000000000000000000000000000006',
     18,
-    'KROM',
-    'Kromatika'
+    'WETH',
+    'Wrapped Ether'
   ),
   [SupportedChainId.ARBITRUM_ONE]: new Token(
     SupportedChainId.ARBITRUM_ONE,

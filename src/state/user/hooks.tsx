@@ -5,7 +5,6 @@ import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { DEFAULT_USER_GAS_PRICE, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
-import { useLimitOrderManager } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -293,19 +292,6 @@ export function useNetworkGasPrice(): CurrencyAmount<Currency> | undefined {
         ? CurrencyAmount.fromRawAmount(nativeOnChain(chainId), JSBI.BigInt(parseUnits(userGasPrice, 'gwei').toString()))
         : undefined,
     [chainId, userGasPrice]
-  )
-}
-
-export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
-  const { chainId, account } = useActiveWeb3React()
-  const limitOrderManager = useLimitOrderManager()
-
-  const { result: gasPriceResult } = useSingleCallResult(limitOrderManager, 'targetGasPrice', [account ?? undefined])
-
-  return useMemo(
-    () =>
-      chainId && gasPriceResult ? CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasPriceResult?.[0]) : undefined,
-    [chainId, gasPriceResult]
   )
 }
 
