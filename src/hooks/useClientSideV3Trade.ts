@@ -32,7 +32,6 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   otherCurrency?: Currency,
   { maxHops = 1 } = {}
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
-  // TODO (pai) get the recommended route for the limit order based on the fee / liquidity
   //  if no such exists; show it (and provide a link to create it first)
 
   const [currencyIn, currencyOut] = useMemo(

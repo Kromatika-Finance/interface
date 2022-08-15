@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Kromatika-interface\n"
+"Project-Id-Version: Metadexa-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-10-14 18:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Crowdin-Project: Kromatika-interface\n"
+"X-Crowdin-Project: Metadexa-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: sr\n"
 "X-Crowdin-File: en-US.po\n"
@@ -203,7 +203,7 @@ msgstr "Активно"
 #~ msgstr "Додати"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Kromatika V2"
+msgid "Add <0/> and <1/> to Metadexa V2"
 msgstr "Додајте <0/> и <1/> у Унисвап В2"
 
 #: src/components/vote/DelegateModal.tsx
@@ -256,7 +256,7 @@ msgstr "Против"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
-msgid "Allow Kromatika to use your {0}"
+msgid "Allow Metadexa to use your {0}"
 msgstr ""
 
 #: 
@@ -269,12 +269,12 @@ msgstr ""
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
+msgid "Allow the Metadexa Aggregator to use your {0}"
 msgstr ""
 
 #: 
-#~ msgid "Allow the Kromatika Protocol to use your {0}"
-#~ msgstr "Дозволите Kromatika протоколу да користи вашу {0}"
+#~ msgid "Allow the Metadexa Protocol to use your {0}"
+#~ msgstr "Дозволите Metadexa протоколу да користи вашу {0}"
 
 #: 
 #~ msgid "Allowed"
@@ -295,12 +295,12 @@ msgid "Amounts"
 msgstr ""
 
 #: 
-#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Metadexa V3."
 #~ msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати повећати толеранцију клизања. Ако то не успе, можда постоји некомпатибилност са токеном којим тргујете. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Metadexa."
 msgstr ""
 
 #: 
@@ -351,8 +351,8 @@ msgid "Are you sure?"
 msgstr "Јеси ли сигуран?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Као члан Kromatika заједнице можете затражити да се УНИ користи за гласање и управљање. <0/> <1/> <2> Прочитајте више о УНИ</2>"
+msgid "As a member of the Metadexa community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Као члан Metadexa заједнице можете затражити да се УНИ користи за гласање и управљање. <0/> <1/> <2> Прочитајте више о УНИ</2>"
 
 #: 
 #~ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -412,8 +412,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Додавањем ове листе имплицитно сте сагласни да су подаци тачни. Свако може да креира листу, укључујући стварање лажних верзија постојећих листа и листа за које се тврди да представљају пројекте којих нема."
 
 #: 
-#~ msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
-#~ msgstr "Повезивањем новчаника прихватате Kromatika Labs <0>Услове коришћења услуге</0> и потврђујете да сте прочитали и разумели <1>Изјаву о одрицању одговорности Kromatika протокола</1>."
+#~ msgid "By connecting a wallet, you agree to Metadexa Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Metadexa protocol disclaimer</1>."
+#~ msgstr "Повезивањем новчаника прихватате Metadexa Labs <0>Услове коришћења услуге</0> и потврђујете да сте прочитали и разумели <1>Изјаву о одрицању одговорности Metadexa протокола</1>."
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel"
@@ -818,12 +818,12 @@ msgid "Deposit liquidity"
 msgstr "Ликвидност депозита"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token."
+msgid "Deposit your Liquidity Provider tokens to receive KROM, the Metadexa protocol governance token."
 msgstr ""
 
 #: 
-#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
-#~ msgstr "Положите своје токене Добављача ликвидности да бисте добили УНИ, токен управљања протоколом Kromatika."
+#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Metadexa protocol governance token."
+#~ msgstr "Положите своје токене Добављача ликвидности да бисте добили УНИ, токен управљања протоколом Metadexa."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit {0}"
@@ -883,8 +883,8 @@ msgid "Earned Balance:"
 msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Kromatika governance."
-msgstr "Зарађени UNI токени представљају акције са правом гласа у управљању Kromatika-ом."
+msgid "Earned UNI tokens represent voting shares in Metadexa governance."
+msgstr "Зарађени UNI токени представљају акције са правом гласа у управљању Metadexa-ом."
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -983,8 +983,8 @@ msgid "Expired"
 msgstr "Истекло"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Kromatika Analytics."
-msgstr "Истражите популарне фондове на Kromatika Аналитици."
+msgid "Explore popular pools on Metadexa Analytics."
+msgstr "Истражите популарне фондове на Metadexa Аналитици."
 
 #: 
 #~ msgid "Explorer"
@@ -1007,8 +1007,8 @@ msgid "For"
 msgstr "За"
 
 #: 
-#~ msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
-#~ msgstr "За сваки фонд приказан у наставку кликните на мигрирај да бисте уклонили своју ликвидност из Kromatika V2 и депоновали је у Kromatika V3."
+#~ msgid "For each pool shown below, click migrate to remove your liquidity from Metadexa V2 and deposit it into Metadexa V3."
+#~ msgstr "За сваки фонд приказан у наставку кликните на мигрирај да бисте уклонили своју ликвидност из Metadexa V2 и депоновали је у Metadexa V3."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1175,27 +1175,27 @@ msgid "Invalid recipient"
 msgstr "Неважећи прималац"
 
 #: src/pages/Vote/index.tsx
-msgid "Kromatika Governance"
-msgstr "Kromatika управљање"
+msgid "Metadexa Governance"
+msgstr "Metadexa управљање"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Kromatika available in: <0>{0}</0>"
-msgstr "Kromatika доступан у: <0>{0}</0>"
+msgid "Metadexa available in: <0>{0}</0>"
+msgstr "Metadexa доступан у: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgid "Metadexa governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Управљање разменом је доступно само на слоју 1. Пребаците мрежу на Етхереум Маиннет да бисте видели предлоге и гласали."
 
 #: src/pages/Earn/index.tsx
-msgid "Kromatika liquidity mining"
-msgstr "Kromatika рударење ликвидности"
+msgid "Metadexa liquidity mining"
+msgstr "Metadexa рударење ликвидности"
 
 #: 
-#~ msgid "Kromatika migration contract↗"
-#~ msgstr "Kromatika уговор о миграцији↗"
+#~ msgid "Metadexa migration contract↗"
+#~ msgstr "Metadexa уговор о миграцији↗"
 
 #: 
-#~ msgid "Kromatika on {0}"
+#~ msgid "Metadexa on {0}"
 #~ msgstr "Унисвап на {0}"
 
 #: src/components/Menu/index.tsx
@@ -1330,8 +1330,8 @@ msgstr "Пребаците ликвидност на V3"
 #~ msgstr "Миграција V2 ликвидности"
 
 #: 
-#~ msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
-#~ msgstr "Пребаците своје токене ликвидности са Kromatika V2 на Kromatika V3."
+#~ msgid "Migrate your liquidity tokens from Metadexa V2 to Metadexa V3."
+#~ msgstr "Пребаците своје токене ликвидности са Metadexa V2 на Metadexa V3."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1451,7 +1451,7 @@ msgid "ON"
 msgstr "УКЉ"
 
 #: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA."
+msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN Metadexa."
 msgstr ""
 
 #: 
@@ -1689,8 +1689,8 @@ msgid "Read more about KROM"
 msgstr ""
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Kromatika governance"
-msgstr "Прочитајте више о управљању Kromatika-ом"
+msgid "Read more about Metadexa governance"
+msgstr "Прочитајте више о управљању Metadexa-ом"
 
 #: 
 #~ msgid "Read more about UNI"
@@ -1963,16 +1963,16 @@ msgid "Target price"
 msgstr ""
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Kromatika community <0/>"
-msgstr "Хвала вам што сте део заједнице Kromatika <0/>"
+msgid "Thanks for being part of the Metadexa community <0/>"
+msgstr "Хвала вам што сте део заједнице Metadexa <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "% Који ћете зарадити на накнадама."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Kromatika непроменљива x*y=k није испоштована разменом. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
+msgid "The Metadexa invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Metadexa непроменљива x*y=k није испоштована разменом. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2001,11 +2001,11 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном."
 
 #: 
-#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Metadexa V3."
 #~ msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Metadexa."
 msgstr ""
 
 #: src/hooks/useMarketCallback.tsx
@@ -2070,11 +2070,11 @@ msgstr "Овај токен се не појављује на листи акт�
 #~ msgstr "Овај алат ће безбедно пребацити вашу {0} ликвидност на V3. Процес је потпуно неповерљив захваљујући"
 
 #: 
-#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Metadexa V3."
 #~ msgstr "Ова трансакција неће успети због кретања цена. Покушајте да повећате толеранцију на клизање. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Metadexa."
 msgstr ""
 
 #: src/hooks/useMarketCallback.tsx
@@ -2247,8 +2247,8 @@ msgid "UNI price:"
 msgstr "UNI цена:"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI токени представљају акције са правом гласа у управљању Kromatika-ом. Можете сами гласати за сваки предлог или пренети своје гласове трећој страни."
+msgid "UNI tokens represent voting shares in Metadexa governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "UNI токени представљају акције са правом гласа у управљању Metadexa-ом. Можете сами гласати за сваки предлог или пренети своје гласове трећој страни."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -2302,12 +2302,12 @@ msgid "Unknown Source"
 msgstr "Непознат извор"
 
 #: 
-#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Metadexa V3."
 #~ msgstr "Непозната грешка{0}. Покушајте повећати толеранцију клизања. Напомена: накнада за токене за пренос и поновну надоградњу није компатибилна са Унисвап В3."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Metadexa."
 msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
@@ -2379,7 +2379,7 @@ msgid "Update list"
 msgstr "Ажурирај листу"
 
 #: 
-#~ msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
+#~ msgid "Use the Metadexa Labs API to get better pricing through a more efficient route."
 #~ msgstr "Користите Унисвап Лабс АПИ да бисте добили боље цене путем ефикасније руте."
 
 #: src/components/claim/ClaimModal.tsx
@@ -2603,8 +2603,8 @@ msgstr "Погрешна мрежа"
 #~ msgstr "Стварате фонд"
 
 #: 
-#~ msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
-#~ msgstr "Ви сте први пружалац ликвидности за овај Kromatika V3 фонд. Ваша ликвидност ће се мигрирати по тренутној цени {0}."
+#~ msgid "You are the first liquidity provider for this Metadexa V3 pool. Your liquidity will migrate at the current {0} price."
+#~ msgstr "Ви сте први пружалац ликвидности за овај Metadexa V3 фонд. Ваша ликвидност ће се мигрирати по тренутној цени {0}."
 
 #: 
 #~ msgid "You are the first liquidity provider."
@@ -2648,15 +2648,15 @@ msgstr "Можда сте изгубили мрежну везу."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
-msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
+msgid "You must give the Metadexa Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr ""
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
-msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Морате да дате дозволу Kromatika паметним уговорима да бисте користили {0}. То морате учинити само једном по токену."
+msgid "You must give the Metadexa smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Морате да дате дозволу Metadexa паметним уговорима да бисте користили {0}. То морате учинити само једном по токену."
 
 #: 
 #~ msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
@@ -2668,8 +2668,8 @@ msgid "You save:"
 msgstr ""
 
 #: 
-#~ msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-#~ msgstr "Ликвидност треба да депонујете у Kromatika V3 само по цени за коју сматрате да је тачна. <0/> Ако се цена чини нетачном, можете извршити замену да бисте преместили цену или сачекајте да то учини неко други."
+#~ msgid "You should only deposit liquidity into Metadexa V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+#~ msgstr "Ликвидност треба да депонујете у Metadexa V3 само по цени за коју сматрате да је тачна. <0/> Ако се цена чини нетачном, можете извршити замену да бисте преместили цену или сачекајте да то учини неко други."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

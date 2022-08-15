@@ -10,8 +10,8 @@ import qs from 'qs'
 
 import { GetValidatorGaslessQuoteResult, GetValidatorQuoteResult } from './types'
 
-export const routingApiKromatika = createApi({
-  reducerPath: 'routingApiKromatika',
+export const routingApiMetadexa = createApi({
+  reducerPath: 'routingApiMetadexa',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://api.metadexa.io/v1.0' }),
   endpoints: (build) => ({
     getQuote: build.query<
@@ -67,5 +67,5 @@ export const routingApiKromatika = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = routingApiKromatika
-export const { useGetGaslessQuoteQuery } = routingApiKromatika
+export const { useGetQuoteQuery } = routingApiMetadexa
+export const { useGetGaslessQuoteQuery } = routingApiMetadexa

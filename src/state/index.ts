@@ -17,7 +17,7 @@ import { routingApiInch } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
-import { routingApiKromatika } from './validator/slice'
+import { routingApiMetadexa } from './validator/slice'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -37,13 +37,13 @@ const store = configureStore({
     logs,
     [dataApi.reducerPath]: dataApi.reducer,
     [routingApiInch.reducerPath]: routingApiInch.reducer,
-    [routingApiKromatika.reducerPath]: routingApiKromatika.reducer,
+    [routingApiMetadexa.reducerPath]: routingApiMetadexa.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
       .concat(dataApi.middleware)
       .concat(routingApiInch.middleware)
-      .concat(routingApiKromatika.middleware)
+      .concat(routingApiMetadexa.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),
 })

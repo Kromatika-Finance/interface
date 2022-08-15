@@ -7,8 +7,8 @@ import { useCallback, useMemo } from 'react'
 import { SwapTransaction } from 'state/validator/types'
 
 import {
-  KROMATIKA_METASWAP_ADDRESSES,
-  LIMIT_ORDER_MANAGER_ADDRESSES,
+  LO_MANAGER_ADDRESSES,
+  METASWAP_ADDRESSES,
   SWAP_ROUTER_ADDRESSES,
   V2_ROUTER_ADDRESS,
 } from '../constants/addresses'
@@ -114,7 +114,7 @@ export function useApproveCallbackFromTrade(
   swapTransaction: SwapTransaction | undefined
 ) {
   const { chainId } = useActiveWeb3React()
-  const v3SwapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
+  const v3SwapRouterAddress = chainId ? LO_MANAGER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? (allowedSlippage ? trade.maximumAmountIn(allowedSlippage) : trade.inputAmount) : undefined),
     [allowedSlippage, trade]

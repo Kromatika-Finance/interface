@@ -5,7 +5,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 
-import { KROMATIKA_ROUTER_ADDRESSES, LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
+import { LO_MANAGER_ADDRESSES, ROUTER_ADDRESSES } from '../constants/addresses'
 import { DAI, UNI, USDC } from '../constants/tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useEIP2612Contract } from './useContract'
@@ -277,7 +277,7 @@ export function useERC20PermitFromTrade(
   skipPermit: boolean
 ) {
   const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
+  const swapRouterAddress = chainId ? LO_MANAGER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? (allowedSlippage ? trade.maximumAmountIn(allowedSlippage) : trade.inputAmount) : undefined),
     [allowedSlippage, trade]
@@ -293,7 +293,7 @@ export function useERC20PermitFromTrade(
 
 export function useERC20PermitFromRouter(amountToApprove: CurrencyAmount<Currency> | null | undefined) {
   const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = chainId ? KROMATIKA_ROUTER_ADDRESSES[chainId] : undefined
+  const swapRouterAddress = chainId ? ROUTER_ADDRESSES[chainId] : undefined
 
   return useERC20Permit(amountToApprove, swapRouterAddress, null)
 }

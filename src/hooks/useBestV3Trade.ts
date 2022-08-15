@@ -10,7 +10,7 @@ import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
 
 import { useClientSideV3Trade } from './useClientSideV3Trade'
-import { useKromatikaMetaswap } from './useContract'
+import { useMetaswap } from './useContract'
 import useDebounce from './useDebounce'
 import { SignatureData } from './useERC20Permit'
 import useIsWindowVisible from './useIsWindowVisible'
@@ -35,11 +35,11 @@ export function useBestMarketTrade(
   const isWindowVisible = useIsWindowVisible()
   const { chainId } = useActiveWeb3React()
   const debouncedAmount = useDebounce(amountSpecified, 100)
-  const kromatikaMetaswap = useKromatikaMetaswap()
+  const metaswap = useMetaswap()
 
   // parse signature data
   let signaturePermitData
-  if (signatureData && kromatikaMetaswap && debouncedAmount) {
+  if (signatureData && metaswap && debouncedAmount) {
     // create call data
     const inputTokenPermit =
       'allowed' in signatureData
@@ -58,7 +58,7 @@ export function useBestMarketTrade(
             v: signatureData.v as any,
           }
     if ('nonce' in inputTokenPermit) {
-      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
+      signaturePermitData = metaswap.interface.encodeFunctionData('selfPermitAllowed', [
         debouncedAmount.currency.isToken ? debouncedAmount.currency.address : undefined,
         inputTokenPermit.nonce,
         inputTokenPermit.expiry,
@@ -67,7 +67,7 @@ export function useBestMarketTrade(
         inputTokenPermit.s,
       ])
     } else {
-      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
+      signaturePermitData = metaswap.interface.encodeFunctionData('selfPermit', [
         debouncedAmount.currency.isToken ? debouncedAmount.currency.address : undefined,
         inputTokenPermit.amount,
         inputTokenPermit.deadline,

@@ -19,7 +19,7 @@
   ],
   "orientation": "portrait",
   "name": "Metadexa",
-  "description": "Swap and limit order MetaDEX Aggregator",
+  "description": "Swap aMetaDEX Aggregator",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
   "short_name": "Metadexa",
   "start_url": ".",
