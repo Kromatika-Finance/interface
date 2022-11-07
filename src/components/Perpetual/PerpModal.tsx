@@ -36,7 +36,6 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
   }
 
   const [checked, setChecked] = useState(false)
-
   const handleChange = () => {
     setChecked(!checked)
   }
