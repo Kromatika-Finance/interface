@@ -1,10 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { ConnectionInfo, fetchJson, poll } from '@ethersproject/web'
+import { poll } from '@ethersproject/web'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
-import DowntimeWarning from 'components/DowntimeWarning'
 import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
@@ -34,7 +33,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/v3/actions'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useIsGaslessMode } from '../../state/user/hooks'
+import { useIsGaslessMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -315,7 +314,7 @@ export default function AddLiquidity({
 
   const Buttons = () =>
     !account ? (
-      <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+      <ButtonLight onClick={toggleWalletModal} $borderRadius="20px" padding={'12px'}>
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
@@ -343,7 +342,7 @@ export default function AddLiquidity({
           disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={400}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )

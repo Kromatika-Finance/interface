@@ -1,7 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
-import { Trans } from '@lingui/macro'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { t, Trans } from '@lingui/macro'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
@@ -13,7 +11,6 @@ import styled, { css } from 'styled-components/macro'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink } from '../../theme'
@@ -24,24 +21,30 @@ export enum FlyoutAlignment {
 }
 
 const StyledMenuIcon = styled(MenuIcon)`
+  height: 24px;
+  width: 24px;
+
   path {
-    stroke: ${({ theme }) => theme.text1};
+    fill: ${({ theme }) => theme.text2};
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    height: 16px;
+    width: 16px;
+  `}
 `
 
 const StyledMenuButton = styled.button`
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.bg1};
+  border-radius: 20px;
+  height: 60px;
+  width: 60px;
   margin: 0;
-  padding: 0;
-  height: 38px;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg0};
-
   padding: 0.15rem 0.5rem;
-  border-radius: 12px;
 
   :hover,
   :focus {
@@ -50,9 +53,13 @@ const StyledMenuButton = styled.button`
     border: 1px solid ${({ theme }) => theme.bg3};
   }
 
-  svg {
-    margin-top: 2px;
-  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    height: 3rem;
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    height: 2rem;
+  `}
 `
 
 const StyledMenu = styled.div`
@@ -71,14 +78,14 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.bg0};
-  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.bg1};
+  border-radius: 20px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   position: absolute;
-  top: 3rem;
+  top: 70px;
   z-index: 100;
 
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
@@ -104,6 +111,7 @@ const MenuItem = styled(ExternalLink)`
   padding: 0.5rem 0.5rem;
   justify-content: space-between;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
@@ -115,11 +123,13 @@ const InternalMenuItem = styled(Link)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
   }
+
   > svg {
     margin-right: 8px;
   }
@@ -132,6 +142,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   padding: 0.5rem 0.5rem;
   justify-content: space-between;
   text-decoration: none;
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
@@ -142,7 +153,6 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
 const ToggleMenuItem = styled.button`
   background-color: transparent;
   margin: 0;
-  padding: 0;
   border: none;
   display: flex;
   flex: 1;
@@ -153,6 +163,7 @@ const ToggleMenuItem = styled.button`
   font-size: 1rem;
   font-weight: 500;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
@@ -191,16 +202,11 @@ function LanguageMenu({ close }: { close: () => void }) {
 }
 
 export default function Menu() {
-  const { account, chainId } = useActiveWeb3React()
-
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
 
   useEffect(() => {

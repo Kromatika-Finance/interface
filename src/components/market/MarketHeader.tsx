@@ -1,5 +1,4 @@
-import { Trans } from '@lingui/macro'
-import { Box, FormControlLabel, Switch } from '@material-ui/core'
+import { Box, Switch } from '@material-ui/core'
 import { Percent } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 

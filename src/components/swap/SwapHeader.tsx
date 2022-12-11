@@ -1,15 +1,9 @@
-import { ChakraProvider, Flex, FormControl, FormLabel, SimpleGrid } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
-import { Box, FormControlLabel, Switch } from '@material-ui/core'
-import { Percent } from '@uniswap/sdk-core'
-import { useContext, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Box, Switch } from '@material-ui/core'
 import styled from 'styled-components/macro'
 
 import { useExpertModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { RowBetween, RowFixed } from '../Row'
-import Toggle from '../Toggle'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
@@ -44,6 +38,7 @@ export default function SwapHeader() {
     </StyledSwapHeader>
   )
 }
+
 function handleSwitch(checked: any) {
   throw new Error('Function not implemented.')
 }

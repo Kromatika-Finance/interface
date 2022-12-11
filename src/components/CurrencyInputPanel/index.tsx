@@ -5,7 +5,7 @@ import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import TradePrice from 'components/swap/TradePrice'
 import { darken } from 'polished'
-import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react'
+import { Fragment, ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -74,11 +74,10 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg0 : theme.primary1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 16px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -142,7 +141,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
   border: none;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;

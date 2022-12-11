@@ -16,6 +16,7 @@ const ActiveRowLinkList = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 8px;
+
   & > a {
     align-items: center;
     color: ${({ theme }) => theme.text2};
@@ -27,6 +28,7 @@ const ActiveRowLinkList = styled.div`
     padding: 8px 0 4px;
     text-decoration: none;
   }
+
   & > a:first-child {
     border-top: 1px solid ${({ theme }) => theme.text2};
     margin: 0;
@@ -57,14 +59,16 @@ const FlyoutMenu = styled.div`
   overflow: auto;
   padding: 16px;
   position: absolute;
-  top: 64px;
+  top: 100px;
   width: 272px;
   z-index: 99;
+
   & > *:not(:last-child) {
     margin-bottom: 12px;
   }
+
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    top: 50px;
+    top: 70px;
   }
 `
 const FlyoutRow = styled.div<{ active: boolean }>`
@@ -95,11 +99,25 @@ const Logo = styled.img`
   width: 20px;
   margin-right: 8px;
 `
-const NetworkLabel = styled.div`
+const NetworkLabel = styled.div<{ bold?: boolean }>`
   flex: 1 1 auto;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-style: normal;
+  font-weight: ${({ bold }) => (bold ? 700 : 400)};
+  font-size: 20px;
+  line-height: 23px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 14px;
+    line-height: 16px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 10px;
+    line-height: 12px;
+  `}
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;
@@ -112,13 +130,30 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
   border: 2px solid ${({ theme }) => theme.bg1};
-  border-radius: 12px;
+  border-radius: 20px;
   color: ${({ theme }) => theme.text1};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
-  padding: 6px 8px;
+  height: 60px;
+  padding: 16px 32px;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    height: 3rem;
+    padding: 12px 32px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    height: 2rem;
+    padding: 8px 16px;
+  `}
 `
 const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
   margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
@@ -245,7 +280,7 @@ export default function NetworkSelector() {
 
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={toggle} interactive>
+      <SelectorControls onClick={toggle} interactive tabIndex={0}>
         <SelectorLogo interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />

@@ -1,4 +1,3 @@
-import { Checkbox, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import PositionListItem from 'components/PositionListItem'

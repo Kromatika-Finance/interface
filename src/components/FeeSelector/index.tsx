@@ -75,7 +75,7 @@ function FeeTierPercentageBadge({
 }) {
   return (
     <Badge>
-      <TYPE.label fontSize={12}></TYPE.label>
+      <TYPE.label fontSize={[10, 14, 20]}></TYPE.label>
     </Badge>
   )
 }

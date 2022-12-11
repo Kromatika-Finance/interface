@@ -46,7 +46,7 @@ export default memo(function SwapRoute({
           </LoadingRows>
         ) : (
           <Badge>
-            <TYPE.black fontSize={12}>
+            <TYPE.black fontSize={[10, 14, 20]}>
               {getTradeVersion(trade) === Version.v2 ? <Trans>Smart Route</Trans> : <Trans>Smart Route</Trans>}
             </TYPE.black>
           </Badge>

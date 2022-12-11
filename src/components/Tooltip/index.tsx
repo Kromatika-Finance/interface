@@ -10,8 +10,8 @@ export const TooltipContainer = styled.div`
   font-weight: 400;
   word-break: break-word;
 
-  background: ${({ theme }) => theme.bg0};
-  border-radius: 12px;
+  background: ${({ theme }) => theme.bg1};
+  border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.bg2};
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `

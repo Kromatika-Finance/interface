@@ -136,6 +136,7 @@ const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   margin-left: 1rem;
   font-size: 0.825rem;
   display: flex;
+
   :hover {
     color: ${({ theme }) => theme.text2};
   }
@@ -145,6 +146,7 @@ const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
   top: 14px;
+
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -169,11 +171,13 @@ const IconWrapper = styled.div<{ size?: number }>`
   align-items: center;
   justify-content: center;
   margin-right: 8px;
+
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
   }
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;
   `};
@@ -184,11 +188,13 @@ const TransactionListWrapper = styled.div`
 `
 
 const WalletAction = styled(ButtonSecondary)`
+  height: auto;
   width: fit-content;
   font-weight: 400;
   margin-left: 8px;
   font-size: 0.825rem;
-  padding: 4px 6px;
+  padding: 6px 12px;
+
   :hover {
     cursor: pointer;
     text-decoration: underline;

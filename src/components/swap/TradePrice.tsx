@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
-import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useCallback, useContext, useEffect } from 'react'
+import { Currency, Price } from '@uniswap/sdk-core'
+import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useCallback, useContext } from 'react'
 import { Text } from 'rebass'
-import { tryParseAmount } from 'state/swap/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { TYPE } from 'theme'
 
@@ -45,7 +44,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <StyledPriceContainer onClick={flipPrice} title={text}>
-      <Text fontWeight={500} fontSize={14} color={theme.text1}>
+      <Text fontWeight={500} fontSize={[10, 14, 20]} color={theme.text1}>
         {text}
       </Text>{' '}
       {usdcPrice && (

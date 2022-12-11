@@ -32,7 +32,7 @@ const StatContainer = styled.div`
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
-  border-radius: 12px;
+  border-radius: 20px;
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -164,13 +164,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <>
           <Break />
           <BottomSection showBackground={true}>
-            <TYPE.black color={'white'} fontWeight={500}>
+            <TYPE.black color={'white'} fontWeight={400}>
               <span>
                 <Trans>Your rate</Trans>
               </span>
             </TYPE.black>
 
-            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={400}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>

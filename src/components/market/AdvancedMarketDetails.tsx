@@ -10,7 +10,6 @@ import { TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import FormattedPriceImpact from '../swap/FormattedPriceImpact'
 import { TransactionDetailsLabel } from './styleds'
 
 interface AdvancedMarketDetailsProps {
@@ -51,7 +50,7 @@ export function AdvancedMarketDetails({ trade, allowedSlippage, syncing = false 
 
   return !trade ? null : (
     <AutoColumn gap="8px">
-      <TransactionDetailsLabel fontWeight={500} fontSize={14}>
+      <TransactionDetailsLabel fontWeight={400} fontSize={[10, 14, 20]}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>
 
@@ -62,7 +61,7 @@ export function AdvancedMarketDetails({ trade, allowedSlippage, syncing = false 
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={45}>
-          <TYPE.black textAlign="right" fontSize={14}>
+          <TYPE.black textAlign="right" fontSize={[10, 14, 20]}>
             {allowedSlippage.toFixed(2)}%
           </TYPE.black>
         </TextWithLoadingPlaceholder>
@@ -75,7 +74,7 @@ export function AdvancedMarketDetails({ trade, allowedSlippage, syncing = false 
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          <TYPE.black textAlign="right" fontSize={14}>
+          <TYPE.black textAlign="right" fontSize={[10, 14, 20]}>
             {trade.tradeType === TradeType.EXACT_INPUT
               ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}

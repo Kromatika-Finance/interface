@@ -1,7 +1,5 @@
-import { Currency, CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import JSBI from 'jsbi'
 import { v2StylePool } from 'state/routing/utils'
 
 import { GetQuote0xResult } from './types'

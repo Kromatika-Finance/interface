@@ -1,18 +1,15 @@
-import { formatEther, formatUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import { useNetworkGasPrice } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
-import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import FormattedPriceImpact from './FormattedPriceImpact'
 import { TransactionDetailsLabel } from './styleds'
 
 interface AdvancedSwapDetailsProps {
@@ -54,7 +51,7 @@ export function AdvancedSwapDetails({
 
   return trade && priceAmount ? (
     <AutoColumn gap="8px">
-      <TransactionDetailsLabel fontWeight={500} fontSize={14}>
+      <TransactionDetailsLabel fontWeight={400} fontSize={[10, 14, 20]}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>
       <RowBetween>
@@ -64,7 +61,7 @@ export function AdvancedSwapDetails({
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-          <TYPE.black textAlign="right" fontSize={14}>
+          <TYPE.black textAlign="right" fontSize={[10, 14, 20]}>
             {serviceFee ? `${serviceFee.toSignificant(8)} ${serviceFee.currency.symbol}` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
@@ -77,7 +74,7 @@ export function AdvancedSwapDetails({
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          <TYPE.black textAlign="right" fontSize={14}>
+          <TYPE.black textAlign="right" fontSize={[10, 14, 20]}>
             {outputAmount?.toSignificant(6)} {outputAmount?.currency.symbol}
           </TYPE.black>
         </TextWithLoadingPlaceholder>

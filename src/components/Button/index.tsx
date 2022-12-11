@@ -16,20 +16,20 @@ export const BaseButton = styled(RebassButton)<
     altDisabledStyle?: boolean
   } & ButtonProps
 >`
-  padding: ${({ padding }) => padding ?? '16px'};
-  width: ${({ width }) => width ?? '100%'};
-  font-weight: 500;
-  text-align: center;
+  height: 60px;
+  padding: ${({ padding }) => padding ?? '16px 48px'};
   border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
+  width: ${({ width }) => width ?? '100%'};
   outline: none;
   border: 1px solid transparent;
   color: white;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: nowrap;
-  align-items: center;
   cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
   position: relative;
   z-index: 1;
   &:disabled {
@@ -40,14 +40,24 @@ export const BaseButton = styled(RebassButton)<
   will-change: transform;
   transition: transform 450ms ease;
   transform: perspective(1px) translateZ(0);
-
   > * {
     user-select: none;
   }
-
   > a {
     text-decoration: none;
   }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 14px;
+    line-height: 16px;
+    height: 3rem;
+    padding: 12px 32px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 10px;
+    line-height: 12px;
+    height: 2rem;
+    padding: 8px 16px;
+  `}
 `
 
 export const ButtonPrimary = styled(BaseButton)`
@@ -122,9 +132,6 @@ export const ButtonSecondary = styled(BaseButton)`
   border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   background-color: transparent;
-  font-size: 16px;
-  border-radius: 12px;
-  padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
@@ -181,6 +188,49 @@ export const ButtonYellow = styled(BaseButton)`
   }
   &:disabled {
     background-color: ${({ theme }) => theme.yellow3};
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
+export const ButtonBlue = styled(BaseButton)`
+  background-color: ${({ theme }) => theme.secondary1};
+  color: white;
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.secondary1)};
+    background-color: ${({ theme }) => darken(0.05, theme.secondary1)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.secondary1)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.secondary1)};
+    background-color: ${({ theme }) => darken(0.1, theme.secondary1)};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.secondary1};
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
+export const ButtonBlock = styled(BaseButton)`
+  background-color: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.text2};
+  width: 100%;
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.bg2)};
+    background-color: ${({ theme }) => darken(0.05, theme.bg2)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.bg2)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.bg2)};
+    background-color: ${({ theme }) => darken(0.1, theme.bg2)};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.bg2};
     opacity: 50%;
     cursor: auto;
   }
@@ -243,7 +293,7 @@ const ButtonConfirmedStyle = styled(BaseButton)`
   }
 `
 
-const ButtonErrorStyle = styled(BaseButton)`
+export const ButtonErrorStyle = styled(BaseButton)`
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red1};
 
@@ -341,13 +391,13 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
 
   if (!active) {
     return (
-      <ButtonOutlined $borderRadius="12px" padding="12px 8px" {...rest}>
+      <ButtonOutlined padding="12px 8px" {...rest}>
         {<RowBetween>{children}</RowBetween>}
       </ButtonOutlined>
     )
   } else {
     return (
-      <ActiveOutlined {...rest} padding="12px 8px" $borderRadius="12px">
+      <ActiveOutlined {...rest} padding="12px 8px">
         {
           <RowBetween>
             {children}

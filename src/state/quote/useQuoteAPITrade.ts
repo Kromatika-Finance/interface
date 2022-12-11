@@ -1,22 +1,16 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Route } from '@uniswap/v2-sdk'
 import { Route as RouteV3, Trade as TradeV3 } from '@uniswap/v3-sdk'
-import { INCH_ROUTER_ADDRESS, V2_ROUTER_ADDRESS } from 'constants/addresses'
-import { SupportedChainId } from 'constants/chains'
 import { ONE_HUNDRED_PERCENT } from 'constants/misc'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { useBlockNumber } from 'state/application/hooks'
 import { CHAIN_0x_URL, useGetSwap0xQuery } from 'state/quote/slice'
 import { SwapTransaction, V3TradeState } from 'state/routing/types'
 import { v2StylePool } from 'state/routing/utils'
 import { useNetworkGasPrice, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-
-import { computeRoutes0x } from './utils'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 

@@ -1,25 +1,22 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
-import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useClientSideRouter, useExpertModeManager, useGaslessModeManager } from '../../state/user/hooks'
+import { useClientSideRouter, useGaslessModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
-import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 
 const StyledMenuIcon = styled(Settings)`
@@ -38,6 +35,7 @@ const StyledMenuIcon = styled(Settings)`
 const StyledCloseIcon = styled(X)`
   height: 20px;
   width: 20px;
+
   :hover {
     cursor: pointer;
   }
@@ -55,7 +53,7 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  border-radius: 0.5rem;
+  border-radius: 20px;
   height: 20px;
 
   :hover,
@@ -87,7 +85,7 @@ const MenuFlyout = styled.span`
   border: 1px solid ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -144,19 +142,19 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
-              <Text fontWeight={500} fontSize={20}>
+              <Text fontWeight={400} fontSize={[10, 14, 20]}>
                 <Trans>Are you sure?</Trans>
               </Text>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={500} fontSize={20}>
+              <Text fontWeight={400} fontSize={[10, 14, 20]}>
                 <Trans>
                   Gasless mode enables users to send blockchain transactions without paying network gas fees.
                 </Trans>
               </Text>
-              <Text fontWeight={600} fontSize={20}>
+              <Text fontWeight={600} fontSize={[10, 14, 20]}>
                 <Trans>ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA.</Trans>
               </Text>
               <ButtonError
@@ -170,7 +168,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   }
                 }}
               >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                <Text fontSize={[10, 14, 20]} fontWeight={500} id="confirm-expert-mode">
                   <Trans>Turn On Gasless Mode</Trans>
                 </Text>
               </ButtonError>
@@ -191,7 +189,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
+            <Text fontWeight={600} fontSize={[10, 14, 20]}>
               <Trans>Transaction Settings</Trans>
             </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />

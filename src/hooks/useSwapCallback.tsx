@@ -1,27 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { BigintIsh, Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { computePoolAddress, encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { toHex } from '@uniswap/v3-sdk'
-import { useTokenComparator } from 'components/SearchModal/sorting'
-import {
-  KROM_TOKEN_ADDRESSES,
-  KROMATIKA_ROUTER_ADDRESSES,
-  LIMIT_ORDER_MANAGER_ADDRESSES,
-  V3_CORE_FACTORY_ADDRESSES,
-} from 'constants/addresses'
+import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { encodeSqrtRatioX96, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
-import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
-import { useSingleCallResult } from 'state/multicall/hooks'
-import {
-  useIsExpertMode,
-  useIsGaslessMode,
-  useUserSlippageToleranceWithDefault,
-  useUserTickSize,
-} from 'state/user/hooks'
+import { useIsGaslessMode, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 import { TransactionType } from '../state/transactions/actions'
@@ -33,8 +19,8 @@ import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import { useKromatikaRouter, useLimitOrderManager, useUniswapUtils } from './useContract'
 import useENS from './useENS'
-import { SignatureData, UseERC20PermitState } from './useERC20Permit'
-import { useGaslessCallback, useGaslessProvider } from './useGaslessCallback'
+import { SignatureData } from './useERC20Permit'
+import { useGaslessCallback } from './useGaslessCallback'
 import { useActiveWeb3React } from './web3'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)

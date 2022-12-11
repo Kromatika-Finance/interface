@@ -1,5 +1,3 @@
-import { Currency, Token } from '@uniswap/sdk-core'
-
 export type OrderInQuote = {
   makerToken: string
   makerAmount: string

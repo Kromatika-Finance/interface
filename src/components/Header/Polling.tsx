@@ -7,9 +7,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
-import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
-import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
@@ -31,16 +29,47 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   padding: 1rem;
   color: ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
   transition: 250ms ease color;
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `}
+
+  a:link {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 23px;
+    text-align: right;
+    text-decoration: none;
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+      font-size: 14px;
+    `}
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      font-size: 10px;
+    `}
+  }
+  :hover > a {
+    text-decoration: none;
+  }
 `
 const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boolean }>`
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {
     opacity: 1;
+  }
+  a {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 23px;
+    text-align: right;
+    color: ${({ theme }) => theme.secondary1};
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+      font-size: 14px;
+    `}
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      font-size: 10px;
+    `}
   }
 `
 const StyledPollingDot = styled.div<{ warning: boolean }>`
@@ -63,6 +92,22 @@ const StyledGasDot = styled.div`
   position: relative;
   transition: 250ms ease background-color;
   width: 4px;
+`
+
+const StyledPollingText = styled(TYPE.mediumHeader)`
+  font-style: normal;
+  line-height: 23px;
+  text-align: right;
+  margin-right: 8px;
+  color: ${({ theme }) => theme.text3};
+  padding-bottom: 2px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  div {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 `
 
 const rotate360 = keyframes`
@@ -137,19 +182,19 @@ export default function Polling() {
       >
         {chainId === 1 ? (
           <ExternalLink href={'https://app.uniswap.org/#/pool/154097?chain=mainnet'}>
-            <RowFixed style={{ marginRight: '8px' }}>
-              <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+            <RowFixed style={{ marginRight: '8px', gap: '8px' }}>
+              <StyledPollingText>
                 <span>🔥</span>
                 {feeValue0?.toFixed(0, { groupSeparator: ',' })} KROM
-              </TYPE.main>
+              </StyledPollingText>
               <StyledGasDot />
             </RowFixed>
           </ExternalLink>
         ) : null}
         <ExternalLink href={'https://etherscan.io/gastracker'}>
           {priceGwei ? (
-            <RowFixed style={{ marginRight: '8px' }}>
-              <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+            <RowFixed style={{ marginRight: '8px', gap: '8px' }}>
+              <StyledPollingText>
                 <MouseoverTooltip
                   text={
                     <Trans>
@@ -160,7 +205,7 @@ export default function Polling() {
                 >
                   {priceGwei.toSignificant(2)} <Trans>gwei</Trans>
                 </MouseoverTooltip>
-              </TYPE.main>
+              </StyledPollingText>
               <StyledGasDot />
             </RowFixed>
           ) : null}

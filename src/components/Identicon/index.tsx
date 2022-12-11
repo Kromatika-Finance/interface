@@ -4,6 +4,7 @@ import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
 
 const StyledIdenticonContainer = styled.div`
+  margin: 0 8px;
   height: 1rem;
   width: 1rem;
   border-radius: 1.125rem;

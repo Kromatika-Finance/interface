@@ -1,7 +1,7 @@
 import { Biconomy } from '@biconomy/mexa'
 import { Web3Provider } from '@ethersproject/providers'
-import { useEffect, useMemo, useState } from 'react'
-import { useIsExpertMode, useIsGaslessMode } from 'state/user/hooks'
+import { useEffect, useState } from 'react'
+import { useIsGaslessMode } from 'state/user/hooks'
 
 import { useActiveWeb3React } from './web3'
 

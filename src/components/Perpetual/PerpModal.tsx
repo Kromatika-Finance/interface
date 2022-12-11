@@ -1,29 +1,30 @@
 import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { Checkbox, PaddedColumn, TextDot } from 'components/SearchModal/styleds'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE } from '../../theme'
-import { Break, CardSection, DataCard } from '../earn/styled'
+import { CloseIcon, ExternalLink, TYPE } from '../../theme'
+import { CardSection } from '../earn/styled'
 import Modal from '../Modal'
-import { RowBetween } from '../Row'
+import { AutoRow, RowBetween } from '../Row'
+
+const ContentWrapper = styled(AutoColumn)`
+  width: 100%;
+`
+
+const PerpText = styled(TYPE.body)`
+  color: ${({ theme }) => theme.primaryText1};
+`
+
+export const StyledInput = styled.input`
+  cursor: pointer;
+`
 
 export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   function wrappedOnDismiss() {
     onDismiss()
   }
-
-  const ModalUpper: any = styled(DataCard)`
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
-  `
-
-  const ContentWrapper = styled(AutoColumn)`
-    width: 100%;
-  `
 
   const PerpRedirectionHandler = () => {
     // Check if checkbox is ticked
@@ -31,6 +32,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
       // We need to write into localStorage the date of the checkbox checking event
       localStorage.setItem('KromTOUTicked', Date.now().toString())
     }
+    onDismiss()
     // External redirection
     window.open('https://perp.kromatika.finance/', '_blank')
   }
@@ -43,19 +45,16 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       <ContentWrapper gap="lg">
-        <ModalUpper>
-          <CardSection gap="md">
-            <RowBetween>
-              <TYPE.white fontWeight={500}>
-                <Trans>Launch Perpetual Trading</Trans>
-              </TYPE.white>
-              <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
-            </RowBetween>
-          </CardSection>
-        </ModalUpper>
-
+        <CardSection gap="md">
+          <RowBetween>
+            <TYPE.subHeader>
+              <Trans>Launch Perpetual Trading</Trans>
+            </TYPE.subHeader>
+            <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
+          </RowBetween>
+        </CardSection>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-          <TYPE.white fontWeight={500}>
+          <PerpText>
             <Trans>
               You are leaving Kromatika.Finance and will be redirected to an independent third-party website.
             </Trans>
@@ -68,12 +67,14 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
               Some countries may not be allowed to use perpetual trading - see the details under section 2 within our
               terms of use.
             </Trans>
-          </TYPE.white>
+          </PerpText>
         </AutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-          <TYPE.subHeader fontWeight={500}>
-            <input type="checkbox" checked={checked} onChange={handleChange} />
-            Don&apos;t show this message again for the next 30 days.
+          <TYPE.body>
+            <AutoRow>
+              <StyledInput type="checkbox" checked={checked} onChange={handleChange} />
+              Don&apos;t show this message again for the next 30 days.
+            </AutoRow>
             <Trans>
               <br />
               <br />
@@ -84,15 +85,13 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
               by Kromatika.Finance
               <br />
               <br />
-              {/* <ExternalLink href="">Read our Terms and Conditions</ExternalLink> */}
             </Trans>
-          </TYPE.subHeader>
+          </TYPE.body>
 
           <ButtonPrimary
-            // disabled={!isAddress(account ?? '')}
             padding="16px 16px"
             width="100%"
-            $borderRadius="12px"
+            $borderRadius="20px"
             mt="1rem"
             onClick={() => PerpRedirectionHandler()}
           >

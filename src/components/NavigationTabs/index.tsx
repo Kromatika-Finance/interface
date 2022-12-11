@@ -13,7 +13,6 @@ import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
 import Row, { RowBetween } from '../Row'
-import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -39,7 +38,7 @@ const StyledNavLink = styled(NavLink).attrs({
   font-size: 20px;
 
   &.${activeClassName} {
-    border-radius: 12px;
+    border-radius: 20px;
     font-weight: 500;
     color: ${({ theme }) => theme.text1};
   }
@@ -74,6 +73,7 @@ export function SwapPoolTabs({ active }: { active: 'limitorder' | 'pool' }) {
       <StyledNavLink id={`swap-nav-link`} to={'/#/limitorder'} isActive={() => active === 'limitorder'}>
         <Trans>Swap</Trans>
       </StyledNavLink>
+
       <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
         <Trans>Pool</Trans>
       </StyledNavLink>
@@ -115,10 +115,10 @@ export function AddRemoveTabs({
   const dispatch = useAppDispatch()
   const location = useLocation()
 
-  // detect if back should redirect to v3 or v2 pool page
-  const poolLink = location.pathname.includes('add/v2')
-    ? '/pool/v2'
-    : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
+  // detect if back should redirect to v3 or v2 limitorder page
+  const limitorderLink = location.pathname.includes('add/v2')
+    ? '/limitorder/v2'
+    : '/limitorder' + (!!positionID ? `/${positionID.toString()}` : '')
 
   const remove = location.pathname.includes('/remove')
 
@@ -126,7 +126,7 @@ export function AddRemoveTabs({
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <StyledHistoryLink
-          to={poolLink}
+          to={limitorderLink}
           onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
@@ -139,7 +139,7 @@ export function AddRemoveTabs({
           <StyledArrowLeft stroke={theme.text2} />
         </StyledHistoryLink>
         <TYPE.mediumHeader
-          fontWeight={500}
+          fontWeight={400}
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
         >

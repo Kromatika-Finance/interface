@@ -32,7 +32,7 @@ const Arrow = styled.div`
     content: '';
     border: 1px solid ${({ theme }) => theme.bg2};
     transform: rotate(45deg);
-    background: ${({ theme }) => theme.bg0};
+    background: ${({ theme }) => theme.bg1};
   }
 
   &.arrow-top {

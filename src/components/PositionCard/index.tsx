@@ -1,55 +1,56 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import Badge, { BadgeVariant } from 'components/Badge'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
-import { formatUnits } from 'ethers/lib/utils'
 import { useNewStakingContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useState } from 'react'
-import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
-import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
+import { HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import { TransactionType } from 'state/transactions/actions'
 import styled from 'styled-components/macro'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import Web3 from 'web3-utils'
 
-import { BIG_INT_ZERO } from '../../constants/misc'
-import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE } from '../../theme'
-import { currencyId } from '../../utils/currencyId'
+import { TYPE } from '../../theme'
 import { unwrappedToken } from '../../utils/unwrappedToken'
-import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonBlock, ButtonErrorStyle } from '../Button'
 import { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { Dots } from '../swap/styleds'
+import { RowBetween, RowFixed } from '../Row'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
-`
-
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
 `
 
 const VoteCard = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
 `
+const AccountStatusWrapper = styled(AutoColumn)`
+  width: 480px;
+  max-width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 90%;
+  `};
+`
+
+const AccountStatusCard = styled(AutoColumn)`
+  background-color: ${({ theme }) => theme.bg1};
+  border: 3px solid ${({ theme }) => theme.bg2};
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 48px;
+`
+
+const DepositRequiredButton = styled(ButtonErrorStyle)``
 
 interface PositionCardProps {
   pair: Pair
@@ -101,7 +102,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
+                <Text fontWeight={400} fontSize={[10, 14, 20]}>
                   <Trans>Your position</Trans>
                 </Text>
               </RowFixed>
@@ -109,32 +110,32 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
                 <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-                <Text fontWeight={500} fontSize={20}>
+                <Text fontWeight={400} fontSize={[10, 14, 20]}>
                   {currency0.symbol}/{currency1.symbol}
                 </Text>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={20}>
+                <Text fontWeight={400} fontSize={[10, 14, 20]}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                 </Text>
               </RowFixed>
             </FixedHeightRow>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
                   <Trans>Your pool share:</Trans>
                 </Text>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
                 </Text>
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
                   {currency0.symbol}:
                 </Text>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={[10, 14, 20]} fontWeight={400} marginLeft={'6px'}>
                       {token0Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -143,12 +144,12 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
                   {currency1.symbol}:
                 </Text>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={[10, 14, 20]} fontWeight={400} marginLeft={'6px'}>
                       {token1Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -177,147 +178,173 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
-  const showMore = true
-  const backgroundColor = useColor(fundingBalance?.currency)
-
   const { chainId } = useActiveWeb3React()
   const kromToken = chainId ? KROM[chainId] : undefined
-
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
 
-  const swapLink = `swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`
-
   return (
-    <VoteCard>
-      <CardBGImage />
-      {/* <CardNoise /> */}
-      <CardSection>
-        <AutoColumn gap="md">
-          <FixedHeightRow>
-            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
-          </FixedHeightRow>
-
-          {showMore && (
-            <AutoColumn gap="8px">
-              <FixedHeightRow>
+    <AccountStatusWrapper gap="10px">
+      <AccountStatusCard>
+        <AutoColumn gap="20px">
+          <AutoColumn gap="5px">
+            <FixedHeightRow>
+              <RowFixed>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
+                  <TYPE.darkGray>
+                    <Trans>Account Status:</Trans>
+                  </TYPE.darkGray>
+                </Text>
+              </RowFixed>
+              <RowFixed>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the
+                      minimum balance.
+                    </Trans>
+                  }
+                >
+                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                </MouseoverTooltip>
+              </RowFixed>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              {isUnderfunded ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={[10, 14, 20]} fontWeight={500}>
+                    <TYPE.error error>KROM deposit required</TYPE.error>
+                  </Text>
+                </RowFixed>
+              ) : (
+                '-'
+              )}
+            </FixedHeightRow>
+            <RowFixed>
+              <DepositRequiredButton as={Link} to={`/add/${kromToken?.address}`}>
+                <Text fontSize={[10, 14, 20]} fontWeight={700}>
+                  <Trans>Deposit</Trans>
+                </Text>
+              </DepositRequiredButton>
+            </RowFixed>
+          </AutoColumn>
+          <AutoColumn>
+            <FixedHeightRow>
+              <RowFixed>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
+                  <TYPE.darkGray>
+                    <Trans>Deposit Balance:</Trans>
+                  </TYPE.darkGray>
+                </Text>
+              </RowFixed>
+              <RowFixed>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Your account is actively processing trades. Recommendation is to deposit at least twice the
+                      minimum minimum balance.
+                    </Trans>
+                  }
+                >
+                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                </MouseoverTooltip>
+              </RowFixed>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              {fundingBalance ? (
+                <RowFixed>
+                  <Text fontSize={[10, 14, 20]} fontWeight={500}>
                     <TYPE.white>
-                      <Trans>Account Status:</Trans>
+                      {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
                     </TYPE.white>
                   </Text>
                 </RowFixed>
-
-                {isUnderfunded ? (
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the
-                        minimum balance.
-                      </Trans>
-                    }
-                  >
-                    <Badge variant={BadgeVariant.NEGATIVE}>
-                      <AlertCircle width={14} height={14} />
-                      &nbsp;
-                      <BadgeText>
-                        <Trans>Underfunded</Trans>
-                      </BadgeText>
-                    </Badge>
-                  </MouseoverTooltip>
-                ) : (
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        Your account is actively processing trades. Recommendation is to deposit at least twice the
-                        minimum balance.
-                      </Trans>
-                    }
-                  >
-                    <Badge variant={BadgeVariant.POSITIVE}>
-                      <AlertCircle width={14} height={14} />
-                      &nbsp;
-                      <BadgeText>
-                        <Trans>Active</Trans>
-                      </BadgeText>
-                    </Badge>
-                  </MouseoverTooltip>
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
+              ) : (
+                '-'
+              )}
+            </FixedHeightRow>
+          </AutoColumn>
+          <AutoColumn>
+            <FixedHeightRow>
+              <RowFixed>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
+                  <TYPE.darkGray>
+                    <Trans>Minimum Balance:</Trans>
+                  </TYPE.darkGray>
+                </Text>
+              </RowFixed>
+              <RowFixed>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is
+                      is to deposit at least twice the minimum balance.
+                    </Trans>
+                  }
+                >
+                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                </MouseoverTooltip>
+              </RowFixed>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              {fundingBalance ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={[10, 14, 20]} fontWeight={500}>
                     <TYPE.white>
-                      <Trans>Deposit Balance:</Trans>
+                      {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                     </TYPE.white>
                   </Text>
                 </RowFixed>
-                {fundingBalance ? (
-                  <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>
-                        {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
-                      </TYPE.white>
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
+              ) : (
+                '-'
+              )}
+            </FixedHeightRow>
+          </AutoColumn>
+          <AutoColumn>
+            <FixedHeightRow>
+              <RowFixed>
+                <Text fontSize={[10, 14, 20]} fontWeight={400}>
+                  <TYPE.darkGray>
+                    <Trans>Total LP Fees Earned:</Trans>
+                  </TYPE.darkGray>
+                </Text>
+              </RowFixed>
+              <RowFixed>
+                <MouseoverTooltip text={<Trans>The total amount of LP fees earned as a liquidity provider</Trans>}>
+                  <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
+                </MouseoverTooltip>
+              </RowFixed>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              {fundingBalance ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
-                    <TYPE.white>
-                      <Trans>Minimum Balance:</Trans>
-                    </TYPE.white>
+                  <Text fontSize={[10, 14, 20]} fontWeight={500}>
+                    <TYPE.purple>
+                      {/* TODO: Show Total Fees Earned */}
+                      {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
+                    </TYPE.purple>
                   </Text>
                 </RowFixed>
-                {minBalance ? (
-                  <RowFixed>
-                    <MouseoverTooltip
-                      text={
-                        <Trans>
-                          You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation
-                          is to deposit at least twice the minimum balance.
-                        </Trans>
-                      }
-                    >
-                      <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                    </MouseoverTooltip>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>
-                        {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
-                      </TYPE.white>
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-
-              <ButtonSecondary padding="8px" $borderRadius="8px">
-                <HistoryLink to={swapLink} style={{ width: '100%', textAlign: 'center' }}>
-                  <Trans>
-                    Get KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
-                  </Trans>
-                </HistoryLink>
-              </ButtonSecondary>
-            </AutoColumn>
-          )}
+              ) : (
+                '-'
+              )}
+            </FixedHeightRow>
+          </AutoColumn>
         </AutoColumn>
-      </CardSection>
-    </VoteCard>
+      </AccountStatusCard>
+      <ButtonBlock as={Link} to={`/add/${kromToken?.address}/remove`}>
+        <Text fontSize={[10, 14, 20]} fontWeight={700}>
+          <Trans>Withdraw KROM</Trans>
+        </Text>
+      </ButtonBlock>
+    </AccountStatusWrapper>
   )
 }
 
 export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
   const stakeManager = useNewStakingContract()
-  const addTransaction = useTransactionAdder()
   const showMore = true
-  const backgroundColor = useColor(fundingBalance?.currency)
 
-  const { account, chainId, library } = useActiveWeb3React()
-  const kromToken = chainId ? KROM[chainId] : undefined
+  const { account } = useActiveWeb3React()
 
   let result = useSingleCallResult(stakeManager, 'getEarnedSKrom', [account?.toString()])
   const earnedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
@@ -327,21 +354,6 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
 
   result = useSingleCallResult(stakeManager, 'supplyInWarmup', [])
   const totalValueLocked = result.result ? Web3.fromWei(result.result.toString()) : ''
-  const amountToStake = 100
-  if (stakeManager && account && library && chainId) {
-    const calldata = stakeManager.interface.encodeFunctionData('stake', [
-      account.toString(),
-      amountToStake,
-      false,
-      false,
-    ])
-
-    const txn = {
-      to: stakeManager.address,
-      data: calldata,
-      value: '0x0',
-    }
-  }
 
   return (
     <VoteCard>
@@ -350,14 +362,14 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
       <CardSection>
         <AutoColumn gap="md">
           <FixedHeightRow>
-            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
+            <RowFixed gap="2px" style={{ marginRight: '10px' }} />
           </FixedHeightRow>
 
           {showMore && (
             <AutoColumn gap="8px">
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={[10, 14, 20]} fontWeight={400}>
                     <TYPE.white>
                       <Trans>Staked Balance:</Trans>
                     </TYPE.white>
@@ -365,7 +377,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                 </RowFixed>
                 {stakedBalance != null ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={[10, 14, 20]} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>{stakedBalance} KROM</TYPE.white>
                     </Text>
                   </RowFixed>
@@ -375,7 +387,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={[10, 14, 20]} fontWeight={400}>
                     <TYPE.white>
                       <Trans>Earned Balance:</Trans>
                     </TYPE.white>
@@ -383,7 +395,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                 </RowFixed>
                 {earnedBalance ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={[10, 14, 20]} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>{earnedBalance} KROM </TYPE.white>
                     </Text>
                   </RowFixed>
@@ -393,7 +405,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={[10, 14, 20]} fontWeight={400}>
                     <TYPE.white>
                       <Trans>APY:</Trans>
                     </TYPE.white>
@@ -406,12 +418,12 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                       </Trans>
                     }
                   >
-                    <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                    <HelpCircle size="24" color={'white'} style={{ marginLeft: '8px' }} />
                   </MouseoverTooltip>
                 </RowFixed>
                 {fundingBalance ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={[10, 14, 20]} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>
                         {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
                       </TYPE.white>
@@ -423,7 +435,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={[10, 14, 20]} fontWeight={400}>
                     <TYPE.white>
                       <Trans>Total Value Locked:</Trans>
                     </TYPE.white>
@@ -431,7 +443,7 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                 </RowFixed>
                 {totalValueLocked != null ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={[10, 14, 20]} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>{totalValueLocked} KROM</TYPE.white>
                     </Text>
                   </RowFixed>
@@ -446,9 +458,11 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
     </VoteCard>
   )
 }
+
 function setCollectMigrationHash(hash: any) {
   throw new Error('Function not implemented.')
 }
+
 function setCollecting(arg0: boolean) {
   throw new Error('Function not implemented.')
 }

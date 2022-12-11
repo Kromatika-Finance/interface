@@ -38,7 +38,7 @@ const Proposal = styled(Button)`
   padding: 0.75rem 1rem;
   width: 100%;
   margin-top: 1rem;
-  border-radius: 12px;
+  border-radius: 20px;
   display: grid;
   grid-template-columns: 48px 1fr 120px;
   align-items: center;
@@ -179,7 +179,7 @@ export default function Vote() {
                   <Trans>Unlock Voting</Trans>
                 </ButtonPrimary>
               ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                <TYPE.body fontWeight={500} mr="6px">
+                <TYPE.body fontWeight={400} mr="6px">
                   <Trans>
                     <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                   </Trans>
@@ -188,7 +188,7 @@ export default function Vote() {
                 userDelegatee &&
                 userDelegatee !== ZERO_ADDRESS &&
                 JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-                <TYPE.body fontWeight={500} mr="6px">
+                <TYPE.body fontWeight={400} mr="6px">
                   <Trans>
                     <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
                   </Trans>
@@ -211,7 +211,7 @@ export default function Vote() {
               <div />
               {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
                 <RowFixed>
-                  <TYPE.body fontWeight={500} mr="4px">
+                  <TYPE.body fontWeight={400} mr="4px">
                     <Trans>Delegated to:</Trans>
                   </TYPE.body>
                   <AddressButton>

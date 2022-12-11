@@ -19,9 +19,9 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
 `
 
 const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
-  border-radius: 12px;
+  border-radius: 20px;
   border: none;
-  background: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.bg1};
   display: flex;
   width: fit-content;
   cursor: pointer;

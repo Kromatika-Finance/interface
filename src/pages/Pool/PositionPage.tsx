@@ -2,51 +2,43 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, KROM, USDC, USDT } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useGaslessCallback, useGaslessProvider } from 'hooks/useGaslessCallback'
+import { useKromatikaRouter, useLimitOrderManager } from 'hooks/useContract'
+import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { Bound } from 'state/mint/v3/actions'
-import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { useIsExpertMode, useIsGaslessMode } from 'state/user/hooks'
+import { useIsGaslessMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
-import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
@@ -84,29 +76,6 @@ const PageWrapper = styled.div`
   `};
 `
 
-const StyledUSD = styled.small`
-  color: gray;
-`
-
-const DesktopHeader = styled.div`
-  display: none;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px;
-
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    align-items: center;
-    display: flex;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    & > div:last-child {
-      text-align: right;
-      margin-right: 12px;
-    }
-  }
-`
-
 const DataLineItem = styled.div`
   font-size: 14px;
 `
@@ -121,7 +90,7 @@ const RangeLineItem = styled(DataLineItem)`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
   background-color: ${({ theme }) => theme.bg2};
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 8px 0;
 `};
 `
@@ -161,16 +130,6 @@ const LinkRow = styled(ExternalLink)`
     flex-direction: column;
     row-gap: 12px;
   `};
-`
-
-const MobileHeader = styled.div`
-  font-weight: medium;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 8px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    display: none;
-  }
 `
 
 const BadgeText = styled.div`
@@ -216,23 +175,6 @@ const ResponsiveRow = styled(RowBetween)`
     row-gap: 16px;
     width: 100%:
   `};
-`
-
-const NFTGrid = styled.div`
-  display: grid;
-  grid-template: 'overlap';
-  min-height: 400px;
-`
-
-const NFTCanvas = styled.canvas`
-  grid-area: overlap;
-`
-
-const NFTImage = styled.img`
-  grid-area: overlap;
-  height: 400px;
-  /* Ensures SVG appears on top of canvas. */
-  z-index: 1;
 `
 
 function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
@@ -329,54 +271,6 @@ function isToken0Stable(token0: Token | undefined): boolean {
 }
 
 // snapshots a src img into a canvas
-function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
-  const context = canvas.getContext('2d')
-
-  if (context) {
-    let { width, height } = src
-
-    // src may be hidden and not have the target dimensions
-    const ratio = width / height
-    height = targetHeight
-    width = Math.round(ratio * targetHeight)
-
-    // Ensure crispness at high DPIs
-    canvas.width = width * devicePixelRatio
-    canvas.height = height * devicePixelRatio
-    canvas.style.width = width + 'px'
-    canvas.style.height = height + 'px'
-    context.scale(devicePixelRatio, devicePixelRatio)
-
-    context.clearRect(0, 0, width, height)
-    context.drawImage(src, 0, 0, width, height)
-  }
-}
-
-const useInverter = ({
-  priceLower,
-  priceUpper,
-  quote,
-  base,
-  invert,
-}: {
-  priceLower?: Price<Token, Token>
-  priceUpper?: Price<Token, Token>
-  quote?: Token
-  base?: Token
-  invert?: boolean
-}): {
-  priceLower?: Price<Token, Token>
-  priceUpper?: Price<Token, Token>
-  quote?: Token
-  base?: Token
-} => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  }
-}
 
 export function PositionPage({
   match: {
@@ -414,7 +308,7 @@ export function PositionPage({
 
   const { transactionHash: processedTxn, event: processedEvent, blockHash: processedBlockNumber } = processedLogs || {}
 
-  const { transactionHash: collectedTxn, event: collectedEvent, blockHash: collectedBlockNumber } = collectedLogs || {}
+  const { event: collectedEvent } = collectedLogs || {}
 
   const removed = liquidity?.eq(0)
 
@@ -427,7 +321,7 @@ export function PositionPage({
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
-  const metadata = usePositionTokenURI(parsedTokenId)
+  usePositionTokenURI(parsedTokenId)
 
   const currency0Wrapped = token0 ? token0 : undefined
   const currency1Wrapped = token1 ? token1 : undefined
@@ -443,11 +337,11 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  useIsTickAtLimit(feeAmount, tickLower, tickUpper)
   const isClosed: boolean = processed ? true : false
 
   // handle manual inversion
-  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
+  const { priceLower, priceUpper, base } = getPriceOrderingFromPositionForUI(position)
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
@@ -498,9 +392,7 @@ export function PositionPage({
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  const currencyAmount = feeValue0?.greaterThan(0) ? feeValue0 : feeValue1
-
-  const orderType = createdEvent?.orderType
+  feeValue0?.greaterThan(0) ? feeValue0 : feeValue1
 
   const serviceFeePaid = processedEvent?.serviceFeePaid
 
@@ -793,8 +685,8 @@ export function PositionPage({
 
   const kromToken = (chainId && KROM[chainId]) || undefined
   const kromPriceUSD = useUSDCPrice(kromToken)
-  const feePaidUSD = Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(5))
-  const collectedAmount0USD = Number(collectedValue0?.toSignificant(6)) * token0USD
+  Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(5))
+  Number(collectedValue0?.toSignificant(6)) * token0USD
   const collectedAmount1USD = Number(collectedValue1?.toSignificant(6)) * token1USD
 
   const targetPriceUSD = inverted
@@ -851,9 +743,9 @@ export function PositionPage({
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
 
-  const limitTrade0USD = inverted
+  inverted
     ? token0USD
       ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD
       : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
@@ -861,7 +753,7 @@ export function PositionPage({
     ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
     : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
 
-  const limitTrade1USD = inverted
+  inverted
     ? currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token1USD
     : currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token0USD
 
@@ -952,7 +844,7 @@ export function PositionPage({
                       disabled={collecting || !!collectMigrationHash}
                       confirmed={!!collectMigrationHash && !isCollectPending}
                       width="fit-content"
-                      style={{ borderRadius: '12px' }}
+                      style={{ borderRadius: '20px' }}
                       padding="4px 8px"
                       onClick={() => setShowConfirm(true)}
                     >
@@ -980,7 +872,7 @@ export function PositionPage({
                       disabled={true}
                       confirmed={!!collectMigrationHash && !isCollectPending}
                       width="fit-content"
-                      style={{ borderRadius: '12px' }}
+                      style={{ borderRadius: '20px' }}
                       padding="4px 8px"
                       onClick={() => setShowConfirm(true)}
                     >
@@ -1003,11 +895,11 @@ export function PositionPage({
                       <Trans>Amounts</Trans>
                     </Label>
                     {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
-                      <TYPE.largeHeader fontSize="36px" fontWeight={500}>
+                      <TYPE.largeHeader fontSize="36px" fontWeight={400}>
                         <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
                       </TYPE.largeHeader>
                     ) : (
-                      <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                      <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={400}>
                         <Trans>$-</Trans>
                       </TYPE.largeHeader>
                     )}

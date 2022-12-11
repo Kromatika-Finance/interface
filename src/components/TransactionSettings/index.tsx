@@ -1,11 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { L2_CHAIN_IDS } from 'constants/chains'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import { useActiveWeb3React } from 'hooks/web3'
 import { darken } from 'polished'
 import { useContext, useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useSetUserSlippageTolerance, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'

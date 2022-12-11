@@ -67,7 +67,7 @@ function colors(darkMode: boolean): Colors {
 
     // backgrounds / greys
     bg0: darkMode ? '#191B1F' : '#FFF',
-    bg1: darkMode ? '#212429' : '#F7F8FA',
+    bg1: darkMode ? '#1E1D20' : '#F7F8FA',
     bg2: darkMode ? '#2C2F36' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
     bg4: darkMode ? '#565A69' : '#888D9B',
@@ -79,17 +79,17 @@ function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#E8006F',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#945DC8' : '#E8006F',
+    primary2: darkMode ? '#9f6dce' : '#FF8CC3',
+    primary3: darkMode ? '#a97dd3' : '#FF99C9',
+    primary4: darkMode ? '#8554b470' : '#F6DDE8',
+    primary5: darkMode ? '#764aa070' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#5090ea' : '#D50066',
+    primaryText1: darkMode ? '#FFFFFF' : '#D50066',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#E8006F',
+    secondary1: darkMode ? '#2D9CDB' : '#2D9CDB',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
@@ -103,13 +103,14 @@ function colors(darkMode: boolean): Colors {
     yellow3: '#F3B71E',
     blue1: darkMode ? '#2172E5' : '#0068FC',
     blue2: darkMode ? '#5199FF' : '#0068FC',
-    error: darkMode ? '#FD4040' : '#DF1F38',
+    purple1: darkMode ? '#945DC8' : '#764aa0',
+    error: darkMode ? '#EB5757' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',
     warning: '#FF8F00',
 
     // dont wanna forget these blue yet
-    blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    blue4: darkMode ? '#764aa070' : '#C4D9F8',
+    // blue5: darkMode ? '#764aa070' : '#EBF4FF',
   }
 }
 
@@ -155,59 +156,62 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
 
 export const TYPE = {
   main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={400} color={'text2'} {...props} />
   },
   link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper fontWeight={400} color={'primary1'} {...props} />
   },
   label(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
   },
   black(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} color={'text1'} {...props} />
   },
   white(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'white'} {...props} />
+    return <TextWrapper fontWeight={400} color={'white'} {...props} />
   },
   body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...props} />
   },
   largeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
   mediumHeader(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={20} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={20} {...props} />
   },
   subHeader(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} {...props} />
   },
   small(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={11} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={11} {...props} />
   },
   blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+    return <TextWrapper fontWeight={400} color={'blue1'} {...props} />
+  },
+  purple(props: TextProps) {
+    return <TextWrapper fontWeight={400} color={'primary1'} {...props} />
   },
   yellow(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'yellow3'} {...props} />
+    return <TextWrapper fontWeight={400} color={'yellow3'} {...props} />
   },
   darkGray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text3'} {...props} />
+    return <TextWrapper fontWeight={400} color={'text3'} {...props} />
   },
   gray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
+    return <TextWrapper fontWeight={400} color={'bg3'} {...props} />
   },
   italic(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
+    return <TextWrapper fontWeight={400} color={error ? 'red1' : 'text2'} {...props} />
   },
 }
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1} !important;
+  background-color: ${({ theme }) => theme.black} !important;
 }
 
 a {

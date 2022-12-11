@@ -17,7 +17,6 @@ import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { isTokenOnList } from '../../utils'
-import { unwrappedToken } from '../../utils/unwrappedToken'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
@@ -134,7 +133,7 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <Text title={currency.name} fontWeight={500}>
+        <Text title={currency.name} fontWeight={400} fontSize={[10, 14, 20]}>
           {currency.symbol}
         </Text>
         <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
@@ -157,6 +156,7 @@ function CurrencyRow({
 
 const BREAK_LINE = 'BREAK'
 type BreakLine = typeof BREAK_LINE
+
 function isBreakLine(x: unknown): x is BreakLine {
   return x === BREAK_LINE
 }

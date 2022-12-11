@@ -27,7 +27,7 @@ export interface Colors {
   modalBG: Color
   advancedBG: Color
 
-  //blues
+  //purples
   primary1: Color
   primary2: Color
   primary3: Color
@@ -53,6 +53,7 @@ export interface Colors {
   blue2: Color
 
   blue4: Color
+  purple1: Color
 
   error: Color
   success: Color

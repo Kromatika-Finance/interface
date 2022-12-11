@@ -68,7 +68,7 @@ export default function Earn() {
                 </TYPE.white>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
+                <TYPE.white fontSize={[10, 12, 14]}>
                   <Trans>
                     Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
@@ -79,7 +79,7 @@ export default function Earn() {
                 href="https://uniswap.org/blog/uni"
                 target="_blank"
               >
-                <TYPE.white fontSize={14}>
+                <TYPE.white fontSize={[10, 12, 14]}>
                   <Trans>Read more about KROM</Trans>
                 </TYPE.white>
               </ExternalLink>
