@@ -67,6 +67,7 @@ const ArrowWrapper = styled(StyledInternalLink)`
     color: ${({ theme }) => theme.text1};
     text-decoration: none;
   }
+
   :hover {
     text-decoration: none;
   }

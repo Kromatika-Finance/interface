@@ -75,6 +75,7 @@ const StyledNavLink = styled(NavLink).attrs({
 
   &.${activeClassName} {
     background-color: ${({ theme }) => theme.bg1};
+
     div {
       font-weight: 700;
     }

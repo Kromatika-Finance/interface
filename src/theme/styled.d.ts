@@ -1,6 +1,7 @@
 import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
+
 export interface Colors {
   darkMode: boolean
 

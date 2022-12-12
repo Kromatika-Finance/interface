@@ -37,6 +37,7 @@ const Arrow = styled.div`
 
   &.arrow-top {
     bottom: -5px;
+
     ::before {
       border-top: none;
       border-left: none;
@@ -45,6 +46,7 @@ const Arrow = styled.div`
 
   &.arrow-bottom {
     top: -5px;
+
     ::before {
       border-bottom: none;
       border-right: none;
@@ -62,6 +64,7 @@ const Arrow = styled.div`
 
   &.arrow-right {
     left: -5px;
+
     ::before {
       border-right: none;
       border-top: none;

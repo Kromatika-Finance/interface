@@ -209,12 +209,12 @@ export const TYPE = {
 }
 
 export const ThemedGlobalStyle = createGlobalStyle`
-html {
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.black} !important;
-}
+  html {
+    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.black} !important;
+  }
 
-a {
- color: ${({ theme }) => theme.blue1}; 
-}
+  a {
+    color: ${({ theme }) => theme.blue1};
+  }
 `

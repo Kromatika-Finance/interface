@@ -16,6 +16,7 @@ const StyledSwapHeader = styled.div`
 const HoverText = styled(TYPE.main)`
   text-decoration: none;
   color: ${({ theme }) => theme.text3};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     text-decoration: none;

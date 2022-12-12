@@ -10,6 +10,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
   font-size: 14px;
   font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
+
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
     background: ${({ theme, isActive, isOnSwitch }) =>

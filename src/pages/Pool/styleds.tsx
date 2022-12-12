@@ -11,6 +11,7 @@ export const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
+
   color: ${({ theme }) => theme.primary1};
 `
 export const MaxButton = styled.button<{ width: string }>`
@@ -27,9 +28,11 @@ export const MaxButton = styled.button<{ width: string }>`
   margin: 0.25rem;
   overflow: hidden;
   color: ${({ theme }) => theme.primary1};
+
   :hover {
     border: 1px solid ${({ theme }) => theme.primary1};
   }
+
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;

@@ -72,6 +72,7 @@ export const Dots = styled.span`
     width: 1em;
     text-align: left;
   }
+
   @keyframes ellipsis {
     0% {
       content: '.';
@@ -96,6 +97,7 @@ const SwapCallbackErrorInner = styled.div`
   margin-top: -2rem;
   color: ${({ theme }) => theme.red1};
   z-index: -1;
+
   p {
     padding: 0;
     margin: 0;

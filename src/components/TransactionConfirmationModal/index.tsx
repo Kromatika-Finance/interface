@@ -81,6 +81,7 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
+
 export function TransactionPreparingContent({
   onDismiss,
   inline,
@@ -126,6 +127,7 @@ export function TransactionPreparingContent({
     </Wrapper>
   )
 }
+
 function TransactionSubmittedContent({
   onDismiss,
   chainId,

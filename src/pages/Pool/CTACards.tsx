@@ -46,6 +46,7 @@ const CTA1 = styled(ExternalLink)`
   :hover {
     border: 1px solid ${({ theme }) => theme.bg1};
     text-decoration: none;
+
     * {
       text-decoration: none !important;
     }
@@ -83,6 +84,7 @@ const CTA2 = styled(ExternalLink)`
   :hover {
     border: 1px solid ${({ theme }) => theme.bg1};
     text-decoration: none !important;
+
     * {
       text-decoration: none !important;
     }

@@ -8,7 +8,10 @@
   },
   "tags": {},
   "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
-  "keywords": ["uniswap", "unsupported"],
+  "keywords": [
+    "uniswap",
+    "unsupported"
+  ],
   "tokens": [
     {
       "name": "Gold Tether",
@@ -153,7 +156,10 @@
       "name": "Synth Inverse Aave",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iAAVE.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -162,7 +168,10 @@
       "name": "Synth Inverse Cardano",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iADA.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -171,7 +180,10 @@
       "name": "Synth Inverse Binance Coin",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iBNB.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -180,7 +192,10 @@
       "name": "Synth Inverse Bitcoin",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iBTC.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -189,7 +204,11 @@
       "name": "Synth Inverse Centralised Exchange Index",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iCEX.svg",
-      "tags": ["index", "inverse", "synth"]
+      "tags": [
+        "index",
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -198,7 +217,10 @@
       "name": "Synth Inverse Compound",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iCOMP.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -207,7 +229,10 @@
       "name": "Synth Inverse Dash",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iDASH.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -216,7 +241,11 @@
       "name": "Synth Inverse DeFi Index",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iDEFI.svg",
-      "tags": ["index", "inverse", "synth"]
+      "tags": [
+        "index",
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -225,7 +254,10 @@
       "name": "Synth Inverse Polkadot",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iDOT.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -234,7 +266,10 @@
       "name": "Synth Inverse EOS",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iEOS.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -243,7 +278,10 @@
       "name": "Synth Inverse Ethereum Classic",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iETC.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -252,7 +290,10 @@
       "name": "Synth Inverse Ether",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iETH.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -261,7 +302,10 @@
       "name": "Synth Inverse Chainlink",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iLINK.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -270,7 +314,10 @@
       "name": "Synth Inverse Litecoin",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iLTC.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -279,7 +326,10 @@
       "name": "Synth Inverse Perpetual Oil Futures",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iOIL.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -288,7 +338,10 @@
       "name": "Synth Inverse Ren",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iREN.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -297,7 +350,10 @@
       "name": "Synth Inverse TRON",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iTRX.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -306,7 +362,10 @@
       "name": "Synth Inverse Uniswap",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iUNI.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -315,7 +374,10 @@
       "name": "Synth Inverse Monero",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iXMR.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -324,7 +386,10 @@
       "name": "Synth Inverse Ripple",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iXRP.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -333,7 +398,10 @@
       "name": "Synth Inverse Tezos",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iXTZ.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -342,7 +410,10 @@
       "name": "Synth Inverse yearn.finance",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iYFI.svg",
-      "tags": ["inverse", "synth"]
+      "tags": [
+        "inverse",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -351,7 +422,9 @@
       "name": "Synth 1inch",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/s1INCH.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -360,7 +433,9 @@
       "name": "Synth Apple",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sAAPL.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -369,7 +444,9 @@
       "name": "Synth Aave",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sAAVE.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -378,7 +455,9 @@
       "name": "Synth Cardano",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sADA.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -387,7 +466,9 @@
       "name": "Synth Amazon",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sAMZN.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -396,7 +477,9 @@
       "name": "Synth Australian Dollars",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sAUD.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -405,7 +488,9 @@
       "name": "Synth Binance Coin",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sBNB.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -414,7 +499,9 @@
       "name": "Synth Bitcoin",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sBTC.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -423,7 +510,10 @@
       "name": "Synth Centralised Exchange Index",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sCEX.svg",
-      "tags": ["index", "synth"]
+      "tags": [
+        "index",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -432,7 +522,9 @@
       "name": "Synth Swiss Franc",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sCHF.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -441,7 +533,9 @@
       "name": "Synth Coinbase",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sCOIN.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -450,7 +544,9 @@
       "name": "Synth Compound",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sCOMP.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -459,7 +555,9 @@
       "name": "Synth Curve DAO Token",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sCRV.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -468,7 +566,9 @@
       "name": "Synth Dash",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sDASH.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -477,7 +577,10 @@
       "name": "Synth DeFi Index",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sDEFI.svg",
-      "tags": ["index", "synth"]
+      "tags": [
+        "index",
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -486,7 +589,9 @@
       "name": "Synth Polkadot",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sDOT.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -495,7 +600,9 @@
       "name": "Synth EOS",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sEOS.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -504,7 +611,9 @@
       "name": "Synth Ethereum Classic",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sETC.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -513,7 +622,9 @@
       "name": "Synth Ether",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sETH.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -522,7 +633,9 @@
       "name": "Synth Euros",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sEUR.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -531,7 +644,9 @@
       "name": "Synth Facebook",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sFB.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -540,7 +655,9 @@
       "name": "Synth FTSE 100 Index",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sFTSE.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -549,7 +666,9 @@
       "name": "Synth Pound Sterling",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sGBP.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -558,7 +677,9 @@
       "name": "Synth Alphabet",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sGOOG.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -567,7 +688,9 @@
       "name": "Synth Japanese Yen",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sJPY.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -576,7 +699,9 @@
       "name": "Synth South Korean Won",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sKRW.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -585,7 +710,9 @@
       "name": "Synth Chainlink",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sLINK.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -594,7 +721,9 @@
       "name": "Synth Litecoin",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sLTC.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -603,7 +732,9 @@
       "name": "Synth Microsoft",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sMSFT.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -612,7 +743,9 @@
       "name": "Synth Netflix",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sNFLX.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -621,7 +754,9 @@
       "name": "Synth Nikkei 225 Index",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sNIKKEI.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -630,7 +765,9 @@
       "name": "Synth Perpetual Oil Futures",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sOIL.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -639,7 +776,9 @@
       "name": "Synth Ren",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sREN.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -648,7 +787,9 @@
       "name": "Synth THORChain",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sRUNE.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -657,7 +798,9 @@
       "name": "Synth TRON",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sTRX.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -666,7 +809,9 @@
       "name": "Synth Tesla",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sTSLA.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -675,7 +820,9 @@
       "name": "Synth Uniswap",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sUNI.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -684,7 +831,9 @@
       "name": "Synth Silver Ounce",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sXAG.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -693,7 +842,9 @@
       "name": "Synth Gold Ounce",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sXAU.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -702,7 +853,9 @@
       "name": "Synth Monero",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sXMR.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -711,7 +864,9 @@
       "name": "Synth Ripple",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sXRP.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -720,7 +875,9 @@
       "name": "Synth Tezos",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sXTZ.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,
@@ -729,7 +886,9 @@
       "name": "Synth yearn.finance",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sYFI.svg",
-      "tags": ["synth"]
+      "tags": [
+        "synth"
+      ]
     },
     {
       "chainId": 1,

@@ -28,9 +28,11 @@ export const MenuItem = styled(RowBetween)`
   grid-gap: 16px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
+
   :hover {
     background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
   }
+
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
@@ -55,7 +57,9 @@ export const SearchInput = styled.input`
   ::placeholder {
     color: ${({ theme }) => theme.text3};
   }
+
   transition: border 100ms;
+
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;

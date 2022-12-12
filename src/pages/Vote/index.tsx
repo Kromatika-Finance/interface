@@ -48,9 +48,11 @@ const Proposal = styled(Button)`
   color: ${({ theme }) => theme.text1};
   text-decoration: none;
   background-color: ${({ theme }) => theme.bg1};
+
   &:focus {
     background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   }
+
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   }
@@ -78,6 +80,7 @@ const WrapSmall = styled(RowBetween)`
 
 const TextButton = styled(TYPE.main)`
   color: ${({ theme }) => theme.primary1};
+
   :hover {
     cursor: pointer;
     text-decoration: underline;

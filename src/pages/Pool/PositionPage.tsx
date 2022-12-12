@@ -2,50 +2,42 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, KROM, USDC, USDT } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useKromatikaRouter, useLimitOrderManager } from 'hooks/useContract'
 import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { Bound } from 'state/mint/v3/actions'
-import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
-import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
@@ -122,9 +114,11 @@ const LinkRow = styled(ExternalLink)`
   &:last-of-type {
     margin: 8px 0 0 0;
   }
+
   & > div:not(:first-child) {
     text-align: center;
   }
+
   :hover {
     background-color: ${({ theme }) => theme.bg2};
   }
@@ -165,6 +159,7 @@ const ExtentsText = styled.span`
 const HoverText = styled(TYPE.main)`
   text-decoration: none;
   color: ${({ theme }) => theme.text3};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     text-decoration: none;

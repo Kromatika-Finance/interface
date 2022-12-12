@@ -8,7 +8,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { useGetQuoteInchQuery, useGetSwapInchQuery } from 'state/routing/slice'
+import { useGetQuoteInchQuery } from 'state/routing/slice'
 import { useNetworkGasPrice, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { SwapTransaction, V3TradeState } from './types'

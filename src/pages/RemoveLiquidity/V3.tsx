@@ -63,6 +63,7 @@ export default function RemoveLiquidityV3({
 
   return <Remove tokenId={parsedTokenId} />
 }
+
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()

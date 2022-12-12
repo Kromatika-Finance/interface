@@ -38,9 +38,11 @@ const LinkRow = styled(Link)`
   &:last-of-type {
     margin: 8px 0 0 0;
   }
+
   & > div:not(:first-child) {
     text-align: center;
   }
+
   :hover {
     background-color: ${({ theme }) => theme.bg2};
   }

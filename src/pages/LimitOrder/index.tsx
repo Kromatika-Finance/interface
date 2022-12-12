@@ -1,10 +1,7 @@
-import { Switch } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Trade as V3Trade } from '@uniswap/v3-sdk'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PositionList from 'components/PositionList'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { AutoRouterLogo } from 'components/swap/RouterLabel'
@@ -12,26 +9,18 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
-import { KROM } from 'constants/tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
-import JSBI from 'jsbi'
-import { constantToCode } from 'multicodec/src/maps'
-import { LoadingRows } from 'pages/Pool/styleds'
-import React from 'react'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
-import { useDarkModeManager, useUserHideClosedPositions } from 'state/user/hooks'
+import { useUserHideClosedPositions } from 'state/user/hooks'
 import { V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { PositionDetails } from 'types/position'
-import { IUniswapV3Factory } from 'types/v3'
-import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -75,16 +64,12 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
-import { useNetworkGasPrice } from '../../state/user/hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useExpertModeManager, useNetworkGasPrice } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
-import AppBodyNoPro from '../AppBodyNoPro'
-import { CandleSticks, MemoizedCandleSticks } from './CandleSticks'
 
 const ClassicModeContainer = styled.div`
   display: flex;
@@ -266,7 +251,7 @@ const FlexContainer = styled.div`
   gap: 1rem;
   border: none;
   width: 100%;
-  height: 75vh;
+  height: 70vh;
   padding: 1rem;
   z-index: 0;
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -910,7 +895,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             disabled={
                               !isValid ||
                               !approvalState ||
-                                (approvalState!== ApprovalState.APPROVED &&
+                              (approvalState !== ApprovalState.APPROVED &&
                                 signatureState !== UseERC20PermitState.SIGNED)
                             }
                             error={isValid}

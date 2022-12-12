@@ -63,6 +63,7 @@ const Container = styled.div<{ hideInput: boolean }>`
   border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
   background-color: ${({ theme }) => theme.bg1};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+
   :focus,
   :hover {
     border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
@@ -87,6 +88,7 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   padding: 0 8px;
   justify-content: space-between;
   margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
@@ -107,6 +109,7 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
+
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -127,6 +130,7 @@ const Aligner = styled.span`
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
+
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
     stroke-width: 1.5px;
@@ -150,9 +154,11 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
+
   :focus {
     outline: none;
   }
+
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin-right: 0.5rem;
   `};

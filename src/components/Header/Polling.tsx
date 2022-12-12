@@ -29,10 +29,10 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   padding: 1rem;
   color: ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
   transition: 250ms ease color;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `}
-
   a:link {
     font-style: normal;
     font-weight: 400;
@@ -47,6 +47,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
       font-size: 10px;
     `}
   }
+
   :hover > a {
     text-decoration: none;
   }
@@ -54,9 +55,11 @@ const StyledPolling = styled.div<{ warning: boolean }>`
 const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boolean }>`
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
+
   :hover {
     opacity: 1;
   }
+
   a {
     font-style: normal;
     font-weight: 700;
