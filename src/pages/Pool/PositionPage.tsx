@@ -2,43 +2,50 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
+import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, KROM, USDC, USDT } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useKromatikaRouter, useLimitOrderManager } from 'hooks/useContract'
+import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
+import { Bound } from 'state/mint/v3/actions'
+import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { useIsGaslessMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
+import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
+import { MEDIA_WIDTHS } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
+import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
@@ -271,6 +278,54 @@ function isToken0Stable(token0: Token | undefined): boolean {
 }
 
 // snapshots a src img into a canvas
+function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
+  const context = canvas.getContext('2d')
+
+  if (context) {
+    let { width, height } = src
+
+    // src may be hidden and not have the target dimensions
+    const ratio = width / height
+    height = targetHeight
+    width = Math.round(ratio * targetHeight)
+
+    // Ensure crispness at high DPIs
+    canvas.width = width * devicePixelRatio
+    canvas.height = height * devicePixelRatio
+    canvas.style.width = width + 'px'
+    canvas.style.height = height + 'px'
+    context.scale(devicePixelRatio, devicePixelRatio)
+
+    context.clearRect(0, 0, width, height)
+    context.drawImage(src, 0, 0, width, height)
+  }
+}
+
+const useInverter = ({
+  priceLower,
+  priceUpper,
+  quote,
+  base,
+  invert,
+}: {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+  invert?: boolean
+}): {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+} => {
+  return {
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
+  }
+}
 
 export function PositionPage({
   match: {
@@ -308,7 +363,7 @@ export function PositionPage({
 
   const { transactionHash: processedTxn, event: processedEvent, blockHash: processedBlockNumber } = processedLogs || {}
 
-  const { event: collectedEvent } = collectedLogs || {}
+  const { transactionHash: collectedTxn, event: collectedEvent, blockHash: collectedBlockNumber } = collectedLogs || {}
 
   const removed = liquidity?.eq(0)
 
@@ -316,12 +371,13 @@ export function PositionPage({
 
   const kromatikaRouter = useKromatikaRouter()
 
-  const isExpertMode = useIsGaslessMode()
+  // FIXME disabled
+  const isExpertMode = false
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
-  usePositionTokenURI(parsedTokenId)
+  const metadata = usePositionTokenURI(parsedTokenId)
 
   const currency0Wrapped = token0 ? token0 : undefined
   const currency1Wrapped = token1 ? token1 : undefined
@@ -337,11 +393,11 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
   const isClosed: boolean = processed ? true : false
 
   // handle manual inversion
-  const { priceLower, priceUpper, base } = getPriceOrderingFromPositionForUI(position)
+  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
@@ -392,7 +448,9 @@ export function PositionPage({
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  feeValue0?.greaterThan(0) ? feeValue0 : feeValue1
+  const currencyAmount = feeValue0?.greaterThan(0) ? feeValue0 : feeValue1
+
+  const orderType = createdEvent?.orderType
 
   const serviceFeePaid = processedEvent?.serviceFeePaid
 
@@ -685,8 +743,8 @@ export function PositionPage({
 
   const kromToken = (chainId && KROM[chainId]) || undefined
   const kromPriceUSD = useUSDCPrice(kromToken)
-  Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(5))
-  Number(collectedValue0?.toSignificant(6)) * token0USD
+  const feePaidUSD = Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(5))
+  const collectedAmount0USD = Number(collectedValue0?.toSignificant(6)) * token0USD
   const collectedAmount1USD = Number(collectedValue1?.toSignificant(6)) * token1USD
 
   const targetPriceUSD = inverted
@@ -743,9 +801,9 @@ export function PositionPage({
     )
   }
 
-  chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
 
-  inverted
+  const limitTrade0USD = inverted
     ? token0USD
       ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD
       : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
@@ -753,7 +811,7 @@ export function PositionPage({
     ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
     : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
 
-  inverted
+  const limitTrade1USD = inverted
     ? currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token1USD
     : currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token0USD
 

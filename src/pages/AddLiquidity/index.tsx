@@ -1,9 +1,10 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { poll } from '@ethersproject/web'
+import { ConnectionInfo, fetchJson, poll } from '@ethersproject/web'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
+import DowntimeWarning from 'components/DowntimeWarning'
 import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
@@ -33,7 +34,6 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/v3/actions'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsGaslessMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -74,7 +74,8 @@ export default function AddLiquidity({
 
   const { onFieldAInput } = useV3MintActionHandlers(true)
 
-  const isExpertMode = useIsGaslessMode()
+  // FIXME disabled
+  const isExpertMode = false
 
   const isValid = !errorMessage
 

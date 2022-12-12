@@ -4,9 +4,14 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
-import { SwapTransaction } from 'state/routing/types'
+import { SwapTransaction } from 'state/validator/types'
 
-import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
+import {
+  KROMATIKA_METASWAP_ADDRESSES,
+  LIMIT_ORDER_MANAGER_ADDRESSES,
+  SWAP_ROUTER_ADDRESSES,
+  V2_ROUTER_ADDRESS,
+} from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -119,7 +124,7 @@ export function useApproveCallbackFromTrade(
     amountToApprove,
     chainId
       ? swapTransaction
-        ? swapTransaction?.to
+        ? swapTransaction.allowanceTarget
         : trade instanceof V3Trade
         ? v3SwapRouterAddress
         : undefined

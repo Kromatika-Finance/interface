@@ -1,3 +1,4 @@
+import { MinimalPositionCard } from 'components/Stake'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -14,17 +15,30 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
+import AddLiquidity from './AddLiquidity/index'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
+import Earn from './Earn'
+import Manage from './Earn/Manage'
 import LimitOrder from './LimitOrder'
-import { RedirectPathToLimitOrderOnly, RedirectToLimitOrder } from './LimitOrder/redirects'
+import {
+  OpenClaimAddressModalAndRedirectToLimitOrder,
+  RedirectPathToLimitOrderOnly,
+  RedirectToLimitOrder,
+} from './LimitOrder/redirects'
 import Market from './Market'
 import { RedirectToMarket } from './Market/redirects'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
+import PoolV2 from './Pool/v2'
+import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import Stake from './Stake/index'
 import StakingModal from './Stake/StakingModal'
-import { RedirectPathToSwapOnly } from './Swap/redirects'
+import Swap from './Swap'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import Vote from './Vote'
+import VotePage from './Vote/VotePage'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -84,7 +98,7 @@ export default function App() {
               <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
               <Route exact strict path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
-              <Route exact strict path="/swap" component={Market} />
+              <Route path="/swap" component={Market} />
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />
               <Route exact strict path="/stake/:tokenId" component={StakingModal} />
