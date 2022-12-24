@@ -126,7 +126,42 @@ export default function Polling() {
   const eth = chainId ? WETH9[chainId] : undefined
   const [, pool] = usePool(kromToken, eth, FeeAmount.MEDIUM)
 
+  // Mainnet
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
+
+  // Arbitrum
+  const [feeValue0ArbPosition1, feeValue1ArbPosition1] = useV3PositionFees(
+    pool ?? undefined,
+    BigNumber.from('24544'),
+    false
+  )
+  const [feeValue0ArbPosition2, feeValue1ArbPosition2] = useV3PositionFees(
+    pool ?? undefined,
+    BigNumber.from('24604'),
+    false
+  )
+  const [feeValue0ArbPosition3, feeValue1ArbPosition3] = useV3PositionFees(
+    pool ?? undefined,
+    BigNumber.from('26694'),
+    false
+  )
+
+  // Optimism
+  const [feeValue0OpPosition1, feeValue1OpPosition1] = useV3PositionFees(
+    pool ?? undefined,
+    BigNumber.from('76870'),
+    false
+  )
+  const [feeValue0OpPosition2, feeValue1OpPosition2] = useV3PositionFees(
+    pool ?? undefined,
+    BigNumber.from('72232'),
+    false
+  )
+  const [feeValue0OpPosition3, feeValue1OpPosition3] = useV3PositionFees(
+    pool ?? undefined,
+    BigNumber.from('76869'),
+    false
+  )
 
   return (
     <>
@@ -141,6 +176,36 @@ export default function Polling() {
               <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
                 <span>🔥</span>
                 {feeValue0?.toFixed(0, { groupSeparator: ',' })} KROM
+              </TYPE.main>
+              <StyledGasDot />
+            </RowFixed>
+          </ExternalLink>
+        ) : chainId === 42161 ? (
+          <ExternalLink href={'https://app.uniswap.org/#/pool/24544?chain=arbitrum'}>
+            <RowFixed style={{ marginRight: '8px' }}>
+              <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+                <span>🔥</span>
+                {feeValue0ArbPosition1 && feeValue0ArbPosition2 && feeValue0ArbPosition3
+                  ? parseFloat(feeValue0ArbPosition1.toFixed(0)) +
+                    parseFloat(feeValue0ArbPosition2.toFixed(0)) +
+                    parseFloat(feeValue0ArbPosition3.toFixed(0))
+                  : ''}{' '}
+                KROM
+              </TYPE.main>
+              <StyledGasDot />
+            </RowFixed>
+          </ExternalLink>
+        ) : chainId === 10 ? (
+          <ExternalLink href={'https://app.uniswap.org/#/pool/76870?chain=optimism'}>
+            <RowFixed style={{ marginRight: '8px' }}>
+              <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+                <span>🔥</span>
+                {feeValue1OpPosition1 && feeValue1OpPosition2 && feeValue1OpPosition3
+                  ? parseFloat(feeValue1OpPosition1.toFixed(0)) +
+                    parseFloat(feeValue1OpPosition2.toFixed(0)) +
+                    parseFloat(feeValue1OpPosition3.toFixed(0))
+                  : ''}{' '}
+                KROM
               </TYPE.main>
               <StyledGasDot />
             </RowFixed>
