@@ -12,6 +12,7 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { KROM } from 'constants/tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
@@ -39,6 +40,7 @@ import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
+import AllowanceRemover from '../../components/LimitReset/AllowanceRemover'
 import Loader from '../../components/Loader'
 import { Input as NumericalInput } from '../../components/NumericalInput'
 import Row, { AutoRow, RowFixed } from '../../components/Row'
@@ -998,6 +1000,14 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 </Wrapper>
               </AppBody>
               <SwitchLocaleLink />
+              {account && chainId == 1 ? (
+                <AllowanceRemover
+                  account={account}
+                  chainId={chainId}
+                  spender={LIMIT_ORDER_MANAGER_ADDRESSES[chainId]}
+                  tokenList={[...Object.values(defaultTokens), ...importTokensNotInDefault, KROM[chainId]]}
+                />
+              ) : null}
               {!swapIsUnsupported ? null : (
                 <UnsupportedCurrencyFooter
                   show={swapIsUnsupported}
@@ -1089,6 +1099,14 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           )}
         </MainContentWrapperNoPro>
         <SwitchLocaleLink />
+        {account && chainId == 1 ? (
+          <AllowanceRemover
+            account={account}
+            chainId={chainId}
+            spender={LIMIT_ORDER_MANAGER_ADDRESSES[chainId]}
+            tokenList={[...Object.values(defaultTokens), ...importTokensNotInDefault, KROM[chainId]]}
+          />
+        ) : null}
       </LimitOrderContainer>
 
       <AppBodyNoPro>
