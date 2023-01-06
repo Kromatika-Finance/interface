@@ -1000,7 +1000,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 </Wrapper>
               </AppBody>
               <SwitchLocaleLink />
-              {account && chainId == 1 ? (
+              {account && chainId == 137 ? (
                 <AllowanceRemover
                   account={account}
                   chainId={chainId}
@@ -1099,7 +1099,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           )}
         </MainContentWrapperNoPro>
         <SwitchLocaleLink />
-        {account && chainId == 1 ? (
+        {account && chainId == 137 ? (
           <AllowanceRemover
             account={account}
             chainId={chainId}

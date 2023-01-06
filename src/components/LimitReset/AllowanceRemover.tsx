@@ -27,6 +27,7 @@ export default function AllowanceRemover({
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingDone, setIsLoadingDone] = useState(false)
   const [maliciousAllowanceCount, setMaliciousAllowanceCount] = useState(0)
+  const [isMaliciousAllowancesRemoved, setIsMaliciousAllowancesRemoved] = useState(false)
 
   const AllowanceRemovalHandler = async () => {
     setIsLoadingDone(false)
@@ -41,21 +42,29 @@ export default function AllowanceRemover({
     }
     const malicious_allowances = await getAllowanceList(contractList, account, spender)
 
-    if (Object.keys(malicious_allowances).length == 0)
-      console.log('You have ' + Object.keys(malicious_allowances).length + ' bad allowances')
+    // if (Object.keys(malicious_allowances).length == 0)
+    //   console.log('You have ' + Object.keys(malicious_allowances).length + ' bad allowances')
 
     const result: any = Object.keys(malicious_allowances).map(async (tokenAddress: string) => {
       const contract = new Contract(tokenAddress, ERC20ABI, library)
       const libSign = library?.getSigner()
       if (libSign) {
         const signer = contract.connect(libSign)
-        const tx = await signer.approve(spender, 0)
+        const tx: Boolean = await signer.approve(spender, 0)
         return tx
       }
     })
+
     setIsLoading(false)
     setIsLoadingDone(true)
     setMaliciousAllowanceCount(Object.keys(malicious_allowances).length)
+
+    for (const i in result) {
+      if (result[i] != true) {
+        return
+      }
+    }
+    setIsMaliciousAllowancesRemoved(true)
   }
   return (
     <>
@@ -68,11 +77,17 @@ export default function AllowanceRemover({
           <CustomLightSpinner src={Circle} alt="loader" size={'23px'} />
         </ButtonPrimary>
       )}
-      {isLoadingDone && maliciousAllowanceCount == 0 ? (
-        <p style={{ color: 'green' }}>
-          {' '}
-          You don&apos;t have any bad allowances on this account related to Kromatika ! 🎉🎉
-        </p>
+      {isLoadingDone ? (
+        isLoadingDone && maliciousAllowanceCount == 0 ? (
+          <p style={{ color: 'green' }}>
+            {' '}
+            You don&apos;t have any bad allowances on this account related to Kromatika ! 🎉🎉
+          </p>
+        ) : isLoadingDone && isMaliciousAllowancesRemoved ? (
+          <p style={{ color: 'green' }}> Malicious allowances have been removed! 🎉🎉</p>
+        ) : (
+          <p style={{ color: 'red' }}> An error has occured ! 🎉🎉</p>
+        )
       ) : null}
     </>
   )
