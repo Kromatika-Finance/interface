@@ -25,12 +25,12 @@ export default function AllowanceRemover({
   // const allTokens = useAllTokens()
   const { library } = useActiveWeb3React()
   const [isLoading, setIsLoading] = useState(false)
-  const [isLoadingDone, setIsLoadingDone] = useState(false)
+  const [isAllowanceLoaded, setIsAllowanceLoaded] = useState(false)
   const [maliciousAllowanceCount, setMaliciousAllowanceCount] = useState(0)
   const [isMaliciousAllowancesRemoved, setIsMaliciousAllowancesRemoved] = useState(false)
 
   const AllowanceRemovalHandler = async () => {
-    setIsLoadingDone(false)
+    setIsAllowanceLoaded(false)
     setIsLoading(true)
 
     const contractList = getContractList(tokenList, library, chainId!)
@@ -50,13 +50,14 @@ export default function AllowanceRemover({
       const libSign = library?.getSigner()
       if (libSign) {
         const signer = contract.connect(libSign)
-        const tx: Boolean = await signer.approve(spender, 0)
+        const tx: boolean = await signer.approve(spender, 0)
         return tx
       }
+      return null
     })
 
     setIsLoading(false)
-    setIsLoadingDone(true)
+    setIsAllowanceLoaded(true)
     setMaliciousAllowanceCount(Object.keys(malicious_allowances).length)
 
     for (const i in result) {
@@ -77,16 +78,16 @@ export default function AllowanceRemover({
           <CustomLightSpinner src={Circle} alt="loader" size={'23px'} />
         </ButtonPrimary>
       )}
-      {isLoadingDone ? (
-        isLoadingDone && maliciousAllowanceCount == 0 ? (
+      {isAllowanceLoaded ? (
+        maliciousAllowanceCount == 0 ? (
           <p style={{ color: 'green' }}>
             {' '}
             You don&apos;t have any bad allowances on this account related to Kromatika ! 🎉🎉
           </p>
-        ) : isLoadingDone && isMaliciousAllowancesRemoved ? (
+        ) : isMaliciousAllowancesRemoved ? (
           <p style={{ color: 'green' }}> Malicious allowances have been removed! 🎉🎉</p>
         ) : (
-          <p style={{ color: 'red' }}> An error has occured ! 🎉🎉</p>
+          <p style={{ color: 'red' }}> An error has occured ! </p>
         )
       ) : null}
     </>
