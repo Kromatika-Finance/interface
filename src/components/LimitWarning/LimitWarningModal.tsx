@@ -79,7 +79,7 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
               <br />
               <Trans>b) Withdraw deposited KROM on polygon</Trans>
               <br />
-              <Trans>c) Revoke approval to old limit order manager contract directly from the limit order page,</Trans>
+              <Trans>c) Revoke approval to old limit order manager contract directly from the limit order page</Trans>
             </Trans>
           </TYPE.white>
         </AutoColumn>
