@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 
 export const getAllowanceList = async (contractList: Contract[], account: string, spender: string) => {
-  const potential_malicious_allowances = await Promise.all(
+  const potential_allowances = await Promise.all(
     contractList.map(async (ERC20contract: any) => {
       try {
         const allowance = Number((await ERC20contract.allowance(account, spender))._hex)
@@ -14,15 +14,15 @@ export const getAllowanceList = async (contractList: Contract[], account: string
   )
 
   // Only keep non-null allowances
-  const filtered_malicious_allowances: { [id: string]: number } = {}
-  for (const i in potential_malicious_allowances) {
-    const key = Object.keys(potential_malicious_allowances[i])[0]
-    const value = Object.values(potential_malicious_allowances[i])[0]
+  const filtered_allowances: { [id: string]: number } = {}
+  for (const i in potential_allowances) {
+    const key = Object.keys(potential_allowances[i])[0]
+    const value = Object.values(potential_allowances[i])[0]
     if (value != null && value > 0) {
-      filtered_malicious_allowances[key] = value!
+      filtered_allowances[key] = value!
     }
   }
-  return filtered_malicious_allowances
+  return filtered_allowances
 }
 
 export default getAllowanceList

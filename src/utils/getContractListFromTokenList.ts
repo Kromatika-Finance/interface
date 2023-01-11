@@ -12,14 +12,7 @@ export const createERC20TokenContracts = (tokenList: string[], abi: any, provide
 
 export const getContractList = (tokenList: Token[], library: any, chainId: number) => {
   try {
-    //@ts-ignore
-    console.log(Object.keys(tokenList).length)
-    console.log(tokenList)
     const filtered = tokenList.filter((v) => {
-      //@ts-ignore
-      // console.log(v._checksummedAddress)
-      //@ts-ignore
-      // console.log(v.tokenInfo.name)
       //@ts-ignore
       if (v.tokenInfo != undefined) return v.tokenInfo.chainId == chainId
       else return v.chainId == chainId
@@ -29,10 +22,6 @@ export const getContractList = (tokenList: Token[], library: any, chainId: numbe
     })
 
     const contractList = createERC20TokenContracts(filtered_addresses, ERC20ABI, library!)
-    // if (contractList.length != Object.keys(filtered).length) {
-    //   console.log('error getting contract Address')
-    //   return null
-    // }
     return contractList
   } catch (e) {
     console.log(e)
