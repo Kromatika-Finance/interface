@@ -192,7 +192,7 @@ export default function AllowanceRemover({
         isUnfolded
           ? {
               backgroundColor: theme.bg0,
-              padding: '25px',
+              padding: '12px',
               marginTop: '35px',
               marginBottom: '60px',
               borderRadius: '20px',
@@ -222,30 +222,27 @@ export default function AllowanceRemover({
         {isUnfolded ? (
           <div>
             <div>
-              <h2 style={{ textAlign: 'center', paddingBottom: '20px' }}>Polygon limit orders users warning</h2>
+              <h4 style={{ textAlign: 'center', paddingBottom: '10px' }}>Polygon limit orders users warning</h4>
             </div>
             <div style={{ marginLeft: '10%', marginRight: '10%' }}>
-              <p>
+              <p style={{ fontSize: '0.8rem', textAlign: 'center' }}>
                 Due to the recent LastPass breach, there may be a potential security breach on Kromatika&apos;s Limit
-                Order Contract on Polygon Network only. <br />
+                Order Contract on Polygon Network only.
                 <br /> <b>ALL OTHER CHAINS</b> and <b>FEATURES ARE SECURE</b> (Polygon swaps & gasless swaps are also
                 secure).
-                <br /> <br />
+                <br />
                 As a security measure, Limit Order UI is paused on Polygon Network only.
                 <br />
-                <br />
               </p>
-              <p>
+              <p style={{ fontSize: '0.8rem', textAlign: 'center' }}>
                 <b>
                   FOR POLYGON KROMATIKA LIMIT ORDERS USERS <p style={{ color: 'red' }}>ACTION REQUIRED:</p>
                 </b>
                 a) Cancel Polygon chain limit orders
                 <br />
-                <br />
-                b) Withdraw deposited KROM on polygon <br />
+                b) Withdraw deposited KROM on polygon
                 <br />
                 c) Revoke approval to old limit order manager contract directly from the limit order page
-                <br />
                 <br />
               </p>
             </div>
@@ -294,10 +291,3 @@ export default function AllowanceRemover({
     </div>
   )
 }
-
-// TESTING PROCEDURE
-// On Polygon mainnet
-// - Add allowances by polygonscan on 3 tokens, spender is POLYGON  krom limit order manager
-// - Check on revoke.cash the allowances
-// - Try to remove them 3 by using the button
-// - Check again on revoke.cash that these allowances are properly removed
