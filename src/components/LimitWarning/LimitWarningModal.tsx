@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { Checkbox, PaddedColumn, TextDot } from 'components/SearchModal/styleds'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE } from '../../theme'
@@ -81,14 +79,6 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
               <br />
               <Trans>b) Withdraw deposited KROM on polygon</Trans>
               <br />
-              <Trans>
-                c) Revoke approval to old limit order manager contract:
-                &quot;0xd1fdf0144be118c30a53e1d08cc1e61d600e508e&quot;{' '}
-                <a href="https://www.youtube.com/watch?v=_gTz5QQdCXI" target="_blank" rel="noreferrer">
-                  CLICK HERE
-                </a>{' '}
-                and follow the guide.
-              </Trans>
             </Trans>
           </TYPE.white>
         </AutoColumn>
