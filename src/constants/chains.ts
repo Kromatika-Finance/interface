@@ -52,7 +52,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.MAINNET,
   // SupportedChainId.ROPSTEN,
   // SupportedChainId.RINKEBY,
-  SupportedChainId.GOERLI,
+  // SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
 
   SupportedChainId.ARBITRUM_ONE,
