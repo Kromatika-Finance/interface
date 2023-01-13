@@ -50,6 +50,19 @@ export default function DowntimeWarning() {
             </Trans>
           </div>
         )
+      case SupportedChainId.POLYGON_MUMBAI:
+        return (
+          <div>
+            <Trans>
+              Polygon Mumbai is in Beta and may experience downtime. Polygon expects planned downtime to upgrade the
+              network in the near future. During downtime, your position will not earn fees and you will be unable to
+              remove liquidity.{' '}
+              <ReadMoreLink href="https://help.uniswap.org/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
+                Read more.
+              </ReadMoreLink>
+            </Trans>
+          </div>
+        )
       case SupportedChainId.ARBITRUM_ONE:
       case SupportedChainId.ARBITRUM_RINKEBY:
         return (

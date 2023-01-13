@@ -214,6 +214,13 @@ export const KROM: { [chainId: number]: Token } = {
     'KROM',
     'Kromatika'
   ),
+  [SupportedChainId.POLYGON_MUMBAI]: new Token(
+    SupportedChainId.POLYGON_MUMBAI,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.POLYGON_MUMBAI],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
 }
 
 export const WETH: { [chainId: number]: Token } = {
