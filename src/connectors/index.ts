@@ -62,7 +62,7 @@ export const unstopabbledomains = new UAuthConnector({
   postLogoutRedirectUri: process.env.REACT_APP_UD_POST_LOGOUT_REDIRECT_URI,
 
   // Scope must include openid and wallet
-  scope: 'openid wallet',
+  scope: 'openid wallet email profile:optional social:optional',
 
   // Injected and walletconnect connectors are required.
   connectors: { injected, walletconnect },
