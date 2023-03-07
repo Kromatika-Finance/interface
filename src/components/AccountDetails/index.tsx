@@ -310,9 +310,7 @@ export default function AccountDetails({
                   {connector !== injected && connector !== walletlink && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                      onClick={() => {
-                        ;(connector as any).close()
-                      }}
+                      onClick={() => (connector as any).handleDeactivate()}
                     >
                       <Trans>Disconnect</Trans>
                     </WalletAction>
