@@ -515,6 +515,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               tokens={importTokensNotInDefault}
               onConfirm={handleConfirmTokenWarning}
               onDismiss={handleDismissTokenWarning}
+
             />
             <SwapModalContainer>
               <SwapHeader />
@@ -783,17 +784,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               signatureState === UseERC20PermitState.SIGNED ? (
                               <CheckCircle size="20" color={theme.green1} />
                             ) : (
-                              <MouseoverTooltip
-                                text={
-                                  <Trans>
-                                    You must give the Kromatika smart contracts permission to use your{' '}
-                                    {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                                  </Trans>
-                                }
-                              >
-                                <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                              </MouseoverTooltip>
-                            )}
+                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                            )
                           </AutoRow>
                         </ButtonConfirmed>
                         <ButtonError
