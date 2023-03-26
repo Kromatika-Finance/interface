@@ -599,7 +599,15 @@ export default function SwapWidget() {
       />
       <StyledSwap>
         <AppBody>
-          <MarketHeader allowedSlippage={allowedSlippage} />
+          <WidgetHeader>
+            <a href="https://app.kromatika.finance" style={{ all: 'unset' }}>
+              <PoweredBy>
+                <Text>Powered by</Text>
+                <img src={KromLogo} alt="KROM Logo" height="24px" />
+              </PoweredBy>
+            </a>
+            <MarketHeader allowedSlippage={allowedSlippage} />
+          </WidgetHeader>
           <Wrapper id="swap-page">
             <ConfirmMarketModal
               isOpen={showConfirm}

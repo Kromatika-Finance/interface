@@ -760,16 +760,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               signatureState === UseERC20PermitState.SIGNED ? (
                               <CheckCircle size="20" color={theme.green1} />
                             ) : (
-                              <MouseoverTooltip
-                                text={
-                                  <Trans>
-                                    You must give the Kromatika smart contracts permission to use your{' '}
-                                    {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                                  </Trans>
-                                }
-                              >
-                                <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                              </MouseoverTooltip>
+                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
                             )}
                           </AutoRow>
                         </ButtonConfirmed>
@@ -1009,34 +1000,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </LoadingOpacityContainer>
                   </RowFixed>
                 </RowBetween>
-                {/* <RowFixed>
-                  <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="end">
-                    <Trans>Transaction Details</Trans>
-                  </TYPE.body>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                        <AdvancedSwapDetails
-                          trade={trade}
-                          serviceFee={serviceFee}
-                          priceAmount={price}
-                          outputAmount={parsedAmounts.output}
-                          syncing={routeIsSyncing}
-                        />
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    onOpen={() =>
-                      ReactGA.event({
-                        category: 'Trade',
-                        action: 'Transaction Details Tooltip Open',
-                      })
-                    }
-                  >
-                    <StyledInfo />
-                  </MouseoverTooltipContent>
-                </RowFixed> */}
               </AutoColumn>
             )}
             {!trade && !minPrice && (
