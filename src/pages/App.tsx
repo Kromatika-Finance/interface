@@ -118,6 +118,8 @@ const Widget = () => (
 export default function App() {
   const { pathname } = useLocation()
   const isApp = !pathname.includes('swap-widget')
+  console.log('pathName: ', pathname)
+  console.log('isApp: ', isApp)
 
   return (
     <ErrorBoundary>
