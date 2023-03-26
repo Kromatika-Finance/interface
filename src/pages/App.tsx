@@ -128,8 +128,8 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
         <Switch>
-          <Route path="/swap-widget/dark" component={SwapWidget} />
-          <Route path="/swap-widget/light" component={SwapWidget} />
+          <Route path="/swapwidget/dark" component={SwapWidget} />
+          <Route path="/swapwidget/light" component={SwapWidget} />
           <AppWrapper>
             <HeaderWrapper>
               <Header />
