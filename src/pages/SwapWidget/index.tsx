@@ -581,7 +581,7 @@ export default function SwapWidget() {
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
-      setApprovalSubmitted(false) // reset 2 step UI for approvals
+      setApprovalSubmitted(false)
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
     [onCurrencySelection]
