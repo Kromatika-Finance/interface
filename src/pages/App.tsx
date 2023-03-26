@@ -127,10 +127,10 @@ export default function App() {
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
-        <AppWrapper>
-          <Switch>
-            <Route path="/swap-widget/dark" component={SwapWidget} />
-            <Route path="/swap-widget/light" component={SwapWidget} />
+        <Switch>
+          <Route path="/swap-widget/dark" component={SwapWidget} />
+          <Route path="/swap-widget/light" component={SwapWidget} />
+          <AppWrapper>
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
@@ -157,8 +157,8 @@ export default function App() {
               <Route component={RedirectPathToLimitOrderOnly} />
               <Route component={RedirectPathToSwapOnly} />
             </BodyWrapper>
-          </Switch>
-        </AppWrapper>
+          </AppWrapper>
+        </Switch>
       </Web3ReactManager>
     </ErrorBoundary>
   )
