@@ -18,6 +18,7 @@ import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
@@ -218,12 +219,19 @@ const PoweredBy = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function SwapWidget() {
+export default function SwapWidget(props: RouteComponentProps<{ themeColor: string }>) {
   const { chainId, account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [priceImpactAccepted, setPriceImpactAccepted] = useState(false)
   const [feeImpactAccepted, setFeeImpactAccepted] = useState(false)
   const refEnabled = false
+
+  const {
+    location: { search },
+    match: {
+      params: { themeColor },
+    },
+  } = props
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -340,11 +348,11 @@ export default function SwapWidget() {
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
   const { pathname } = window.location
 
-  if (darkMode && pathname.includes('light')) {
+  if (darkMode && themeColor === 'light' && pathname.includes('light')) {
     toggleSetDarkMode()
   }
 
-  if (!darkMode && pathname.includes('dark')) {
+  if (!darkMode && themeColor === 'dark' && pathname.includes('dark')) {
     toggleSetDarkMode()
   }
 
