@@ -219,19 +219,12 @@ const PoweredBy = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function SwapWidget(props: RouteComponentProps<{ themeColor: string }>) {
+export default function SwapWidget() {
   const { chainId, account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [priceImpactAccepted, setPriceImpactAccepted] = useState(false)
   const [feeImpactAccepted, setFeeImpactAccepted] = useState(false)
   const refEnabled = false
-
-  const {
-    location: { search },
-    match: {
-      params: { themeColor },
-    },
-  } = props
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -348,11 +341,11 @@ export default function SwapWidget(props: RouteComponentProps<{ themeColor: stri
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
   const { pathname } = window.location
 
-  if (darkMode && themeColor === 'light' && pathname.includes('light')) {
+  if (darkMode && pathname.includes('light')) {
     toggleSetDarkMode()
   }
 
-  if (!darkMode && themeColor === 'dark' && pathname.includes('dark')) {
+  if (!darkMode && pathname.includes('dark')) {
     toggleSetDarkMode()
   }
 
