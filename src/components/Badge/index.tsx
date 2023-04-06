@@ -65,7 +65,7 @@ const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   border-radius: 10px;
   color: ${({ theme, variant }) => pickFontColor(variant, theme)};
   display: inline-flex;
-  padding: 6px 12px;
+  padding: 4px 8px;
   justify-content: center;
   font-weight: 500;
 `
