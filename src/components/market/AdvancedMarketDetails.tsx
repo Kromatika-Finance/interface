@@ -6,7 +6,6 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useMemo } from 'react'
-import { Text } from 'rebass'
 import { useIsGaslessMode } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -110,7 +109,9 @@ export function AdvancedMarketDetails({
       {isGaslessMode && (
         <RowBetween>
           <RowFixed>
-            <TYPE.subHeader color={theme.text1}>Fees:</TYPE.subHeader>
+            <TYPE.small color={theme.text1}>
+              <Trans>Fees:</Trans>
+            </TYPE.small>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
             <TYPE.black textAlign="right" fontSize={14}>

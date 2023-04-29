@@ -178,32 +178,6 @@ export default function MarketModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-      {isGaslessMode && (
-        <DarkCard
-          padding="0.75rem 1rem"
-          style={{
-            marginBottom: '0.25rem',
-            borderRadius: '0px 0px 10px 10px',
-            border: '1px solid #2C2F36',
-            marginTop: '0px',
-            position: 'relative',
-            top: '-5px',
-          }}
-        >
-          <AutoColumn gap={'8px'}>
-            <RowBetween align="flex-end">
-              <TYPE.body fontSize={14} color={'white'}>
-                <RowFixed gap={'0px'}>Received (including fees)</RowFixed>
-              </TYPE.body>
-              <RowFixed gap={'0px'}>
-                <TruncatedText fontSize={14} fontWeight={500}>
-                  {fee ? trade.outputAmount.subtract(fee).toSignificant(6) : 'undefined'} {paymentToken?.symbol}
-                </TruncatedText>
-              </RowFixed>
-            </RowBetween>
-          </AutoColumn>
-        </DarkCard>
-      )}
 
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
         <TYPE.body color={theme.text2} fontWeight={400} fontSize={16}>
