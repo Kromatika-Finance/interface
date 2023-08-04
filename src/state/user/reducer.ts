@@ -21,6 +21,7 @@ import {
   updateUserGaslessMode,
   updateUserGasPrice,
   updateUserLocale,
+  updateUserMulticallMode,
   updateUserSlippageTolerance,
   updateUserTickOffset,
   updateUserTickSize,
@@ -41,6 +42,8 @@ export interface UserState {
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
+
+  userMulticallMode: boolean
 
   userClientSideRouter: boolean // whether routes should be calculated with the client side router only
 
@@ -91,6 +94,7 @@ export const initialState: UserState = {
   optimismAlphaAcknowledged: false,
   userDarkMode: true,
   userExpertMode: true,
+  userMulticallMode: false,
   userLocale: null,
   userClientSideRouter: false,
   userHideClosedPositions: false,
@@ -158,6 +162,10 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserMulticallMode, (state, action) => {
+      state.userMulticallMode = action.payload.userMulticallMode
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserGaslessMode, (state, action) => {

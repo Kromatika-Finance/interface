@@ -60,7 +60,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useNetworkGasPrice } from '../../state/user/hooks'
+import { useExpertModeManager, useMulticallModeManager, useNetworkGasPrice } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -229,6 +229,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const [expertMode] = useExpertModeManager()
+  const [multicallMode] = useMulticallModeManager()
 
   const theme = useContext(ThemeContext)
 
@@ -418,7 +419,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     signatureData,
     parsedAmounts.input,
     price,
-    serviceFee
+    serviceFee,
+    multicallMode
   )
 
   const handleSwap = useCallback(() => {
@@ -793,7 +795,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           error={!isValid}
                         >
                           <Text fontSize={20} fontWeight={500}>
-                            {<Trans>Create FELO</Trans>}
+                            {<Trans>Create FEA</Trans>}
                           </Text>
                         </ButtonError>
                       </AutoColumn>
@@ -814,7 +816,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       error={!isValid && !swapCallbackError}
                     >
                       <Text fontSize={20} fontWeight={500}>
-                        {swapInputError ? swapInputError : <Trans>Create FELO</Trans>}
+                        {swapInputError ? swapInputError : <Trans>Create FEO</Trans>}
                       </Text>
                     </ButtonError>
                   )}
@@ -1138,7 +1140,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       error={!isValid}
                     >
                       <Text fontSize={20} fontWeight={500}>
-                        {<Trans>Create FELO</Trans>}
+                        {<Trans>Create FELAO</Trans>}
                       </Text>
                     </ButtonError>
                   </AutoColumn>

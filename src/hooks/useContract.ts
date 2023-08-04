@@ -3,6 +3,7 @@ import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.j
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import { Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
@@ -15,6 +16,7 @@ import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import KROM_TOKEN_ABI from 'abis/krom.json'
 import KROMATIKA_METASWAP_ABI from 'abis/kromatika-metaswap.json'
 import KROMATIKA_ROUTER_ABI from 'abis/kromatika-router.json'
 import LIMIT_ORDER_MANAGER_ABI from 'abis/limit-order-manager.json'
@@ -30,6 +32,7 @@ import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
+  KROM_TOKEN_ADDRESSES,
   KROMATIKA_METASWAP_ADDRESSES,
   KROMATIKA_ROUTER_ADDRESSES,
   LIMIT_ORDER_MANAGER_ADDRESSES,
@@ -53,6 +56,7 @@ import {
   EnsPublicResolver,
   EnsRegistrar,
   Erc20,
+  Krom,
   KromatikaMetaswap,
   KromatikaRouter,
   LimitOrderManager,
@@ -91,6 +95,10 @@ export function useContract<T extends Contract = Contract>(
 
 export function useSKromatikaContract() {
   return useContract<SKromatika>(SKROMATIKA_ADDRESS, SKROMATIKA_ABI, true)
+}
+
+export function useKromTokenContract() {
+  return useContract<Krom>(KROM_TOKEN_ADDRESSES, KROM_TOKEN_ABI, true)
 }
 
 export function useNewStakingContract() {

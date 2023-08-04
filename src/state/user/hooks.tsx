@@ -33,6 +33,7 @@ import {
   updateUserGaslessMode,
   updateUserGasPrice,
   updateUserLocale,
+  updateUserMulticallMode,
   updateUserSlippageTolerance,
   updateUserTickOffset,
   updateUserTickSize,
@@ -112,6 +113,20 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
+}
+
+export function useIsMulticallMode(): boolean {
+  return useAppSelector((state) => state.user.userMulticallMode)
+}
+export function useMulticallModeManager(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const multicallMode = useIsMulticallMode()
+
+  const toggleSetMulticallMode = useCallback(() => {
+    dispatch(updateUserMulticallMode({ userMulticallMode: !multicallMode }))
+  }, [multicallMode, dispatch])
+
+  return [multicallMode, toggleSetMulticallMode]
 }
 
 export function useIsGaslessMode(): boolean {

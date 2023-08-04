@@ -23,6 +23,7 @@ export const updateOptimismAlphaAcknowledged = createAction<{ optimismAlphaAckno
 )
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
+export const updateUserMulticallMode = createAction<{ userMulticallMode: boolean }>('user/updateUserMulticallMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
 export const updateUserClientSideRouter = createAction<{ userClientSideRouter: boolean }>(
   'user/updateUserClientSideRouter'

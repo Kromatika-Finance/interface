@@ -438,7 +438,8 @@ export default function Swap({ history }: RouteComponentProps) {
     signatureData,
     parsedAmounts.input,
     price,
-    serviceFee
+    serviceFee,
+    undefined
   )
 
   const handleSwap = useCallback(() => {

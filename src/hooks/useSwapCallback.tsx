@@ -1,14 +1,25 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import {
+  Currency,
+  CurrencyAmount,
+  MaxUint256,
+  NativeCurrency,
+  Percent,
+  Price,
+  Token,
+  TradeType,
+} from '@uniswap/sdk-core'
 import { encodeSqrtRatioX96, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { ReactNode, useMemo } from 'react'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useTokenBalance } from 'state/wallet/hooks'
 import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
+import { computeSignatureCalldata } from 'utils/computeSignatureCalldata'
 
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -16,11 +27,17 @@ import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
+import { useCurrency, useToken } from './Tokens'
+import { useApproveCallback } from './useApproveCallback'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useKromatikaRouter, useLimitOrderManager, useUniswapUtils } from './useContract'
+import { useBestMarketTrade } from './useBestV3Trade'
+import { useKromatikaRouter, useKromTokenContract, useLimitOrderManager, useUniswapUtils } from './useContract'
+import { useKromatikaMetaswap } from './useContract'
 import useENS from './useENS'
-import { SignatureData } from './useERC20Permit'
+import { SignatureData, useERC20PermitFromTrade } from './useERC20Permit'
 import { useGaslessCallback } from './useGaslessCallback'
+import { useTokenAllowance } from './useTokenAllowance'
+import { useV3Positions } from './useV3Positions'
 import { useActiveWeb3React } from './web3'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
@@ -65,17 +82,43 @@ function useSwapCallArguments(
   signatureData: SignatureData | null | undefined,
   parsedAmount: CurrencyAmount<Currency> | undefined,
   priceAmount: Price<Currency, Currency> | undefined,
-  serviceFee: CurrencyAmount<Currency> | undefined
+  serviceFee: CurrencyAmount<Currency> | undefined,
+  isAllInOne: boolean | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const limitOrderManager = useLimitOrderManager()
-  const uniswapUtils = useUniswapUtils()
+  const kromTokenContract = useKromTokenContract()
+  // const uniswapUtils = useUniswapUtils()
   const argentWalletContract = useArgentWalletContract()
-
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
+
+  const kromToken = useToken(kromTokenContract?.address)
+  const kromCurrency = useCurrency(kromToken?.address)
+  const kromBalance = useTokenBalance(kromTokenContract?.address)
+
+  // Might not need it since it's automatically computed by useApproveCallback
+  const kromTokenAllowance = useTokenAllowance(kromToken!, account ?? undefined, limitOrderManager?.address)
+  // Amount of krom deposited
+  const { fundingBalance } = useV3Positions(account)
+  let requiredFunding: CurrencyAmount<Currency> | undefined = undefined
+  if (serviceFee) {
+    requiredFunding = CurrencyAmount.fromRawAmount(kromToken as Currency, parseInt(serviceFee.numerator.toString()) * 3)
+  }
+
+  const fundingTrade = useBestMarketTrade(
+    false,
+    false,
+    null,
+    TradeType.EXACT_OUTPUT,
+    requiredFunding,
+    kromCurrency as Currency
+  )
+
+  const permitFunding = useERC20PermitFromTrade(fundingTrade.trade, undefined, false)
+  const fundingSignatureData = permitFunding.signatureData
 
   const priceInfo = useMemo(() => {
     if (!chainId || !priceAmount || !parsedAmount) return undefined
@@ -149,55 +192,83 @@ function useSwapCallArguments(
       !gasAmount
     )
       return []
+
     // trade is V3Trade
     const limitManagerAddress = limitOrderManager.address
     if (!limitManagerAddress) return []
 
-    const calldatas: string[] = []
+    let calldatas: string[] = []
 
-    if (signatureData) {
-      // create call data
-      const inputTokenPermit =
-        'allowed' in signatureData
-          ? {
-              expiry: signatureData.deadline,
-              nonce: signatureData.nonce,
-              s: signatureData.s,
-              r: signatureData.r,
-              v: signatureData.v as any,
-            }
-          : {
-              deadline: signatureData.deadline,
-              amount: signatureData.amount,
-              s: signatureData.s,
-              r: signatureData.r,
-              v: signatureData.v as any,
-            }
+    // If multicall is activated
+    if (isAllInOne == true) {
+      // alert(trade.inputAmount.currency.name)
+      // alert(kromTokenAllowance?.toSignificant(6))
+      if (
+        !kromTokenAllowance ||
+        !kromTokenContract ||
+        !serviceFee ||
+        !fundingBalance ||
+        !fundingTrade.trade ||
+        !requiredFunding
+      )
+        return []
 
-      if ('nonce' in inputTokenPermit) {
-        calldatas.push(
-          limitOrderManager.interface.encodeFunctionData('selfPermitAllowed', [
-            parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
-            inputTokenPermit.nonce,
-            inputTokenPermit.expiry,
-            inputTokenPermit.v,
-            inputTokenPermit.r,
-            inputTokenPermit.s,
-          ])
-        )
-      } else {
-        calldatas.push(
-          limitOrderManager.interface.encodeFunctionData('selfPermit', [
-            parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
-            inputTokenPermit.amount,
-            inputTokenPermit.deadline,
-            inputTokenPermit.v,
-            inputTokenPermit.r,
-            inputTokenPermit.s,
-          ])
-        )
+      // alert('start')
+      // alert(requiredFunding.toSignificant())
+
+      // If not enough funding
+      if (parseFloat(fundingBalance.toSignificant()) < parseFloat(requiredFunding.toSignificant())) {
+        // If allowance is not setup
+        if (parseFloat(kromTokenAllowance.toSignificant()) < parseFloat(requiredFunding.toSignificant())) {
+          alert('doesnt have good allowance')
+          calldatas.push(
+            kromTokenContract.interface?.encodeFunctionData('approve', [
+              limitOrderManager.address,
+              toHex(requiredFunding.numerator),
+            ])
+          )
+        }
+        // Does user have enough fund to deposit
+        if (kromBalance! <= serviceFee) {
+          // Buy account, swap
+
+          calldatas = computeSignatureCalldata(requiredFunding, fundingSignatureData, calldatas, limitOrderManager)
+          const weth = WRAPPED_NATIVE_CURRENCY[chainId]
+
+          const fundingToken0: Token = weth
+          const fundingToken1: Token = kromToken as Token
+          const fundingSqrtPriceX96 = encodeSqrtRatioX96(
+            fundingTrade.trade.executionPrice.numerator,
+            fundingTrade.trade.executionPrice.denominator
+          )?.toString()
+
+          calldatas.push(
+            limitOrderManager.interface.encodeFunctionData('placeLimitOrder', [
+              {
+                _token0: fundingToken0.address,
+                _token1: fundingToken1.address,
+                _fee: fundingTrade.paymentFees,
+                _sqrtPriceX96: fundingSqrtPriceX96,
+                _amount0: fundingTrade.trade?.inputAmount,
+                _amount1: fundingTrade.trade?.outputAmount,
+                _amount0Min: fundingTrade.trade?.maximumAmountIn(
+                  new Percent(50, 3000),
+                  fundingTrade.trade?.inputAmount
+                ),
+                _amount1Min: fundingTrade.trade?.minimumAmountOut(
+                  new Percent(50, 3000),
+                  fundingTrade.trade?.outputAmount
+                ),
+              },
+            ])
+          )
+        }
+        // Deposit the necessary funding to pay for service fee
+        calldatas.push(limitOrderManager.interface.encodeFunctionData('addFunding', [toHex(requiredFunding.numerator)]))
       }
     }
+
+    calldatas = computeSignatureCalldata(parsedAmount, signatureData, calldatas, limitOrderManager)
 
     const value = parsedAmount.currency.isNative ? toHex(parsedAmount.quotient) : toHex('0')
 
@@ -257,6 +328,7 @@ function useSwapCallArguments(
     gasAmount,
     signatureData,
     argentWalletContract,
+    isAllInOne,
   ])
 }
 
@@ -346,7 +418,8 @@ export function useSwapCallback(
   signatureData: SignatureData | undefined | null,
   parsedAmount: CurrencyAmount<Currency> | undefined,
   priceAmount: Price<Currency, Currency> | undefined,
-  serviceFee: CurrencyAmount<Currency> | undefined
+  serviceFee: CurrencyAmount<Currency> | undefined,
+  isAllInOne: boolean | undefined
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -357,6 +430,7 @@ export function useSwapCallback(
 
   const kromatikaRouter = useKromatikaRouter()
 
+  // @dev: returns tx data to be executed
   const swapCalls = useSwapCallArguments(
     trade,
     gasAmount,
@@ -364,13 +438,16 @@ export function useSwapCallback(
     signatureData,
     parsedAmount,
     priceAmount,
-    serviceFee
+    serviceFee,
+    isAllInOne
   )
 
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
+  // Amount of krom deposited
+  const { fundingBalance } = useV3Positions(account)
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId || !priceAmount || !parsedAmount) {
@@ -387,6 +464,8 @@ export function useSwapCallback(
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
+        // alert(serviceFee?.toSignificant(6))
+        // alert(fundingBalance?.toSignificant())
         const estimatedCalls: SwapCallEstimate[] = await Promise.all(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
@@ -439,6 +518,7 @@ export function useSwapCallback(
           const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
             (call): call is SwapCallEstimate => !('error' in call)
           )
+
           if (!firstNoErrorCall) throw new Error(t`Unexpected error. Could not estimate gas for the swap.`)
           bestCallOption = firstNoErrorCall
         }

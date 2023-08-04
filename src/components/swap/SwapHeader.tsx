@@ -3,7 +3,7 @@ import { Switch } from '@material-ui/core'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
-import { useExpertModeManager } from '../../state/user/hooks'
+import { useExpertModeManager, useMulticallModeManager } from '../../state/user/hooks'
 import { RowBetween, RowFixed } from '../Row'
 
 const StyledSwapHeader = styled.div`
@@ -14,6 +14,7 @@ const StyledSwapHeader = styled.div`
 
 export default function SwapHeader() {
   const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const [multicallMode, toggleMulticallMode] = useMulticallModeManager()
 
   return (
     <StyledSwapHeader>
@@ -22,6 +23,10 @@ export default function SwapHeader() {
           <Trans>Show Chart</Trans>
         </Text>
         <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
+        <Text>
+          <Trans>Multicall </Trans>
+        </Text>
+        <Switch checked={multicallMode} color="primary" onClick={() => toggleMulticallMode()} />
       </RowFixed>
     </StyledSwapHeader>
   )
