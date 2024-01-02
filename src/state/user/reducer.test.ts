@@ -1,4 +1,4 @@
-import { createStore, Store } from 'redux'
+import { legacy_createStore, Store } from '@reduxjs/toolkit'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
@@ -8,7 +8,7 @@ describe('swap reducer', () => {
   let store: Store<UserState>
 
   beforeEach(() => {
-    store = createStore(reducer, initialState)
+    store = legacy_createStore(reducer, initialState)
   })
 
   describe('updateVersion', () => {
@@ -21,7 +21,7 @@ describe('swap reducer', () => {
       expect(store.getState().lastUpdateVersionTimestamp).toBeGreaterThanOrEqual(time)
     })
     it('sets allowed slippage and deadline', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         ...initialState,
         userDeadline: undefined,
         userSlippageTolerance: undefined,

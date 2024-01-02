@@ -7,7 +7,7 @@ import { ReactNode, useContext } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
@@ -56,7 +56,7 @@ function ConfirmationPendingContent({
 }) {
   return (
     <Wrapper>
-      <AutoColumn gap="md">
+      <AutoColumn $gap="md">
         {!inline && (
           <RowBetween>
             <div />
@@ -66,7 +66,7 @@ function ConfirmationPendingContent({
         <ConfirmedIcon inline={inline}>
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn $gap="12px" $justify={'center'}>
           <Text fontWeight={400} fontSize={20} textAlign="center">
             <Trans>Waiting For Confirmation</Trans>
           </Text>
@@ -93,7 +93,7 @@ export function TransactionPreparingContent({
 }) {
   return (
     <Wrapper>
-      <AutoColumn gap="md">
+      <AutoColumn $gap="md">
         {!inline && (
           <RowBetween>
             <div />
@@ -103,7 +103,7 @@ export function TransactionPreparingContent({
         <ConfirmedIcon inline={inline}>
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn $gap="12px" $justify={'center'}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
             <Trans>Preparing transaction</Trans>
           </Text>
@@ -141,7 +141,7 @@ function TransactionSubmittedContent({
   currencyToAdd?: Currency | undefined
   inline?: boolean // not in modal
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const { library } = useActiveWeb3React()
 
@@ -159,7 +159,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn $gap="12px" $justify={'center'}>
           <Text fontWeight={400} fontSize={20} textAlign="center">
             <Trans>Transaction Submitted</Trans>
           </Text>
@@ -219,13 +219,13 @@ export function ConfirmationModalContent({
         </RowBetween>
         {topContent()}
       </Section>
-      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
+      {bottomContent && <BottomSection $gap="12px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   return (
     <Wrapper>
       <Section>
@@ -235,7 +235,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
+        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} $gap="24px" $justify="center">
           <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
           <Text
             fontWeight={400}
@@ -247,7 +247,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
           </Text>
         </AutoColumn>
       </Section>
-      <BottomSection gap="12px">
+      <BottomSection $gap="12px">
         <ButtonPrimary onClick={onDismiss}>
           <Trans>Dismiss</Trans>
         </ButtonPrimary>
@@ -270,7 +270,7 @@ function L2Content({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const transaction = useTransaction(hash)
 
@@ -310,7 +310,7 @@ function L2Content({
             <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
           )}
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn $gap="12px" $justify={'center'}>
           <Text fontWeight={400} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>

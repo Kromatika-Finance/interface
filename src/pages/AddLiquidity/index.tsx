@@ -8,7 +8,7 @@ import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
 import ReactGA from 'react-ga'
-import { RouteComponentProps, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -43,26 +43,23 @@ import { DynamicSection, PageWrapper, ScrollablePage, Wrapper } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string }>) {
+export default function AddLiquidity() {
   const { account, chainId, library } = useActiveWeb3React()
   const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
   const limitManager = useLimitOrderManager()
 
-  const baseCurrency = useCurrency(currencyIdA)
+  const baseCurrency = useCurrency(params.currencyIdA)
   const withdrawKROM = location.pathname.includes('/withdraw')
   const { fundingBalance } = useV3Positions(account)
 
   const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled } = useV3DerivedMintInfo(
     baseCurrency ?? undefined,
     baseCurrency ?? undefined,
-    withdrawKROM ? fundingBalance : undefined
+    withdrawKROM ? fundingBalance : undefined,
   )
 
   const { independentField, typedValue } = useV3MintState()
@@ -101,7 +98,7 @@ export default function AddLiquidity({
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A].reduce(
@@ -111,7 +108,7 @@ export default function AddLiquidity({
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const argentWalletContract = useArgentWalletContract()
@@ -119,7 +116,7 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
+    chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined,
   )
 
   async function onAdd() {
@@ -134,7 +131,7 @@ export default function AddLiquidity({
 
     if (account && amount0) {
       calldatas.push(
-        limitManager.interface.encodeFunctionData(withdrawKROM ? 'withdrawFunding' : 'addFunding', [toHex(amount0)])
+        limitManager.interface.encodeFunctionData(withdrawKROM ? 'withdrawFunding' : 'addFunding', [toHex(amount0)]),
       )
       const calldata =
         calldatas.length === 1 ? calldatas[0] : limitManager.interface.encodeFunctionData('multicall', [calldatas])
@@ -199,11 +196,11 @@ export default function AddLiquidity({
                       return undefined
                     }
                     const blockNumber = await gaslessProvider._getInternalBlockNumber(
-                      100 + 2 * gaslessProvider.pollingInterval
+                      100 + 2 * gaslessProvider.pollingInterval,
                     )
                     return gaslessProvider._wrapTransaction(tx, response, blockNumber)
                   },
-                  { oncePoll: gaslessProvider }
+                  { oncePoll: gaslessProvider },
                 )
                 setAttemptingTxn(false)
 
@@ -291,9 +288,9 @@ export default function AddLiquidity({
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+      <AutoColumn $gap={'md'} style={{ marginTop: '20px' }}>
         <LightCard padding="12px 16px">
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo
@@ -327,10 +324,10 @@ export default function AddLiquidity({
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      history.push('/pool')
+      navigate('/pool')
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [navigate, onFieldAInput, txHash])
 
   // we need an existence check on parsed amounts for single-asset deposits
   const showApprovalA =
@@ -350,22 +347,24 @@ export default function AddLiquidity({
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
-      <AutoColumn gap={'md'}>
-        {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) && !withdrawKROM && isValid && (
-          <RowBetween>
-            {showApprovalA ? (
-              <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
-                {approvalA === ApprovalState.PENDING ? (
-                  <Dots>
-                    <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                  </Dots>
-                ) : (
-                  <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                )}
-              </ButtonPrimary>
-            ) : null}
-          </RowBetween>
-        )}
+      <AutoColumn $gap={'md'}>
+        {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) &&
+          !withdrawKROM &&
+          isValid && (
+            <RowBetween>
+              {showApprovalA ? (
+                <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
+                  {approvalA === ApprovalState.PENDING ? (
+                    <Dots>
+                      <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                    </Dots>
+                  ) : (
+                    <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                  )}
+                </ButtonPrimary>
+              ) : null}
+            </RowBetween>
+          )}
         <ButtonError
           style={{ marginTop: '8px' }}
           onClick={() => {
@@ -407,9 +406,9 @@ export default function AddLiquidity({
             showBackLink={true}
           />
           <Wrapper>
-            <AutoColumn gap="lg" justify="space-between">
+            <AutoColumn $gap="lg" $justify="space-between">
               <DynamicSection disabled={false}>
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <TYPE.label>
                     <Trans>Amount</Trans>
                   </TYPE.label>
@@ -419,7 +418,7 @@ export default function AddLiquidity({
                     onUserInput={onFieldAInput}
                     onMax={() => {
                       onFieldAInput(
-                        withdrawKROM ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? ''
+                        withdrawKROM ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? '',
                       )
                     }}
                     showMaxButton={!(withdrawKROM ? fundingBalance : atMaxAmounts[Field.CURRENCY_A])}

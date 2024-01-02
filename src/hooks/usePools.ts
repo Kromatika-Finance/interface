@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
+import IUniswapV3PoolStateABI from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { computePoolAddress, FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 
@@ -9,7 +9,7 @@ import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 import { useActiveWeb3React } from './web3'
 
-const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
+const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI.abi) as IUniswapV3PoolStateInterface
 
 export enum PoolState {
   LOADING,

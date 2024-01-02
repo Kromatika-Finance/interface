@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Switch } from '@material-ui/core'
 import { Percent } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useExpertModeManager } from '../../state/user/hooks'
 import { RowFixed } from '../Row'
@@ -35,7 +35,7 @@ export default function MarketHeader({
         </RowFixed>
       )}
 
-      <RowFixed justify="flex-end" width="100%">
+      <RowFixed $justify="flex-end" width="100%">
         <SettingsTab placeholderSlippage={allowedSlippage} />
       </RowFixed>
     </StyledMarketHeader>

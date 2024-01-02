@@ -1,10 +1,10 @@
 import { Box } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Row = styled(Box)<{
   width?: string
   align?: string
-  justify?: string
+  $justify?: string
   padding?: string
   border?: string
   borderRadius?: string
@@ -12,7 +12,7 @@ const Row = styled(Box)<{
   width: ${({ width }) => width ?? '100%'};
   display: flex;
   align-items: ${({ align }) => align ?? 'center'};
-  justify-content: ${({ justify }) => justify ?? 'flex-start'};
+  justify-content: ${({ $justify }) => $justify ?? 'flex-start'};
   padding: ${({ padding }) => padding ?? 0};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
@@ -27,20 +27,20 @@ export const RowFlat = styled.div`
   align-items: flex-end;
 `
 
-export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
+export const AutoRow = styled(Row)<{ $gap?: string; $justify?: string }>`
   flex-wrap: wrap;
-  gap: ${({ gap }) => (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || gap};
-  justify-content: ${({ justify }) => justify && justify};
+  gap: ${({ $gap }) => ($gap === 'sm' && '8px') || ($gap === 'md' && '12px') || ($gap === 'lg' && '24px') || $gap};
+  justify-content: ${({ $justify }) => $justify && $justify};
 
   & > * {
-    gap: ${({ gap }) =>
-      (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || gap} !important;
+    gap: ${({ $gap }) =>
+      ($gap === 'sm' && '8px') || ($gap === 'md' && '12px') || ($gap === 'lg' && '24px') || $gap} !important;
   }
 `
 
-export const RowFixed = styled(Row)<{ gap?: string; justify?: string; width?: string }>`
+export const RowFixed = styled(Row)<{ $gap?: string; justify?: string; width?: string }>`
   width: ${({ width }) => width || 'fit-content'};
-  gap: ${({ gap }) => (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || gap};
+  gap: ${({ $gap }) => ($gap === 'sm' && '8px') || ($gap === 'md' && '12px') || ($gap === 'lg' && '24px') || $gap};
 `
 
 export default Row

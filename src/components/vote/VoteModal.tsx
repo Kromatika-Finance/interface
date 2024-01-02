@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useContext, useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -22,7 +22,7 @@ const ContentWrapper = styled(AutoColumn)`
 `
 
 const StyledClosed = styled(X)`
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `
@@ -53,7 +53,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
   const [attempting, setAttempting] = useState<boolean>(false)
 
   // get theme for colors
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   // wrapper to reset state on modal close
   function wrappedOndismiss() {
@@ -82,8 +82,8 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
       {!attempting && !hash && (
-        <ContentWrapper gap="lg">
-          <AutoColumn gap="lg" justify="center">
+        <ContentWrapper $gap="lg">
+          <AutoColumn $gap="lg" $justify="center">
             <RowBetween>
               <TYPE.mediumHeader fontWeight={400}>
                 {voteOption === VoteOption.Against ? (
@@ -122,8 +122,8 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           <ConfirmedIcon>
             <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="100px" $justify={'center'}>
+            <AutoColumn $gap="12px" $justify={'center'}>
               <TYPE.largeHeader>
                 <Trans>Submitting Vote</Trans>
               </TYPE.largeHeader>
@@ -143,8 +143,8 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           <ConfirmedIcon>
             <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="100px" $justify={'center'}>
+            <AutoColumn $gap="12px" $justify={'center'}>
               <TYPE.largeHeader>
                 <Trans>Transaction Submitted</Trans>
               </TYPE.largeHeader>

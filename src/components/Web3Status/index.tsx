@@ -6,7 +6,7 @@ import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -45,7 +45,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   user-select: none;
   padding: 8px 16px;
 
-  :focus {
+  &:focus {
     outline: none;
   }
 
@@ -59,8 +59,8 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   color: ${({ theme }) => theme.white};
   font-weight: 400;
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     background-color: ${({ theme }) => darken(0.1, theme.red1)};
     border: 2px solid ${({ theme }) => theme.bg3};
   }
@@ -75,8 +75,8 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   border: none;
   color: ${({ theme }) => theme.white};
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     border: none;
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
@@ -92,9 +92,9 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
   font-weight: 400;
 
-  :hover,
-  :focus,
-  :active {
+  &:hover,
+  &:focus,
+  &:active {
     cursor: pointer;
     outline: none;
     box-shadow: none;

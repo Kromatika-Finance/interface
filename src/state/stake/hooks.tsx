@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { Trans } from '@lingui/macro'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import STAKING_REWARDS_ABI from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -12,7 +12,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
-const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
+const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI.abi)
 
 export const STAKING_GENESIS = 1600387200
 

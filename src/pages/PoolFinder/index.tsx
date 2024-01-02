@@ -59,7 +59,7 @@ export default function PoolFinder() {
       pairState === PairState.EXISTS &&
         pair &&
         JSBI.equal(pair.reserve0.quotient, JSBI.BigInt(0)) &&
-        JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0))
+        JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0)),
     )
 
   const position: CurrencyAmount<Token> | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
@@ -73,7 +73,7 @@ export default function PoolFinder() {
         setCurrency1(currency)
       }
     },
-    [activeField]
+    [activeField],
   )
 
   const handleSearchDismiss = useCallback(() => {
@@ -96,9 +96,9 @@ export default function PoolFinder() {
     <>
       <AppBody>
         <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
-        <AutoColumn style={{ padding: '1rem' }} gap="md">
+        <AutoColumn style={{ padding: '1rem' }} $gap="md">
           <BlueCard>
-            <AutoColumn gap="10px">
+            <AutoColumn $gap="10px">
               <TYPE.link fontWeight={400} color={'primaryText1'}>
                 <Trans>
                   <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
@@ -171,7 +171,7 @@ export default function PoolFinder() {
                 <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
               ) : (
                 <LightCard padding="45px 10px">
-                  <AutoColumn gap="sm" justify="center">
+                  <AutoColumn $gap="sm" $justify="center">
                     <Text textAlign="center">
                       <Trans>You don’t have liquidity in this pool yet.</Trans>
                     </Text>
@@ -185,7 +185,7 @@ export default function PoolFinder() {
               )
             ) : validPairNoLiquidity ? (
               <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
+                <AutoColumn $gap="sm" $justify="center">
                   <Text textAlign="center">
                     <Trans>No pool found.</Trans>
                   </Text>
@@ -196,7 +196,7 @@ export default function PoolFinder() {
               </LightCard>
             ) : pairState === PairState.INVALID ? (
               <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
+                <AutoColumn $gap="sm" $justify="center">
                   <Text textAlign="center" fontWeight={400}>
                     <Trans>Invalid pair.</Trans>
                   </Text>
@@ -204,7 +204,7 @@ export default function PoolFinder() {
               </LightCard>
             ) : pairState === PairState.LOADING ? (
               <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
+                <AutoColumn $gap="sm" $justify="center">
                   <Text textAlign="center">
                     <Trans>Loading</Trans>
                     <Dots />

@@ -43,7 +43,7 @@ export function AdvancedSwapDetails({
   syncing = false,
 }: AdvancedSwapDetailsProps) {
   return trade && priceAmount ? (
-    <AutoColumn gap="8px">
+    <AutoColumn $gap="8px">
       <TransactionDetailsLabel fontWeight={400} fontSize={14}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>

@@ -1,7 +1,7 @@
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 function reportWebVitals({ name, delta, id }: Metric) {
@@ -14,7 +14,8 @@ function reportWebVitals({ name, delta, id }: Metric) {
 }
 
 // tracks web vitals and pageviews
-export default function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteComponentProps): null {
+export default function GoogleAnalyticsReporter(): null {
+  const params = useParams()
   useEffect(() => {
     getFCP(reportWebVitals)
     getFID(reportWebVitals)
@@ -28,7 +29,7 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
   }, [chainId])
 
   useEffect(() => {
-    ReactGA.pageview(`${pathname}${search}`)
-  }, [pathname, search])
+    ReactGA.pageview(`${params.pathname}${params.search}`)
+  }, [params.pathname, params.search])
   return null
 }

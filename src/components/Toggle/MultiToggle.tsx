@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const ToggleWrapper = styled.button<{ width?: string }>`
   display: flex;
@@ -12,7 +12,7 @@ export const ToggleWrapper = styled.button<{ width?: string }>`
   outline: none;
 `
 
-export const ToggleElement = styled.span<{ isActive?: boolean; fontSize?: string }>`
+export const ToggleElement = styled.span<{ $isActive?: boolean; fontSize?: string }>`
   display: flex;
   align-items: center;
   width: 100%;
@@ -20,14 +20,14 @@ export const ToggleElement = styled.span<{ isActive?: boolean; fontSize?: string
   border-radius: 6px;
   justify-content: center;
   height: 100%;
-  background: ${({ theme, isActive }) => (isActive ? theme.bg1 : 'none')};
-  color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
+  background: ${({ theme, $isActive }) => ($isActive ? theme.bg1 : 'none')};
+  color: ${({ theme, $isActive }) => ($isActive ? theme.text1 : theme.text3)};
   font-size: ${({ fontSize }) => fontSize ?? '1rem'};
   font-weight: 500;
   white-space: nowrap;
 
-  :hover {
+  &:hover {
     user-select: initial;
-    color: ${({ theme, isActive }) => (isActive ? theme.text2 : theme.text3)};
+    color: ${({ theme, $isActive }) => ($isActive ? theme.text2 : theme.text3)};
   }
 `

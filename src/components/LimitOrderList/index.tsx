@@ -7,7 +7,7 @@ import { useV3Positions } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import { memo } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { PositionDetails } from 'types/position'
 
 import { TYPE } from '../../theme'
@@ -62,7 +62,7 @@ function LimitOrderList() {
       acc[p.processed ? 1 : 0].push(p)
       return acc
     },
-    [[], []]
+    [[], []],
   ) ?? [[], []]
   Boolean(!account)
 
@@ -70,21 +70,21 @@ function LimitOrderList() {
     <LimitOrdersContainer>
       <LimitOrdersWrapper direction={'column'}>
         <Collapsible label={t`Open Orders`} initState={openPositions.length > 0}>
-          <AutoColumn gap="1rem">
+          <AutoColumn $gap="1rem">
             {openPositions.map((item, index) => (
               <LimitOrderListItem key={index} limitOrderDetails={item} isUnderfunded={isUnderfunded} />
             ))}
           </AutoColumn>
         </Collapsible>
         <Collapsible label={t`Executed Orders`} initState={closedPositions.length > 0}>
-          <AutoColumn gap="1rem">
+          <AutoColumn $gap="1rem">
             {closedPositions.map((item, index) => (
               <LimitOrderListItem key={index} limitOrderDetails={item} isUnderfunded={isUnderfunded} />
             ))}
           </AutoColumn>
         </Collapsible>
       </LimitOrdersWrapper>
-      <AutoRow justify="center" textAlign="center" padding="0 1rem">
+      <AutoRow $justify="center" textAlign="center" padding="0 1rem">
         <Text fontSize={16} fontWeight={400}>
           <TYPE.main>
             <Trans>Any missing order(s)? Try switching between networks.</Trans>

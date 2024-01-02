@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const StyledIframe = styled.iframe`
   border: none;

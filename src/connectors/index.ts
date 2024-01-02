@@ -58,8 +58,8 @@ export const walletlink = new WalletLinkConnector({
 })
 
 export const unstopabbledomains = new UAuthConnector({
-  clientID: process.env.REACT_APP_UD_CLIENT_ID,
-  redirectUri: process.env.REACT_APP_UD_REDIRECT_URI,
+  clientID: process.env.REACT_APP_UD_CLIENT_ID!,
+  redirectUri: process.env.REACT_APP_UD_REDIRECT_URI!,
   postLogoutRedirectUri: process.env.REACT_APP_UD_POST_LOGOUT_REDIRECT_URI,
 
   // Scope must include openid and wallet

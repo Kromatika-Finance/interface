@@ -78,7 +78,7 @@ const plurals: LocalePlural = {
 }
 
 async function dynamicActivate(locale: SupportedLocale) {
-  i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
+  i18n.loadLocaleData(locale, { plurals: plurals[locale] })
   const { messages } = locale === DEFAULT_LOCALE ? { messages: DEFAULT_MESSAGES } : await import(`locales/${locale}`)
   i18n.load(locale, messages)
   i18n.activate(locale)
@@ -101,9 +101,5 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       })
   }, [locale, setUserLocale])
 
-  return (
-    <I18nProvider forceRenderOnLocaleChange={false} i18n={i18n}>
-      {children}
-    </I18nProvider>
-  )
+  return <I18nProvider i18n={i18n}>{children}</I18nProvider>
 }

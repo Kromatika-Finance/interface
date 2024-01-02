@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { SupportedChainId } from 'constants/chains'
 import React, { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'

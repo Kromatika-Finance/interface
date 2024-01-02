@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -53,10 +53,10 @@ interface ProgressCirclesProps {
  * @param steps  array of booleans where true means step is complete
  */
 export default function ProgressCircles({ steps, disabled = false, ...rest }: ProgressCirclesProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   return (
-    <Wrapper justify={'center'} {...rest}>
+    <Wrapper $justify={'center'} {...rest}>
       <Grouping>
         {steps.map((step, i) => {
           return (

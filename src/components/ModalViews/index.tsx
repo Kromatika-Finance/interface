@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -29,7 +29,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       <ConfirmedIcon>
         <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
       </ConfirmedIcon>
-      <AutoColumn gap="100px" justify={'center'}>
+      <AutoColumn $gap="100px" $justify={'center'}>
         {children}
         <TYPE.subHeader>
           <Trans>Confirm this transaction in your wallet</Trans>
@@ -48,7 +48,7 @@ export function SubmittedView({
   onDismiss: () => void
   hash: string | undefined
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const { chainId } = useActiveWeb3React()
 
   return (
@@ -60,7 +60,7 @@ export function SubmittedView({
       <ConfirmedIcon>
         <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
       </ConfirmedIcon>
-      <AutoColumn gap="100px" justify={'center'}>
+      <AutoColumn $gap="100px" $justify={'center'}>
         {children}
         {chainId && hash && (
           <ExternalLink

@@ -8,7 +8,7 @@ import { darken } from 'polished'
 import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock, Minus, Plus } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -24,13 +24,13 @@ import { RowBetween, RowFixed } from '../Row'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
+const InputPanel = styled.div<{ $hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg2)};
+  border-radius: ${({ $hideInput }) => ($hideInput ? '16px' : '20px')};
+  background-color: ${({ theme, $hideInput }) => ($hideInput ? 'transparent' : theme.bg2)};
   z-index: 1;
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: ${({ $hideInput }) => ($hideInput ? '100%' : 'initial')};
 `
 
 const FixedContainer = styled.div`
@@ -46,20 +46,20 @@ const FixedContainer = styled.div`
   z-index: 2;
 `
 
-const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 2px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
+const Container = styled.div<{ $hideInput: boolean }>`
+  border-radius: ${({ $hideInput }) => ($hideInput ? '16px' : '20px')};
+  border: 2px solid ${({ theme, $hideInput }) => ($hideInput ? ' transparent' : theme.bg2)};
   background-color: ${({ theme }) => theme.bg6};
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: ${({ $hideInput }) => ($hideInput ? '100%' : 'initial')};
 
-  :focus,
-  :hover {
-    border: 2px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
+  &:focus,
+  &:hover {
+    border: 2px solid ${({ theme, $hideInput }) => ($hideInput ? ' transparent' : theme.bg3)};
   }
 `
 
-const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean; hideInput?: boolean }>`
-  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
+const CurrencySelect = styled(ButtonGray)<{ $visible: boolean; selected: boolean; $hideInput?: boolean }>`
+  visibility: ${({ $visible }) => ($visible ? 'visible' : 'hidden')};
   align-items: center;
   font-size: 24px;
   font-weight: 500;
@@ -71,14 +71,14 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   cursor: pointer;
   user-select: none;
   border: none;
-  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  height: ${({ $hideInput }) => ($hideInput ? '2.8rem' : '2.4rem')};
+  width: ${({ $hideInput }) => ($hideInput ? '100%' : 'initial')};
   padding: 0 8px;
   justify-content: space-between;
-  margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+  margin-right: ${({ $hideInput }) => ($hideInput ? '0' : '12px')};
 
-  :focus,
-  :hover {
+  &:focus,
+  &:hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
   }
 `
@@ -125,9 +125,9 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   }
 `
 
-const StyledTokenName = styled.span<{ active?: boolean }>`
-  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size: ${({ active }) => (active ? '18px' : '18px')};
+const StyledTokenName = styled.span<{ $active?: boolean }>`
+  ${({ $active }) => ($active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
+  font-size: ${({ $active }) => ($active ? '18px' : '18px')};
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
@@ -143,7 +143,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
 
-  :focus {
+  &:focus {
     outline: none;
   }
 
@@ -172,7 +172,7 @@ const SmallButton = styled(ButtonGray)`
   width: 20px;
   height: 20px;
 
-  :hover {
+  &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
 `
@@ -255,7 +255,7 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -288,10 +288,10 @@ export default function CurrencyInputPanel({
   }
 
   return (
-    <InputPanel id={id} hideInput={hideInput} {...rest}>
+    <InputPanel id={id} $hideInput={hideInput} {...rest}>
       {locked && (
         <FixedContainer>
-          <AutoColumn gap="sm" justify="center">
+          <AutoColumn $gap="sm" $justify="center">
             <Lock />
             <TYPE.label fontSize={16} textAlign="center" padding="0 12px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
@@ -299,7 +299,7 @@ export default function CurrencyInputPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      <Container hideInput={hideInput}>
+      <Container $hideInput={hideInput}>
         {actionLabel && (
           <ActionLabel>
             <Trans>{actionLabel}</Trans>
@@ -308,9 +308,9 @@ export default function CurrencyInputPanel({
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           {showCurrencySelector ? (
             <CurrencySelect
-              visible={currency !== undefined}
+              $visible={currency !== undefined}
               selected={!!currency}
-              hideInput={hideInput}
+              $hideInput={hideInput}
               className="open-currency-select-button"
               onClick={() => {
                 if (onCurrencySelect) {
@@ -332,7 +332,7 @@ export default function CurrencyInputPanel({
                       {pair?.token0.symbol}:{pair?.token1.symbol}
                     </StyledTokenName>
                   ) : (
-                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                    <StyledTokenName className="token-symbol-container" $active={Boolean(currency && currency.symbol)}>
                       {(currency && currency.symbol && currency.symbol.length > 20
                         ? currency.symbol.slice(0, 4) +
                           '...' +
@@ -384,7 +384,7 @@ export default function CurrencyInputPanel({
                 <RowFixed style={{ height: '17px' }}>
                   <TYPE.body
                     onClick={onMax}
-                    color={theme.text2}
+                    color={theme?.text2}
                     fontWeight={400}
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}

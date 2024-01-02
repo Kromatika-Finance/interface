@@ -15,13 +15,13 @@ import { LoadingRows } from 'pages/Pool/styleds'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import { V3TradeState } from 'state/validator/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 import { PositionDetails } from 'types/position'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -177,7 +177,7 @@ const StyledInfo = styled(Info)`
   margin-left: 4px;
   color: ${({ theme }) => theme.text3};
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
   }
 `
@@ -238,12 +238,13 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-export default function Swap({ history }: RouteComponentProps) {
+export default function Swap() {
+  const navigate = useNavigate()
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading, fundingBalance, minBalance, gasPrice } = useV3Positions(account)
@@ -253,7 +254,7 @@ export default function Swap({ history }: RouteComponentProps) {
       acc[p.processed ? 1 : 0].push(p)
       return acc
     },
-    [[], []]
+    [[], []],
   ) ?? [[], []]
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
@@ -276,7 +277,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
+    [loadedInputCurrency, loadedOutputCurrency],
   )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
@@ -333,7 +334,7 @@ export default function Swap({ history }: RouteComponentProps) {
       V3TradeState.LOADING === v3TradeState,
       V3TradeState.SYNCING === v3TradeState,
     ],
-    [trade, v3TradeState]
+    [trade, v3TradeState],
   )
 
   const fiatValueInput = useUSDCValue(parsedAmounts.input)
@@ -347,26 +348,26 @@ export default function Swap({ history }: RouteComponentProps) {
     (value: string) => {
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
   const handleTypePrice = useCallback(
     (value: string) => {
       onUserInput(Field.PRICE, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/limitorder')
-  }, [history])
+    navigate('/limitorder')
+  }, [navigate])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -386,7 +387,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] &&
       currencies[Field.OUTPUT] &&
-      (independentField === Field.INPUT || independentField === Field.OUTPUT)
+      (independentField === Field.INPUT || independentField === Field.OUTPUT),
   )
 
   // check whether the user has approved the router on the input token
@@ -439,7 +440,7 @@ export default function Swap({ history }: RouteComponentProps) {
     signatureData,
     parsedAmounts.input,
     price,
-    serviceFee
+    serviceFee,
   )
 
   const handleSwap = useCallback(() => {
@@ -456,8 +457,8 @@ export default function Swap({ history }: RouteComponentProps) {
             recipient === null
               ? 'Trade w/o Send'
               : (recipientAddress ?? recipient) === account
-              ? 'Trade w/o Send + recipient'
-              : 'Trade w/ Send',
+                ? 'Trade w/o Send + recipient'
+                : 'Trade w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -507,20 +508,20 @@ export default function Swap({ history }: RouteComponentProps) {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      history.push('/#/limitorder/')
+      navigate('/#/limitorder/')
     }
-  }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, navigate, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
-    (inputCurrency) => {
+    (inputCurrency: Currency) => {
       setApprovalSubmitted(false)
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
 
   const handleMaxInput = useCallback(() => {
@@ -528,10 +529,10 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency) => {
+    (outputCurrency: Currency) => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
@@ -570,7 +571,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     outputAmount={parsedAmounts.output}
                   />
 
-                  <AutoColumn gap={'md'}>
+                  <AutoColumn $gap={'md'}>
                     <div style={{ display: 'relative' }}>
                       <CurrencyInputPanel
                         label={
@@ -593,7 +594,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         loading={independentField === Field.OUTPUT && routeIsSyncing}
                       />
 
-                      <ArrowWrapper clickable={false}>
+                      <ArrowWrapper $clickable={false}>
                         <X size="16" />
                       </ArrowWrapper>
 
@@ -615,7 +616,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         loading={independentField === Field.INPUT && routeIsSyncing}
                       />
 
-                      <ArrowWrapper clickable>
+                      <ArrowWrapper $clickable>
                         <ArrowDown
                           size="16"
                           onClick={() => {
@@ -651,8 +652,8 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     {recipient !== null && !showWrap ? (
                       <>
-                        <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                          <ArrowWrapper clickable={false}>
+                        <AutoRow $justify="space-between" style={{ padding: '0 1rem' }}>
+                          <ArrowWrapper $clickable={false}>
                             <ArrowDown size="16" color={theme.text2} />
                           </ArrowWrapper>
                           <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -664,7 +665,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     ) : null}
                     {!showWrap && trade && minPrice && (
                       <>
-                        <Row justify={!trade ? 'center' : 'space-between'}>
+                        <Row $justify={!trade ? 'center' : 'space-between'}>
                           <RowFixed style={{ position: 'relative' }}>
                             <MouseoverTooltipContent
                               wrap={false}
@@ -681,7 +682,7 @@ export default function Swap({ history }: RouteComponentProps) {
                                 })
                               }
                             >
-                              <AutoRow gap="4px" width="auto">
+                              <AutoRow $gap="4px" width="auto">
                                 <AutoRouterLogo />
                                 <LoadingOpacityContainer $loading={routeIsSyncing}>
                                   {trade instanceof V3Trade && trade.swaps.length > 1 && (
@@ -729,7 +730,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             </MouseoverTooltipContent>
                           </RowFixed>
                         </Row>
-                        <Row justify={!trade ? 'center' : 'space-between'}>
+                        <Row $justify={!trade ? 'center' : 'space-between'}>
                           <RowFixed style={{ position: 'relative' }}>
                             <TYPE.body color={theme.text2} fontWeight={400} fontSize={[10, 12, 14]}>
                               <Trans>Min Price</Trans>
@@ -783,7 +784,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         </GreyCard>
                       ) : showApproveFlow ? (
                         <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                          <AutoColumn style={{ width: '100%' }} gap="12px">
+                          <AutoColumn style={{ width: '100%' }} $gap="12px">
                             <ButtonConfirmed
                               onClick={handleApprove}
                               disabled={
@@ -798,7 +799,7 @@ export default function Swap({ history }: RouteComponentProps) {
                                 signatureState === UseERC20PermitState.SIGNED
                               }
                             >
-                              <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                              <AutoRow $justify="space-between" style={{ flexWrap: 'nowrap' }}>
                                 <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                                   <CurrencyLogo
                                     currency={currencies[Field.INPUT]}
@@ -994,7 +995,7 @@ export default function Swap({ history }: RouteComponentProps) {
               outputAmount={parsedAmounts.output}
             />
 
-            <AutoColumn gap={'md'}>
+            <AutoColumn $gap={'md'}>
               <div style={{ display: 'relative' }}>
                 <CurrencyInputPanel
                   label={
@@ -1013,7 +1014,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   loading={independentField === Field.OUTPUT && routeIsSyncing}
                 />
 
-                <ArrowWrapper clickable={false}>
+                <ArrowWrapper $clickable={false}>
                   <X size="16" />
                 </ArrowWrapper>
 
@@ -1035,7 +1036,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   loading={independentField === Field.INPUT && routeIsSyncing}
                 />
 
-                <ArrowWrapper clickable>
+                <ArrowWrapper $clickable>
                   <ArrowDown
                     size="16"
                     onClick={() => {
@@ -1067,8 +1068,8 @@ export default function Swap({ history }: RouteComponentProps) {
 
               {recipient !== null && !showWrap ? (
                 <>
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <ArrowWrapper clickable={false}>
+                  <AutoRow $justify="space-between" style={{ padding: '0 1rem' }}>
+                    <ArrowWrapper $clickable={false}>
                       <ArrowDown size="16" color={theme.text2} />
                     </ArrowWrapper>
                     <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -1080,7 +1081,7 @@ export default function Swap({ history }: RouteComponentProps) {
               ) : null}
               {!showWrap && trade && minPrice && (
                 <>
-                  <Row justify={!trade ? 'center' : 'space-between'}>
+                  <Row $justify={!trade ? 'center' : 'space-between'}>
                     <RowFixed style={{ position: 'relative' }}>
                       <MouseoverTooltipContent
                         wrap={false}
@@ -1097,7 +1098,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           })
                         }
                       >
-                        <AutoRow gap="4px" width="auto">
+                        <AutoRow $gap="4px" width="auto">
                           <AutoRouterLogo />
                           <LoadingOpacityContainer $loading={routeIsSyncing}>
                             {trade instanceof V3Trade && trade.swaps.length > 1 && (
@@ -1145,7 +1146,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </MouseoverTooltipContent>
                     </RowFixed>
                   </Row>
-                  <Row justify={!trade ? 'center' : 'space-between'}>
+                  <Row $justify={!trade ? 'center' : 'space-between'}>
                     <RowFixed style={{ position: 'relative' }}>
                       <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                         <Trans>Min Price</Trans>
@@ -1195,7 +1196,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   </GreyCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                    <AutoColumn style={{ width: '100%' }} gap="12px">
+                    <AutoColumn style={{ width: '100%' }} $gap="12px">
                       <ButtonConfirmed
                         onClick={handleApprove}
                         disabled={
@@ -1209,7 +1210,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                         }
                       >
-                        <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                        <AutoRow $justify="space-between" style={{ flexWrap: 'nowrap' }}>
                           <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}

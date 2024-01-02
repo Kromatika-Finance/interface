@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
 import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
@@ -13,7 +13,7 @@ const Container = styled(TYPE.small)`
   bottom: 0;
   padding: 1rem;
   opacity: 0.6;
-  :hover {
+  &:hover {
     opacity: 1;
   }
   margin-top: 1rem !important;

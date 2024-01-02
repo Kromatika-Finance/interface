@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
 import ReactGA from 'react-ga'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import store, { AppState } from '../../state'
 import { ExternalLink, TYPE } from '../../theme'
@@ -45,7 +45,7 @@ type ErrorBoundaryState = {
   error: Error | null
 }
 
-export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
+export default class ErrorBoundary extends React.Component<any, ErrorBoundaryState> {
   constructor(props: unknown) {
     super(props)
     this.state = { error: null }
@@ -70,7 +70,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
       return (
         <FallbackWrapper>
           <BodyWrapper>
-            <AutoColumn gap={'md'}>
+            <AutoColumn $gap={'md'}>
               <SomethingWentWrongWrapper>
                 <TYPE.label fontSize={[18, 20, 24]} fontWeight={600}>
                   <Trans>Something went wrong</Trans>
@@ -86,7 +86,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                   <ExternalLink
                     id="create-github-issue-link"
                     href={`https://github.com/Kromatika-Finance/interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
-                      `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``
+                      `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``,
                     )}`}
                     target="_blank"
                   >

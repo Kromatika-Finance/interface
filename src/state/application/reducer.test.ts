@@ -1,4 +1,4 @@
-import { createStore, Store } from 'redux'
+import { legacy_createStore, Store } from '@reduxjs/toolkit'
 
 import reducer, {
   addPopup,
@@ -14,7 +14,7 @@ describe('application reducer', () => {
   let store: Store<ApplicationState>
 
   beforeEach(() => {
-    store = createStore(reducer, {
+    store = legacy_createStore(reducer, {
       blockNumber: {
         [1]: 3,
       },

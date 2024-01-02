@@ -18,7 +18,7 @@ import { useModalOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ProposalData, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, TYPE } from 'theme'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -81,7 +81,7 @@ const WrapSmall = styled(RowBetween)`
 const TextButton = styled(TYPE.main)`
   color: ${({ theme }) => theme.primary1};
 
-  :hover {
+  &:hover {
     cursor: pointer;
     text-decoration: underline;
   }
@@ -114,29 +114,29 @@ export default function Vote() {
   const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    chainId ? UNI[chainId] : undefined,
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // show delegation option if they have have a balance, but have not delegated
   const showUnlockVoting = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
   )
 
   return (
     <>
-      <PageWrapper gap="lg" justify="center">
+      <PageWrapper $gap="lg" $justify="center">
         <DelegateModal
           isOpen={showDelegateModal}
           onDismiss={toggleDelegateModal}
           title={showUnlockVoting ? <Trans>Unlock Votes</Trans> : <Trans>Update Delegation</Trans>}
         />
-        <TopSection gap="md">
+        <TopSection $gap="md">
           <VoteCard>
             <CardBGImage />
             <CardNoise />
             <CardSection>
-              <AutoColumn gap="md">
+              <AutoColumn $gap="md">
                 <RowBetween>
                   <TYPE.white fontWeight={600}>
                     <Trans>Uniswap Governance</Trans>
@@ -165,12 +165,12 @@ export default function Vote() {
             <CardNoise />
           </VoteCard>
         </TopSection>
-        <TopSection gap="2px">
+        <TopSection $gap="2px">
           <WrapSmall>
             <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
-            <AutoRow gap="6px" justify="flex-end">
+            <AutoRow $gap="6px" $justify="flex-end">
               {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
               {showUnlockVoting ? (
                 <ButtonPrimary

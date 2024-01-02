@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTransaction } from '../../state/transactions/hooks'
@@ -19,7 +19,7 @@ export default function TransactionPopup({ hash }: { hash: string }) {
   const { chainId } = useActiveWeb3React()
 
   const tx = useTransaction(hash)
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   if (!tx) return null
   const success = Boolean(tx.receipt && tx.receipt.status === 1)
@@ -27,9 +27,9 @@ export default function TransactionPopup({ hash }: { hash: string }) {
   return (
     <RowNoFlex>
       <div style={{ paddingRight: 16 }}>
-        {success ? <CheckCircle color={theme.green1} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
+        {success ? <CheckCircle color={theme?.green1} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
       </div>
-      <AutoColumn gap="8px">
+      <AutoColumn $gap="8px">
         <TYPE.body fontWeight={400}>
           <TransactionSummary info={tx.info} />
         </TYPE.body>

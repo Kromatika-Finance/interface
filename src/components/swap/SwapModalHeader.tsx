@@ -5,7 +5,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
+import { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { TYPE } from '../../theme'
@@ -39,16 +39,16 @@ export default function SwapModalHeader({
   inputAmount: CurrencyAmount<Currency> | undefined
   outputAmount: CurrencyAmount<Currency> | undefined
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const [showInverted, setShowInverted] = useState<boolean>(true)
 
   const fiatValueInput = useUSDCValue(inputAmount)
 
   return (
-    <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn $gap={'6px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
-        <AutoColumn gap={'8px'}>
+        <AutoColumn $gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={400} fontSize={14}>
               <Trans>From</Trans>
@@ -56,13 +56,13 @@ export default function SwapModalHeader({
             <FiatValue fiatValue={fiatValueInput} />
           </RowBetween>
           <RowBetween align="center">
-            <RowFixed gap={'0px'}>
+            <RowFixed $gap={'0px'}>
               <CurrencyLogo currency={inputAmount?.currency} size={'20px'} style={{ marginRight: '12px' }} />
               <Text fontSize={16} fontWeight={400}>
                 {inputAmount?.currency.symbol}
               </Text>
             </RowFixed>
-            <RowFixed gap={'0px'}>
+            <RowFixed $gap={'0px'}>
               <TruncatedText
                 fontSize={24}
                 fontWeight={400}
@@ -100,7 +100,7 @@ export default function SwapModalHeader({
       </LightCard>
 
       {showAcceptChanges ? (
-        <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
+        <SwapShowAcceptChanges $justify="flex-start" $gap={'0px'}>
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
@@ -118,7 +118,7 @@ export default function SwapModalHeader({
         </SwapShowAcceptChanges>
       ) : null}
 
-      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
+      <AutoColumn $justify="flex-start" $gap="sm" style={{ padding: '.75rem 1rem' }}>
         <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
           <Trans>
             Output is estimated. You will receive at least{' '}
@@ -130,7 +130,7 @@ export default function SwapModalHeader({
         </TYPE.italic>
       </AutoColumn>
       {recipient !== null ? (
-        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+        <AutoColumn $justify="flex-start" $gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>
             <Trans>
               Output will be sent to{' '}

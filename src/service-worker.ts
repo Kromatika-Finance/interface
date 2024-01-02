@@ -30,22 +30,25 @@ precacheAndRoute(manifest)
 // immediately with a local index.html shell. See
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$')
-registerRoute(({ request, url }: { request: Request; url: URL }) => {
-  // If this isn't app.uniswap.org, skip. IPFS gateways may not have domain
-  // separation, so they cannot use App Shell-style routing.
-  if (url.hostname !== 'app.kromatika.finance') {
-    return false
-  }
+registerRoute(
+  ({ request, url }: { request: Request; url: URL }) => {
+    // If this isn't app.uniswap.org, skip. IPFS gateways may not have domain
+    // separation, so they cannot use App Shell-style routing.
+    if (url.hostname !== 'app.kromatika.finance') {
+      return false
+    }
 
-  // If this isn't a navigation, skip.
-  if (request.mode !== 'navigate') {
-    return false
-  }
+    // If this isn't a navigation, skip.
+    if (request.mode !== 'navigate') {
+      return false
+    }
 
-  // If this looks like a URL for a resource, skip.
-  if (url.pathname.match(fileExtensionRegexp)) {
-    return false
-  }
+    // If this looks like a URL for a resource, skip.
+    if (url.pathname.match(fileExtensionRegexp)) {
+      return false
+    }
 
-  return true
-}, createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'))
+    return true
+  },
+  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'),
+)

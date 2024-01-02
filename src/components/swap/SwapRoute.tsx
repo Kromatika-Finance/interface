@@ -10,7 +10,7 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
 
@@ -34,9 +34,9 @@ export default memo(function SwapRoute({
   const routingAPIEnabled = useRoutingAPIEnabled()
 
   return (
-    <AutoColumn gap="12px">
+    <AutoColumn $gap="12px">
       <RowBetween>
-        <AutoRow gap="4px" width="auto">
+        <AutoRow $gap="4px" width="auto">
           <AutoRouterLogo />
           <AutoRouterLabel />
         </AutoRow>
@@ -74,7 +74,7 @@ export default memo(function SwapRoute({
 })
 
 function getTokenPath(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>,
 ): RoutingDiagramEntry[] {
   // convert V2 path to a list of routes
   if (trade instanceof V2Trade) {

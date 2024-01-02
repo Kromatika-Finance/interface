@@ -6,7 +6,7 @@ import { useContext, useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -82,31 +82,31 @@ const Layer2Prompt = styled(EmptyProposals)`
 `
 
 export default function Pool() {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const { account, chainId } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
+    [trackedTokenPairs],
   )
   const liquidityTokens = useMemo(
     () => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken),
-    [tokenPairsWithLiquidityTokens]
+    [tokenPairsWithLiquidityTokens],
   )
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
-    liquidityTokens
+    liquidityTokens,
   )
 
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+      tokenPairsWithLiquidityTokens.filter(
+        ({ liquidityToken }) => v2PairsBalances[liquidityToken.address]?.greaterThan('0'),
       ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+    [tokenPairsWithLiquidityTokens, v2PairsBalances],
   )
 
   const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
@@ -118,7 +118,7 @@ export default function Pool() {
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
   const stakingInfosWithBalance = stakingInfo?.filter((pool) =>
-    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO)
+    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO),
   )
   const stakingPairs = useV2Pairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
 
@@ -141,7 +141,7 @@ export default function Pool() {
           <CardBGImage />
           <CardNoise />
           <CardSection>
-            <AutoColumn gap="md">
+            <AutoColumn $gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
                   <Trans>Liquidity provider rewards</Trans>
@@ -171,8 +171,8 @@ export default function Pool() {
         </VoteCard>
 
         {ON_L2 ? (
-          <AutoColumn gap="lg" justify="center">
-            <AutoColumn gap="md" style={{ width: '100%' }}>
+          <AutoColumn $gap="lg" $justify="center">
+            <AutoColumn $gap="md" style={{ width: '100%' }}>
               <Layer2Prompt>
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Trans>V2 is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
@@ -181,8 +181,8 @@ export default function Pool() {
             </AutoColumn>
           </AutoColumn>
         ) : (
-          <AutoColumn gap="lg" justify="center">
-            <AutoColumn gap="md" style={{ width: '100%' }}>
+          <AutoColumn $gap="lg" $justify="center">
+            <AutoColumn $gap="md" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
                 <HideSmall>
                   <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
@@ -232,7 +232,7 @@ export default function Pool() {
                       </Trans>
                     </RowBetween>
                   </ButtonSecondary>
-                  <RowFixed justify="center" style={{ width: '100%' }}>
+                  <RowFixed $justify="center" style={{ width: '100%' }}>
                     <ButtonOutlined
                       as={Link}
                       to="/migrate/v2"

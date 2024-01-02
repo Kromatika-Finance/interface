@@ -1,4 +1,4 @@
-import { createStore, Store } from 'redux'
+import { legacy_createStore, Store } from '@reduxjs/toolkit'
 
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
@@ -30,7 +30,7 @@ describe('list reducer', () => {
   let store: Store<ListsState>
 
   beforeEach(() => {
-    store = createStore(reducer, {
+    store = legacy_createStore(reducer, {
       byUrl: {},
       activeListUrls: undefined,
     })
@@ -54,7 +54,7 @@ describe('list reducer', () => {
       })
 
       it('does not clear current list', () => {
-        store = createStore(reducer, {
+        store = legacy_createStore(reducer, {
           byUrl: {
             'fake-url': {
               error: null,
@@ -191,7 +191,7 @@ describe('list reducer', () => {
       })
 
       it('sets the error if loading', () => {
-        store = createStore(reducer, {
+        store = legacy_createStore(reducer, {
           byUrl: {
             'fake-url': {
               error: null,
@@ -234,7 +234,7 @@ describe('list reducer', () => {
       })
     })
     it('no op for existing list', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -262,7 +262,7 @@ describe('list reducer', () => {
 
   describe('acceptListUpdate', () => {
     it('swaps pending update into current', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -290,7 +290,7 @@ describe('list reducer', () => {
 
   describe('removeList', () => {
     it('deletes the list key', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -308,7 +308,7 @@ describe('list reducer', () => {
       })
     })
     it('Removes from active lists if active list is removed', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -329,7 +329,7 @@ describe('list reducer', () => {
 
   describe('enableList', () => {
     it('enables a list url', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -354,7 +354,7 @@ describe('list reducer', () => {
       })
     })
     it('adds to url keys if not present already on enable', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -385,7 +385,7 @@ describe('list reducer', () => {
       })
     })
     it('enable works if list already added', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         byUrl: {
           'fake-url': {
             error: null,
@@ -414,7 +414,7 @@ describe('list reducer', () => {
   describe('updateVersion', () => {
     describe('never initialized', () => {
       beforeEach(() => {
-        store = createStore(reducer, {
+        store = legacy_createStore(reducer, {
           byUrl: {
             'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
               error: null,
@@ -464,7 +464,7 @@ describe('list reducer', () => {
     })
     describe('initialized with a different set of lists', () => {
       beforeEach(() => {
-        store = createStore(reducer, {
+        store = legacy_createStore(reducer, {
           byUrl: {
             'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
               error: null,

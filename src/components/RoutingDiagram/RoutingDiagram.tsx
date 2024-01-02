@@ -5,8 +5,9 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Row, { AutoRow } from 'components/Row'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
+import { Routes } from 'react-router-dom'
 import { Box } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TYPE } from 'theme'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
@@ -78,7 +79,9 @@ export default function RoutingDiagram({
       {routes.map(({ percent, path }, index) => (
         <RouteContainerRow key={index}>
           <CurrencyLogo currency={tokenIn} />
-          <Route percent={percent} path={path} />
+          <Routes>
+            <Route percent={percent} path={path} />
+          </Routes>
           <CurrencyLogo currency={tokenOut} />
         </RouteContainerRow>
       ))}
@@ -98,7 +101,7 @@ function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; pat
         </TYPE.small>
       </OpaqueBadge>
 
-      <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
+      <AutoRow $gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
         {path.map(([currency0, currency1, feeAmount], index) => (
           <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
         ))}

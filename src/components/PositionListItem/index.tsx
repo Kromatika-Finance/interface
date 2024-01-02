@@ -11,7 +11,7 @@ import { usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 import { unwrappedToken } from 'utils/unwrappedToken'
@@ -43,7 +43,7 @@ const LinkRow = styled(Link)`
     text-align: center;
   }
 
-  :hover {
+  &:hover {
     background-color: ${({ theme }) => theme.bg2};
   }
 
@@ -78,7 +78,7 @@ const RangeLineItem = styled(DataLineItem)`
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.bg2};
     border-radius: 20px;
     padding: 8px 0;
 `};
@@ -159,8 +159,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const stables = [DAI, USDC, USDT]
   if (stables.some((stable) => stable && stable.symbol && stable.symbol == token1.symbol)) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as any,
+      priceUpper: position.token0PriceLower.invert() as any,
       quote: token0,
       base: token1,
     }
@@ -170,8 +170,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC]
   if (bases.some((base) => base.equals(token1))) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as any,
+      priceUpper: position.token0PriceLower.invert() as any,
       quote: token0,
       base: token1,
     }
@@ -180,8 +180,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   // if both prices are below 1, invert
   if (position.token0PriceUpper.lessThan(1)) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as any,
+      priceUpper: position.token0PriceLower.invert() as any,
       quote: token0,
       base: token1,
     }
@@ -189,8 +189,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 
   // otherwise, just return the default
   return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
+    priceLower: position.token0PriceLower as any,
+    priceUpper: position.token0PriceUpper as any,
     quote: token1,
     base: token0,
   }
@@ -275,8 +275,8 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
       ? CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0.toString())
       : undefined
     : currency1
-    ? CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1.toString())
-    : undefined
+      ? CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1.toString())
+      : undefined
 
   // TODO (pai) fix the target price ; upper or lower ; buy or sell
 
@@ -301,8 +301,8 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         ? Number(token0USD) / Number(pool?.token1Price.toSignificant(6))
         : Number(token0USD) / Number(pool?.token0Price.toSignificant(6))
       : inverted
-      ? Number(token1USD) / Number(pool?.token1Price.toSignificant(6))
-      : Number(token1USD) / Number(pool?.token0Price.toSignificant(6))
+        ? Number(token1USD) / Number(pool?.token1Price.toSignificant(6))
+        : Number(token1USD) / Number(pool?.token0Price.toSignificant(6))
 
   const targetPriceUSD =
     currency0 && currencyBase?.name == unwrappedToken(currency0)?.name
@@ -310,8 +310,8 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         ? Number(token0USD) / Number(priceUpper?.toSignificant(6))
         : Number(token0USD) / Number(priceUpper?.toSignificant(6))
       : inverted
-      ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
-      : Number(token1USD) / Number(priceUpper?.toSignificant(6))
+        ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
+        : Number(token1USD) / Number(priceUpper?.toSignificant(6))
 
   const numberOfZeroes = pool && countZeroes((inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6))
   const leftover = numberOfZeroes && currentPriceUSD.toFixed(20).substring(2 + numberOfZeroes)

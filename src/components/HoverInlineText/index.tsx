@@ -1,6 +1,6 @@
 import Tooltip from 'components/Tooltip'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const TextWrapper = styled.span<{ margin: boolean; link?: boolean; fontSize?: string; adjustSize?: boolean }>`
   margin-left: ${({ margin }) => margin && '4px'};

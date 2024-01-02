@@ -1,16 +1,18 @@
 import { Options, Placement } from '@popperjs/core'
-import Portal from '@reach/portal'
+import { Portal } from '@reach/portal'
 import React, { useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import useInterval from '../../hooks/useInterval'
 
-const PopoverContainer = styled.div<{ show: boolean }>`
+const PopoverContainer = styled.div<{ $show: boolean }>`
   z-index: 9999;
-  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 150ms linear, opacity 150ms linear;
+  visibility: ${(props) => (props.$show ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.$show ? 1 : 0)};
+  transition:
+    visibility 150ms linear,
+    opacity 150ms linear;
   color: ${({ theme }) => theme.text2};
 `
 
@@ -94,7 +96,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
         { name: 'preventOverflow', options: { padding: 8 } },
       ],
     }),
-    [arrowElement, placement]
+    [arrowElement, placement],
   )
 
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)
@@ -108,7 +110,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+        <PopoverContainer $show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
           <Arrow
             className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}

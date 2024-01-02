@@ -2,8 +2,10 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
   },
+  "resolveJsonModule": true,
+  "esModuleInterop": true,
   "exclude": ["node_modules", "cypress"],
   "include": ["src/**/*"]
 }

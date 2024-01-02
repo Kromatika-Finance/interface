@@ -5,7 +5,7 @@ import { useModalOpen, useShowClaimPopup, useTogglePerpModal, useToggleSelfClaim
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import tokenLogo from '../../assets/images/krom_logo.png'
 import KromatikaLogo from '../../assets/images/KROM_Transparent_1.png'
@@ -22,7 +22,7 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkSelector from './NetworkSelector'
 
-const HeaderFrame = styled.div<{ showBackground: boolean }>`
+const HeaderFrame = styled.div<{ $showBackground: boolean }>`
   display: grid;
   grid-template-columns: minmax(240px, 1fr) 1fr 1fr;
   justify-content: space-between;
@@ -35,9 +35,11 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   z-index: 1;
   /* Background slide effect on scroll. */
   background-color: transparent;
-  background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
+  background-position: ${({ $showBackground }) => ($showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
-  transition: background-position 0.1s, box-shadow 0.1s;
+  transition:
+    background-position 0.1s,
+    box-shadow 0.1s;
   background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -120,7 +122,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   white-space: nowrap;
   width: 100%;
 
-  :focus {
+  &:focus {
     border: 1px solid blue;
   }
 `
@@ -138,11 +140,11 @@ const UNIWrapper = styled.span`
   position: relative;
   cursor: pointer;
 
-  :hover {
+  &:hover {
     opacity: 0.8;
   }
 
-  :active {
+  &:active {
     opacity: 0.9;
   }
 `
@@ -158,7 +160,7 @@ const Title = styled.a`
     justify-self: center;
   `};
 
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `
@@ -180,7 +182,7 @@ const TokenPrice = styled.div`
 
   :hover {
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
-    border: 2px solid ${({ theme }) => theme.bg3};
+    border: 0px solid ${({ theme }) => theme.bg3};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -224,7 +226,7 @@ export default function Header() {
 
   return (
     <>
-      <HeaderFrame showBackground={true}>
+      <HeaderFrame $showBackground={true}>
         <ClaimModal />
         <Title href=".">
           <UniIcon>
@@ -243,7 +245,7 @@ export default function Header() {
               <ExternalLink href={pools[chainId]} style={{ textDecoration: 'none' }}>
                 {kromPrice ? (
                   <TokenPrice>
-                    <StyledLogoIcon src={tokenLogo} />
+                    <StyledLogoIcon src={tokenLogo} style={{ textDecoration: 'none' }} />
                     <TYPE.body fontSize={16}>${kromPrice?.toSignificant(2)}</TYPE.body>
                   </TokenPrice>
                 ) : null}

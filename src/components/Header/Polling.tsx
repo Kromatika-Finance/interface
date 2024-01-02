@@ -11,7 +11,7 @@ import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { useNetworkGasPrice } from 'state/user/hooks'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 
 import { CHAIN_INFO, NetworkType, SupportedChainId } from '../../constants/chains'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -21,21 +21,21 @@ import { ExternalLink, TYPE } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
-const StyledPolling = styled.div<{ warning: boolean }>`
+const StyledPolling = styled.div<{ $warning: boolean }>`
   position: fixed;
   display: flex;
   align-items: center;
   right: 0;
   bottom: 0;
   padding: 1rem;
-  color: ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
+  color: ${({ theme, $warning }) => ($warning ? theme.yellow3 : theme.green1)};
   transition: 250ms ease color;
   z-index: 1;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `}
-  :hover > a {
+  &:hover > a {
     text-decoration: none;
   }
 `
@@ -48,19 +48,19 @@ const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boo
     color: ${({ theme }) => theme.blue1};
   }
 
-  :hover {
+  &:hover {
     opacity: 1;
   }
 `
 
-const StyledPollingDot = styled.div<{ warning: boolean }>`
+const StyledPollingDot = styled.div<{ $warning: boolean }>`
   width: 8px;
   height: 8px;
   min-height: 8px;
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
+  background-color: ${({ theme, $warning }) => ($warning ? theme.yellow3 : theme.green1)};
   transition: 250ms ease background-color;
 `
 
@@ -99,14 +99,14 @@ const rotate360 = keyframes`
   }
 `
 
-const Spinner = styled.div<{ warning: boolean }>`
+const Spinner = styled.div<{ $warning: boolean }>`
   animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   transform: translateZ(0);
 
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
+  border-left: 2px solid ${({ theme, $warning }) => ($warning ? theme.yellow3 : theme.green1)};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -142,7 +142,7 @@ export default function Polling() {
         clearTimeout(mountingTimer)
       }
     },
-    [blockNumber] //useEffect will run only one time
+    [blockNumber], //useEffect will run only one time
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
@@ -163,7 +163,7 @@ export default function Polling() {
       <StyledPolling
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        warning={chainConnectivityWarning}
+        $warning={chainConnectivityWarning}
       >
         {chainId === 1 ? (
           <ExternalLink href={'https://app.uniswap.org/#/pool/154097?chain=mainnet'}>
@@ -210,8 +210,8 @@ export default function Polling() {
             </MouseoverTooltip>
           </ExternalLink>
         </StyledPollingNumber>
-        <StyledPollingDot warning={chainConnectivityWarning}>
-          {isMounting && <Spinner warning={chainConnectivityWarning} />}
+        <StyledPollingDot $warning={chainConnectivityWarning}>
+          {isMounting && <Spinner $warning={chainConnectivityWarning} />}
         </StyledPollingDot>{' '}
       </StyledPolling>
       {chainConnectivityWarning && <ChainConnectivityWarning />}

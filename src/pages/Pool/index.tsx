@@ -14,7 +14,7 @@ import { Inbox } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 import { HideSmall, TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
 
@@ -101,7 +101,7 @@ export default function Pool() {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const [userHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading, fundingBalance, minBalance, gasPrice } = useV3Positions(account)
@@ -113,7 +113,7 @@ export default function Pool() {
       acc[p.processed ? 1 : 0].push(p)
       return acc
     },
-    [[], []]
+    [[], []],
   ) ?? [[], []]
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
@@ -123,8 +123,8 @@ export default function Pool() {
     <>
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
-        <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
+        <AutoColumn $gap="lg" $justify="center">
+          <AutoColumn $gap="lg" style={{ width: '100%' }}>
             <TitleRow padding={'10'}>
               <TYPE.body fontSize={'20px'}>
                 <Trans>Account</Trans>

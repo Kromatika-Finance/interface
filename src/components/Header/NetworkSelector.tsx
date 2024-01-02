@@ -6,7 +6,7 @@ import { useCallback, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { useAppDispatch } from '../../state/hooks'
@@ -83,7 +83,7 @@ const FlyoutRow = styled.div<{ active: boolean }>`
   text-align: left;
   width: calc(100% - 8px);
 
-  :hover {
+  &:hover {
     background-color: ${({ theme }) => theme.bg2};
   }
 `
@@ -121,20 +121,20 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const SelectorControls = styled.div<{ $interactive: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.primary1)};
   box-shadow: 0 0 0 2px ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
   border-radius: 20px;
   color: ${({ theme }) => theme.white};
-  cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
+  cursor: ${({ $interactive }) => ($interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
   padding: 8px 16px;
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     cursor: pointer;
     outline: none;
     box-shadow: 0 0 0 2px ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
@@ -144,8 +144,8 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
     padding: 0.5rem;
   `};
 `
-const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
-  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
+const SelectorLogo = styled(Logo)<{ $interactive?: boolean }>`
+  margin-right: ${({ $interactive }) => ($interactive ? 8 : 0)}px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     margin-right: 8px;
   }
@@ -261,7 +261,7 @@ export default function NetworkSelector() {
           dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
         })
     },
-    [dispatch, library, toggle]
+    [dispatch, library, toggle],
   )
 
   if (!chainId || !info || !library) {
@@ -270,8 +270,8 @@ export default function NetworkSelector() {
 
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={toggle} interactive tabIndex={0}>
-        <SelectorLogo interactive src={info.logoUrl} />
+      <SelectorControls onClick={toggle} $interactive tabIndex={0}>
+        <SelectorLogo $interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />
       </SelectorControls>

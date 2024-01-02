@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import JSBI from 'jsbi'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -55,13 +55,13 @@ export default function Earn() {
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
+    <PageWrapper $gap="lg" $justify="center">
+      <TopSection $gap="md">
         <DataCard>
           <CardBGImage />
           <CardNoise />
           <CardSection>
-            <AutoColumn gap="md">
+            <AutoColumn $gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
                   <Trans>Uniswap liquidity mining</Trans>
@@ -90,7 +90,7 @@ export default function Earn() {
         </DataCard>
       </TopSection>
 
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+      <AutoColumn $gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
             <Trans>Participating pools</Trans>

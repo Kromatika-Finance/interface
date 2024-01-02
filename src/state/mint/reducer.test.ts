@@ -1,4 +1,4 @@
-import { createStore, Store } from 'redux'
+import { legacy_createStore, Store } from '@reduxjs/toolkit'
 
 import { Field, typeInput } from './actions'
 import reducer, { initialState, MintState } from './reducer'
@@ -7,7 +7,7 @@ describe('mint reducer', () => {
   let store: Store<MintState>
 
   beforeEach(() => {
-    store = createStore(reducer, initialState)
+    store = legacy_createStore(reducer, initialState)
   })
 
   describe('typeInput', () => {

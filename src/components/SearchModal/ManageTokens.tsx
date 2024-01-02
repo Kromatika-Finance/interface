@@ -8,7 +8,7 @@ import { useToken } from 'hooks/Tokens'
 import { useActiveWeb3React } from 'hooks/web3'
 import { RefObject, useCallback, useMemo, useRef, useState } from 'react'
 import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { ButtonText, ExternalLink, ExternalLinkIcon, TrashIcon, TYPE } from 'theme'
 import { isAddress } from 'utils'
 
@@ -47,11 +47,11 @@ export default function ManageTokens({
   const { chainId } = useActiveWeb3React()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback((event) => {
+  const handleInput = useCallback((event: { target: { value: string } }) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -98,7 +98,7 @@ export default function ManageTokens({
   return (
     <Wrapper>
       <Column style={{ width: '100%', height: '100%', flex: '1 1' }}>
-        <PaddedColumn gap="14px">
+        <PaddedColumn $gap="14px">
           <Row>
             <SearchInput
               type="text"
@@ -127,7 +127,7 @@ export default function ManageTokens({
           )}
         </PaddedColumn>
         <Separator />
-        <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
+        <PaddedColumn $gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
           <RowBetween>
             <TYPE.main fontWeight={600}>
               <Trans>{userAddedTokens?.length} Custom Tokens</Trans>

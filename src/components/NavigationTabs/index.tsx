@@ -9,7 +9,7 @@ import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { TYPE } from 'theme'
 
 import Row, { RowBetween } from '../Row'
@@ -23,9 +23,7 @@ const Tabs = styled.div`
 
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
+const StyledNavLink = styled(NavLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: center;
@@ -42,8 +40,8 @@ const StyledNavLink = styled(NavLink).attrs({
     color: ${({ theme }) => theme.text1};
   }
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 `
@@ -69,10 +67,10 @@ const StyledArrowLeft = styled(ArrowLeft)`
 export function SwapPoolTabs({ active }: { active: 'limitorder' | 'pool' }) {
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
-      <StyledNavLink id={`swap-nav-link`} to={'/#/limitorder'} isActive={() => active === 'limitorder'}>
+      <StyledNavLink id={`swap-nav-link`} to={'/#/limitorder'}>
         <Trans>Swap</Trans>
       </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
+      <StyledNavLink id={`pool-nav-link`} to={'/pool'}>
         <Trans>Pool</Trans>
       </StyledNavLink>
     </Tabs>
@@ -108,7 +106,7 @@ export function AddRemoveTabs({
   showBackLink?: boolean
   children?: ReactNode | undefined
 }) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
   // reset states on back
   const dispatch = useAppDispatch()
   const location = useLocation()

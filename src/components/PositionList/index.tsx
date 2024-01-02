@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import PositionListItem from 'components/PositionListItem'
 import React, { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 

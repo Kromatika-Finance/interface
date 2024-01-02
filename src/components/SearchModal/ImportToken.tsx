@@ -13,7 +13,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { transparentize } from 'polished'
 import { AlertCircle, ArrowLeft } from 'react-feather'
 import { useAddUserToken } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { CloseIcon, TYPE } from 'theme'
 
 import { ExternalLink } from '../../theme/components'
@@ -50,7 +50,7 @@ interface ImportProps {
 }
 
 export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   const { chainId } = useActiveWeb3React()
 
@@ -58,7 +58,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
 
   return (
     <Wrapper>
-      <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
+      <PaddedColumn $gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
           <TYPE.mediumHeader>
@@ -68,8 +68,8 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
-        <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
+      <AutoColumn $gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
+        <AutoColumn $justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
           <TYPE.body fontWeight={400} fontSize={16}>
             <Trans>
@@ -86,10 +86,10 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
               className=".token-warning-container"
               padding="2rem"
             >
-              <AutoColumn gap="10px" justify="center">
+              <AutoColumn $gap="10px" $justify="center">
                 <CurrencyLogo currency={token} size={'32px'} />
 
-                <AutoColumn gap="4px" justify="center">
+                <AutoColumn $gap="4px" $justify="center">
                   <TYPE.body ml="8px" mr="8px" fontWeight={400} fontSize={16}>
                     {token.symbol}
                   </TYPE.body>

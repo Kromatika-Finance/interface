@@ -4,7 +4,7 @@ import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { TYPE } from 'theme'
 
 import { AutoColumn } from '../Column'
@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
   padding: 8px;
 `
 
-export const ArrowWrapper = styled.div<{ clickable: boolean }>`
+export const ArrowWrapper = styled.div<{ $clickable: boolean }>`
   padding: 4px;
   border-radius: 20px;
   height: 32px;
@@ -28,10 +28,10 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   background-color: ${({ theme }) => theme.bg1};
   border: 4px solid ${({ theme }) => theme.bg1};
   z-index: 2;
-  ${({ clickable }) =>
-    clickable
+  ${({ $clickable }) =>
+    $clickable
       ? css`
-          :hover {
+          &:hover {
             cursor: pointer;
             opacity: 0.8;
           }
@@ -50,10 +50,10 @@ export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
     severity === 3 || severity === 4
       ? theme.red1
       : severity === 2
-      ? theme.yellow2
-      : severity === 1
-      ? theme.text1
-      : theme.text2};
+        ? theme.yellow2
+        : severity === 1
+          ? theme.text1
+          : theme.text2};
 `
 
 export const TruncatedText = styled(Text)`

@@ -1,5 +1,5 @@
 import Davatar from '@davatar/react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 

@@ -3,7 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import { ButtonPrimary } from '../../components/Button'
@@ -35,7 +35,7 @@ const StyledClose = styled(X)`
   right: 10px;
   top: 10px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `
@@ -92,11 +92,11 @@ export default function ClaimPopup() {
   return (
     <>
       {showClaimPopup && !showClaimModal && (
-        <StyledClaimPopup gap="md">
+        <StyledClaimPopup $gap="md">
           <CardBGImage />
           <CardNoise />
           <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
-          <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
+          <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} $justify="center">
             <UniToken width="48px" src={tokenLogo} />{' '}
             <TYPE.white style={{ marginTop: '1rem' }} fontSize={[24, 28, 36]} fontWeight={600}>
               {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
@@ -116,7 +116,7 @@ export default function ClaimPopup() {
               </Trans>
             </TYPE.subHeader>
           </AutoColumn>
-          <AutoColumn style={{ zIndex: 10 }} justify="center">
+          <AutoColumn style={{ zIndex: 10 }} $justify="center">
             <ButtonPrimary padding="8px" $borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
               <Trans>Claim your UNI tokens</Trans>
             </ButtonPrimary>

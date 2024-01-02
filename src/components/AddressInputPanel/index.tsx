@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { ReactNode, useCallback, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -25,7 +25,8 @@ const ContainerRow = styled.div<{ error: boolean }>`
   align-items: center;
   border-radius: 1.25rem;
   border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
-  transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
+  transition:
+    border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
     color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.bg1};
 `
@@ -88,17 +89,17 @@ export default function AddressInputPanel({
   onChange: (value: string) => void
 }) {
   const { chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const { address, loading, name } = useENS(value)
 
   const handleInput = useCallback(
-    (event) => {
+    (event: { target: { value: string } }) => {
       const input = event.target.value
       const withoutSpaces = input.replace(/\s+/g, '')
       onChange(withoutSpaces)
     },
-    [onChange]
+    [onChange],
   )
 
   const error = Boolean(value.length > 0 && !loading && !address)
@@ -107,9 +108,9 @@ export default function AddressInputPanel({
     <InputPanel id={id}>
       <ContainerRow error={error}>
         <InputContainer>
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <RowBetween>
-              <TYPE.black color={theme.text2} fontWeight={400} fontSize={14}>
+              <TYPE.black color={theme?.text2} fontWeight={400} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
               </TYPE.black>
               {address && chainId && (

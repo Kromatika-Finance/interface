@@ -11,7 +11,7 @@ import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
 import { useNativeCurrencyBalances } from 'state/wallet/hooks'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { CHAIN_INFO } from '../../constants/chains'
@@ -96,9 +96,9 @@ const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
   text-decoration: none;
   width: auto;
 
-  :hover,
-  :focus,
-  :active {
+  &:hover,
+  &:focus,
+  &:active {
     background-color: rgba(255, 255, 255, 0.05);
   }
 
@@ -137,8 +137,8 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
         ? OptimismWrapperBackgroundDarkMode
         : OptimismWrapperBackgroundLightMode
       : darkMode
-      ? ArbitrumWrapperBackgroundDarkMode
-      : ArbitrumWrapperBackgroundLightMode};
+        ? ArbitrumWrapperBackgroundDarkMode
+        : ArbitrumWrapperBackgroundLightMode};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -155,7 +155,7 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
       max-width: max-content;
       min-height: min-content;
     `}
-  :before {
+  &:before {
     background-image: url(${({ logoUrl }) => logoUrl});
     background-repeat: no-repeat;
     background-size: 300px;
@@ -194,9 +194,9 @@ const LinkOutToBridge = styled(ExternalLink)<{ thin?: boolean }>`
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
-  :hover,
-  :focus,
-  :active {
+  &:hover,
+  &:focus,
+  &:active {
     background-color: black;
   }
   ${({ thin }) =>

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { CloseIcon, TYPE } from '../../theme'
 import { CardSection, DataCard } from '../earn/styled'
@@ -39,9 +39,9 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
-      <ContentWrapper gap="lg">
+      <ContentWrapper $gap="lg">
         <ModalUpper>
-          <CardSection gap="md">
+          <CardSection $gap="md">
             <RowBetween>
               <TYPE.white fontWeight={500}>
                 <Trans> Polygon User Warning </Trans>
@@ -51,7 +51,7 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
           </CardSection>
         </ModalUpper>
 
-        <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+        <AutoColumn $gap="md" style={{ padding: '1rem', paddingTop: '0' }} $justify="center">
           <TYPE.white fontWeight={500} fontSize={14}>
             <Trans>
               Due to the recent LastPass breach, there may be a potential security breach on Kromatika&apos;s Limit
@@ -90,7 +90,7 @@ export default function LimitWarningModal({ isOpen, onDismiss }: { isOpen: boole
             </Trans>
           </TYPE.white>
         </AutoColumn>
-        <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+        <AutoColumn $gap="md" style={{ padding: '1rem', paddingTop: '0' }} $justify="center">
           <TYPE.subHeader fontWeight={500}>
             <input type="checkbox" checked={checked} onChange={handleChange} />
             Don&apos;t show this message again.

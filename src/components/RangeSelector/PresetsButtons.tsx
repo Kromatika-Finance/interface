@@ -3,7 +3,7 @@ import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import React from 'react'
 import ReactGA from 'react-ga'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TYPE } from 'theme'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
@@ -16,7 +16,7 @@ const Button = styled(ButtonOutlined).attrs(() => ({
 
 export default function PresetsButtons({ setFullRange }: { setFullRange: () => void }) {
   return (
-    <AutoRow gap="4px" width="auto">
+    <AutoRow $gap="4px" width="auto">
       <Button
         onClick={() => {
           setFullRange()

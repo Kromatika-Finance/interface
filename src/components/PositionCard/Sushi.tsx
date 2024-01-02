@@ -4,7 +4,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useColor } from '../../hooks/useColor'
 import { unwrappedToken } from '../../utils/unwrappedToken'
@@ -41,9 +41,9 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
-      <AutoColumn gap="12px">
+      <AutoColumn $gap="12px">
         <FixedHeightRow>
-          <AutoRow gap="8px">
+          <AutoRow $gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
             <Text fontWeight={400} fontSize={16}>
               {!currency0 || !currency1 ? (
@@ -57,7 +57,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
 
             <Badge variant={BadgeVariant.WARNING}>Sushi</Badge>
           </AutoRow>
-          <RowFixed gap="8px">
+          <RowFixed $gap="8px">
             <ButtonEmpty
               padding="0px 35px 0px 0px"
               $borderRadius="20px"

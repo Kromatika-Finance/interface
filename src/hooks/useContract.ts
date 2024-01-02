@@ -1,13 +1,13 @@
 import { Contract } from '@ethersproject/contracts'
-import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
-import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
-import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import GOVERNANCE_ABI from '@uniswap/governance/build/GovernorAlpha.json'
+import UNI_ABI from '@uniswap/governance/build/Uni.json'
+import STAKING_REWARDS_ABI from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import MERKLE_DISTRIBUTOR_ABI from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import IUniswapV2PairABI from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import IUniswapV2Router02ABI from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import QuoterABI from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import MulticallABI from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
+import NFTPositionManagerABI from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
@@ -139,27 +139,27 @@ export function useEIP2612Contract(tokenAddress?: string): Contract | null {
 }
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
+  return useContract(pairAddress, IUniswapV2PairABI.abi, withSignerIfPossible)
 }
 
 export function useV2RouterContract(): Contract | null {
-  return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
+  return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI.abi, true)
 }
 
 export function useMulticall2Contract() {
-  return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
+  return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI.abi, false) as UniswapInterfaceMulticall
 }
 
 export function useMerkleDistributorContract() {
-  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
+  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI.abi, true)
 }
 
 export function useGovernanceV0Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI, false)
+  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI.abi, false)
 }
 
 export function useGovernanceV1Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GOVERNANCE_ABI, false)
+  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GOVERNANCE_ABI.abi, false)
 }
 
 export function useGovernanceBravoContract(): Contract | null {
@@ -170,23 +170,23 @@ export const useLatestGovernanceContract = useGovernanceBravoContract
 
 export function useUniContract() {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? UNI[chainId]?.address : undefined, UNI_ABI, true)
+  return useContract(chainId ? UNI[chainId]?.address : undefined, UNI_ABI.abi, true)
 }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {
-  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+  return useContract(stakingAddress, STAKING_REWARDS_ABI.abi, withSignerIfPossible)
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
   return useContract<NonfungiblePositionManager>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-    NFTPositionManagerABI,
+    NFTPositionManagerABI.abi,
     withSignerIfPossible
   )
 }
 
 export function useV3Quoter() {
-  return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+  return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI.abi)
 }
 
 export function useLimitOrderManager(): Contract | null {

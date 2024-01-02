@@ -9,7 +9,7 @@ import { useIsTokenActive, useIsUserAddedToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties } from 'react'
 import { CheckCircle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { TYPE } from 'theme'
 
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
@@ -54,7 +54,7 @@ export default function ImportRow({
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   // check if already active on list or local storage tokens
   const isAdded = useIsUserAddedToken(token)
@@ -65,7 +65,7 @@ export default function ImportRow({
   return (
     <TokenSection style={style}>
       <CurrencyLogo currency={token} size={'24px'} style={{ opacity: dim ? '0.6' : '1' }} />
-      <AutoColumn gap="4px" style={{ opacity: dim ? '0.6' : '1' }}>
+      <AutoColumn $gap="4px" style={{ opacity: dim ? '0.6' : '1' }}>
         <AutoRow>
           <TYPE.body fontWeight={400}>{token.symbol}</TYPE.body>
           <TYPE.darkGray ml="8px" fontWeight={300}>
@@ -74,7 +74,7 @@ export default function ImportRow({
         </AutoRow>
         {list && list.logoURI && (
           <RowFixed>
-            <TYPE.small mr="4px" color={theme.text3}>
+            <TYPE.small mr="4px" color={theme?.text3}>
               <Trans>via {list.name} </Trans>
             </TYPE.small>
             <ListLogo logoURI={list.logoURI} size="12px" />
@@ -97,7 +97,7 @@ export default function ImportRow({
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <TYPE.main color={theme.green1}>
+          <TYPE.main color={theme?.green1}>
             <Trans>Active</Trans>
           </TYPE.main>
         </RowFixed>

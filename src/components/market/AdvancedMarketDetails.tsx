@@ -7,7 +7,7 @@ import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext } from 'react'
 import { useIsGaslessMode } from 'state/user/hooks'
-import { ThemeContext } from 'styled-components/macro'
+import { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { TYPE } from '../../theme'
 import { shortenAddress } from '../../utils'
@@ -52,13 +52,13 @@ export function AdvancedMarketDetails({
   paymentFees,
   minimumReceived,
 }: AdvancedMarketDetailsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const { chainId } = useActiveWeb3React()
   const isGaslessMode =
     useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   return !trade ? null : (
-    <AutoColumn gap="8px">
+    <AutoColumn $gap="8px">
       <TransactionDetailsLabel fontWeight={400} fontSize={14}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>

@@ -8,7 +8,7 @@ import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsGaslessMode } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { TYPE } from '../../theme'
@@ -85,7 +85,7 @@ export default function MarketModalHeader({
   priceImpactAccepted: boolean
   feeImpactAccepted: boolean
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const [showInverted, setShowInverted] = useState<boolean>(true)
 
@@ -97,7 +97,7 @@ export default function MarketModalHeader({
   const calculateMinimumReceived = (
     slippage: Percent,
     fees: CurrencyAmount<Currency>,
-    receive: CurrencyAmount<Currency>
+    receive: CurrencyAmount<Currency>,
   ) => {
     const received = receive.subtract(fees)
 
@@ -119,9 +119,9 @@ export default function MarketModalHeader({
     useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   return (
-    <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn $gap={'6px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
-        <AutoColumn gap={'8px'}>
+        <AutoColumn $gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={400} fontSize={16}>
               <Trans>From</Trans>
@@ -129,13 +129,13 @@ export default function MarketModalHeader({
             <FiatValue fiatValue={fiatValueInput} />
           </RowBetween>
           <RowBetween align="center">
-            <RowFixed gap={'0px'}>
+            <RowFixed $gap={'0px'}>
               <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
               <Text fontSize={16} fontWeight={400}>
                 {trade.inputAmount.currency.symbol}
               </Text>
             </RowFixed>
-            <RowFixed gap={'0px'}>
+            <RowFixed $gap={'0px'}>
               <TruncatedText
                 fontSize={[16, 18, 24]}
                 fontWeight={400}
@@ -151,7 +151,7 @@ export default function MarketModalHeader({
         <ArrowDown size="16" color={theme.text2} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0', borderRadius: '20px' }}>
-        <AutoColumn gap={'8px'}>
+        <AutoColumn $gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={400} fontSize={16}>
               <Trans>To</Trans>
@@ -164,13 +164,13 @@ export default function MarketModalHeader({
             </TYPE.body>
           </RowBetween>
           <RowBetween align="flex-end">
-            <RowFixed gap={'0px'}>
+            <RowFixed $gap={'0px'}>
               <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
               <Text fontSize={16} fontWeight={400}>
                 {trade.outputAmount.currency.symbol}
               </Text>
             </RowFixed>
-            <RowFixed gap={'0px'}>
+            <RowFixed $gap={'0px'}>
               <TruncatedText fontSize={[16, 18, 24]} fontWeight={400}>
                 {trade.outputAmount.toSignificant(6)}
               </TruncatedText>
@@ -190,12 +190,12 @@ export default function MarketModalHeader({
             top: '-5px',
           }}
         >
-          <AutoColumn gap={'8px'}>
+          <AutoColumn $gap={'8px'}>
             <RowBetween align="flex-end">
               <TYPE.body fontSize={14} color={'white'}>
-                <RowFixed gap={'0px'}>Received (including fees)</RowFixed>
+                <RowFixed $gap={'0px'}>Received (including fees)</RowFixed>
               </TYPE.body>
-              <RowFixed gap={'0px'}>
+              <RowFixed $gap={'0px'}>
                 <TruncatedText fontSize={14} fontWeight={500}>
                   {fee ? trade.outputAmount.subtract(fee).toSignificant(6) : 'undefined'} {paymentToken?.symbol}
                 </TruncatedText>
@@ -224,7 +224,7 @@ export default function MarketModalHeader({
       </LightCard>
 
       {showAcceptChanges ? (
-        <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
+        <SwapShowAcceptChanges $justify="flex-start" $gap={'0px'}>
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
@@ -242,7 +242,7 @@ export default function MarketModalHeader({
         </SwapShowAcceptChanges>
       ) : null}
 
-      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
+      <AutoColumn $justify="flex-start" $gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
@@ -277,7 +277,7 @@ export default function MarketModalHeader({
         )}
       </AutoColumn>
       {recipient !== null ? (
-        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+        <AutoColumn $justify="flex-start" $gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>
             <Trans>
               Output will be sent to{' '}
@@ -287,7 +287,7 @@ export default function MarketModalHeader({
         </AutoColumn>
       ) : null}
       {priceImpactHigh ? (
-        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '0px 0 0 0px' }}>
+        <AutoColumn $justify="flex-start" $gap="sm" style={{ padding: '0px 0 0 0px' }}>
           <ImpactWarning>
             <span>
               Price impact is greater than 20%. Swap anyway?{' '}
@@ -297,7 +297,7 @@ export default function MarketModalHeader({
         </AutoColumn>
       ) : null}
       {feeImpactHigh ? (
-        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '0px 0 0 0px' }}>
+        <AutoColumn $justify="flex-start" $gap="sm" style={{ padding: '0px 0 0 0px' }}>
           <ImpactWarning>
             <span>
               Fee impact is greater than 20%. Swap anyway?{' '}

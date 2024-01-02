@@ -3,7 +3,7 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { useState } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { CloseIcon, ExternalLink, TYPE } from '../../theme'
@@ -48,8 +48,8 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      <ContentWrapper gap="lg">
-        <CardSection gap="md">
+      <ContentWrapper $gap="lg">
+        <CardSection $gap="md">
           <RowBetween>
             <TYPE.subHeader>
               <Trans>Launch Perpetual Trading</Trans>
@@ -59,7 +59,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
             </CloseIcon>
           </RowBetween>
         </CardSection>
-        <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+        <AutoColumn $gap="md" style={{ padding: '1rem', paddingTop: '0' }} $justify="center">
           <PerpText>
             <Trans>
               You are leaving Kromatika.Finance and will be redirected to an independent third-party website.
@@ -75,7 +75,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
             </Trans>
           </PerpText>
         </AutoColumn>
-        <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+        <AutoColumn $gap="md" style={{ padding: '1rem', paddingTop: '0' }} $justify="center">
           <PerpText>
             <RowFixed>
               <StyledInput type="checkbox" checked={checked} onChange={handleChange} />

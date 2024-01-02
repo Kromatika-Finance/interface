@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -137,7 +137,7 @@ const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
   display: flex;
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text2};
   }
 `
@@ -195,7 +195,7 @@ const WalletAction = styled(ButtonSecondary)`
   font-size: 0.825rem;
   padding: 6px 12px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
     text-decoration: underline;
   }
@@ -231,7 +231,7 @@ export default function AccountDetails({
   openOptions,
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const dispatch = useAppDispatch()
 
   function formatConnectorName() {
@@ -240,7 +240,7 @@ export default function AccountDetails({
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         (k) =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK')),
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
@@ -426,7 +426,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>
+          <TYPE.body color={theme?.text1}>
             <Trans>Your transactions will appear here...</Trans>
           </TYPE.body>
         </LowerSection>

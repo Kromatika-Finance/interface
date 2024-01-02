@@ -6,7 +6,7 @@ import { AutoRow } from 'components/Row'
 import { useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -101,7 +101,7 @@ const HoverText = styled.div`
   display: flex;
   align-items: center;
 
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `

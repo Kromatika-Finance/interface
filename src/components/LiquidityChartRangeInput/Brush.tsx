@@ -2,7 +2,7 @@ import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'compone
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;
@@ -22,8 +22,8 @@ const HandleAccent = styled.path`
   opacity: 0.6;
 `
 
-const LabelGroup = styled.g<{ visible: boolean }>`
-  opacity: ${({ visible }) => (visible ? '1' : '0')};
+const LabelGroup = styled.g<{ $visible: boolean }>`
+  opacity: ${({ $visible }) => ($visible ? '1' : '0')};
   transition: opacity 300ms;
 `
 
@@ -105,7 +105,7 @@ export const Brush = ({
 
       setLocalBrushExtent(scaled)
     },
-    [xScale, brushExtent, setBrushExtent]
+    [xScale, brushExtent, setBrushExtent],
   )
 
   // keep local and external brush extent in sync
@@ -210,7 +210,7 @@ export const Brush = ({
 
                 <LabelGroup
                   transform={`translate(50,0), scale(${flipWestHandle ? '1' : '-1'}, 1)`}
-                  visible={showLabels || hovering}
+                  $visible={showLabels || hovering}
                 >
                   <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
                   <Tooltip transform={`scale(-1, 1)`} y="15" dominantBaseline="middle">
@@ -230,7 +230,7 @@ export const Brush = ({
 
                 <LabelGroup
                   transform={`translate(50,0), scale(${flipEastHandle ? '-1' : '1'}, 1)`}
-                  visible={showLabels || hovering}
+                  $visible={showLabels || hovering}
                 >
                   <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
                   <Tooltip y="15" dominantBaseline="middle">
@@ -268,6 +268,6 @@ export const Brush = ({
       westHandleColor,
       westHandleInView,
       xScale,
-    ]
+    ],
   )
 }

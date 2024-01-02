@@ -3,7 +3,7 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useCallback, useContext } from 'react'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 import { TYPE } from 'theme'
 
 interface TradePriceProps {
@@ -27,7 +27,7 @@ const StyledPriceContainer = styled.button`
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const usdcPrice = useUSDCPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
 
   let formattedPrice: string

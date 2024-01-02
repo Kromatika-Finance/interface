@@ -1,6 +1,6 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { StakingInfo } from '../../state/stake/hooks'
 import { AutoColumn } from '../Column'
@@ -42,9 +42,9 @@ export default function StakingModals({ isOpen, onDismiss, stakingInfo, userLiqu
       <CardBGImage />
       <CardNoise />
       <CardSection>
-        <AutoColumn gap="md">
+        <AutoColumn $gap="md">
           <FixedHeightRow>
-            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
+            <RowFixed $gap="2px" style={{ marginRight: '10px' }}></RowFixed>
           </FixedHeightRow>
           <FixedHeightRow>
             <Text></Text>

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'

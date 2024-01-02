@@ -7,7 +7,7 @@ import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
@@ -162,7 +162,7 @@ function isBreakLine(x: unknown): x is BreakLine {
 }
 
 function BreakLineComponent({ style }: { style: CSSProperties }) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
   return (
     <FixedContentRow style={style}>
       <LightGreyCard padding="8px 12px" $borderRadius="8px">
@@ -222,7 +222,7 @@ export default function CurrencyList({
   }
 
   const Row = useCallback(
-    function TokenRow({ data, index, style }) {
+    function TokenRow({ data, index, style }: any) {
       const row: Currency | BreakLine = data[index]
 
       if (isBreakLine(row)) {
@@ -266,7 +266,7 @@ export default function CurrencyList({
       setImportToken,
       showImportView,
       showCurrencyAmount,
-    ]
+    ],
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {

@@ -9,7 +9,7 @@ import { DateTime } from 'luxon/src/luxon'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { DAI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
@@ -32,7 +32,7 @@ const LimitOrderWrapper = styled(Link)`
   border-radius: 20px;
   overflow: hidden;
 
-  :hover {
+  &:hover {
     background-color: ${({ theme }) => theme.bg6};
   }
 `
@@ -113,8 +113,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const stables = [DAI, USDC, USDT]
   if (stables.some((stable) => stable && stable.symbol && stable.symbol == token1.symbol)) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as any,
+      priceUpper: position.token0PriceLower.invert() as any,
       quote: token0,
       base: token1,
     }
@@ -124,8 +124,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC]
   if (bases.some((base) => base.equals(token1))) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as any,
+      priceUpper: position.token0PriceLower.invert() as any,
       quote: token0,
       base: token1,
     }
@@ -134,8 +134,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   // if both prices are below 1, invert
   if (position.token0PriceUpper.lessThan(1)) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as any,
+      priceUpper: position.token0PriceLower.invert() as any,
       quote: token0,
       base: token1,
     }
@@ -143,8 +143,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 
   // otherwise, just return the default
   return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
+    priceLower: position.token0PriceLower as any,
+    priceUpper: position.token0PriceUpper as any,
     quote: token1,
     base: token0,
   }
@@ -294,8 +294,8 @@ export default function LimitOrderListItem({ limitOrderDetails, isUnderfunded }:
         ? Number(token0USD) / Number(priceUpper?.toSignificant(6))
         : Number(token0USD) / Number(priceUpper?.toSignificant(6))
       : inverted
-      ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
-      : Number(token1USD) / Number(priceUpper?.toSignificant(6))
+        ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
+        : Number(token1USD) / Number(priceUpper?.toSignificant(6))
 
   // check if price is within range
   const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined

@@ -15,7 +15,7 @@ import ReactGA from 'react-ga'
 import { useAppDispatch } from 'state/hooks'
 import { enableList, removeList } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { CloseIcon, TYPE } from 'theme'
 
 import { ExternalLink } from '../../theme/components'
@@ -36,7 +36,7 @@ interface ImportProps {
 }
 
 export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
   const dispatch = useAppDispatch()
 
   // user must accept
@@ -78,7 +78,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
 
   return (
     <Wrapper>
-      <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
+      <PaddedColumn $gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.manage)} />
           <TYPE.mediumHeader>
@@ -88,13 +88,13 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <PaddedColumn gap="md">
-        <AutoColumn gap="md">
+      <PaddedColumn $gap="md">
+        <AutoColumn $gap="md">
           <Card backgroundColor={theme.bg2} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}
-                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
+                <AutoColumn $gap="sm" style={{ marginLeft: '20px' }}>
                   <RowFixed>
                     <TYPE.body fontWeight={600} mr="6px">
                       {list.name}
@@ -114,7 +114,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             </RowBetween>
           </Card>
           <Card style={{ backgroundColor: transparentize(0.8, theme.red1) }}>
-            <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
+            <AutoColumn $justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <AlertTriangle stroke={theme.red1} size={32} />
               <TYPE.body fontWeight={400} fontSize={16} color={theme.red1}>
                 <Trans>Import at your own risk</Trans>
@@ -133,7 +133,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 <Trans>If you purchase a token from this list, you may not be able to sell it back.</Trans>
               </TYPE.body>
             </AutoColumn>
-            <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
+            <AutoRow $justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
               <Checkbox
                 name="confirmed"
                 type="checkbox"

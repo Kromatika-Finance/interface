@@ -18,7 +18,7 @@ import {
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -50,8 +50,8 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 8px;
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
@@ -117,7 +117,7 @@ const MenuItem = styled(ExternalLink)`
   color: ${({ theme }) => theme.text2};
   border-radius: 10px;
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => theme.bg2};
     cursor: pointer;
@@ -130,7 +130,7 @@ const InternalMenuItem = styled(Link)`
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
@@ -149,7 +149,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   justify-content: space-between;
   text-decoration: none;
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
@@ -171,7 +171,7 @@ const ToggleMenuItem = styled.button`
   font-weight: 500;
   color: ${({ theme }) => theme.text2};
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => theme.bg2};
     cursor: pointer;
@@ -352,7 +352,7 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
               <NewMenuItem to={link} key={i}>
                 {content}
               </NewMenuItem>
-            )
+            ),
           )}
         </NewMenuFlyout>
       )}

@@ -1,4 +1,4 @@
-import { createStore, Store } from 'redux'
+import { legacy_createStore, Store } from '@reduxjs/toolkit'
 
 import { updateVersion } from '../global/actions'
 import {
@@ -14,12 +14,12 @@ describe('transaction reducer', () => {
   let store: Store<TransactionState>
 
   beforeEach(() => {
-    store = createStore(reducer, initialState)
+    store = legacy_createStore(reducer, initialState)
   })
 
   describe('updateVersion', () => {
     it('clears old format transactions that do not have info', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         [1]: {
           abc: {
             hash: 'abc',
@@ -30,7 +30,7 @@ describe('transaction reducer', () => {
       expect(store.getState()[1]['abc']).toBeUndefined()
     })
     it('keeps old format transactions that do have info', () => {
-      store = createStore(reducer, {
+      store = legacy_createStore(reducer, {
         [1]: {
           abc: {
             hash: 'abc',

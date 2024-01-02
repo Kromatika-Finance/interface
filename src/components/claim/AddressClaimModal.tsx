@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useState } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -99,11 +99,11 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       <Confetti start={Boolean(isOpen && claimConfirmed && attempting)} />
       {!attempting && (
-        <ContentWrapper gap="lg">
+        <ContentWrapper $gap="lg">
           <ModalUpper>
             <CardBGImage />
             <CardNoise />
-            <CardSection gap="md">
+            <CardSection $gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={400}>
                   <Trans>Claim UNI Token</Trans>
@@ -116,7 +116,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             </CardSection>
             <Break />
           </ModalUpper>
-          <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+          <AutoColumn $gap="md" style={{ padding: '1rem', paddingTop: '0' }} $justify="center">
             <TYPE.subHeader fontWeight={400}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
@@ -157,8 +157,8 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
             )}
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="100px" $justify={'center'}>
+            <AutoColumn $gap="12px" $justify={'center'}>
               <TYPE.largeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </TYPE.largeHeader>

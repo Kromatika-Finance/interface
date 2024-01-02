@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -83,7 +83,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.quotient, JSBI.BigInt(0)) ? (
         <GreyCard border={border}>
-          <AutoColumn gap="12px">
+          <AutoColumn $gap="12px">
             <FixedHeightRow>
               <RowFixed>
                 <Text fontWeight={400} fontSize={16}>
@@ -104,7 +104,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 </Text>
               </RowFixed>
             </FixedHeightRow>
-            <AutoColumn gap="4px">
+            <AutoColumn $gap="4px">
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={400}>
                   <Trans>Your pool share:</Trans>
@@ -176,13 +176,13 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
       <CardBGImage />
       <CardNoise />
       <CardSection>
-        <AutoColumn gap="md">
+        <AutoColumn $gap="md">
           <FixedHeightRow>
-            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
+            <RowFixed $gap="2px" style={{ marginRight: '10px' }}></RowFixed>
           </FixedHeightRow>
 
           {showMore && (
-            <AutoColumn gap="8px">
+            <AutoColumn $gap="8px">
               <FixedHeightRow>
                 <RowFixed>
                   <Text fontSize={16} fontWeight={400}>
@@ -194,13 +194,13 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
                 {earnedBalance != null ? (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
-                      <TYPE.white>{{ earnedBalance }}</TYPE.white>
+                      <TYPE.white>{{ earnedBalance } as any}</TYPE.white>
                     </Text>
                   </RowFixed>
                 ) : (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
-                      <TYPE.white>{{ earnedBalance }}</TYPE.white>
+                      <TYPE.white>{{ earnedBalance } as any}</TYPE.white>
                     </Text>
                   </RowFixed>
                 )}

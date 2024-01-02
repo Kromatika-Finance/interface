@@ -1,6 +1,6 @@
 import { area, curveStepAfter, ScaleLinear } from 'd3'
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ChartEntry } from './types'
 

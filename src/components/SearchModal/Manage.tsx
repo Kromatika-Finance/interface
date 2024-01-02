@@ -5,7 +5,7 @@ import { RowBetween } from 'components/Row'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon } from 'theme'
 
 import { CurrencyModalView } from './CurrencySearchModal'
@@ -37,7 +37,7 @@ const ToggleOption = styled.div<{ active?: boolean }>`
   color: ${({ theme, active }) => (active ? theme.text1 : theme.text2)};
   user-select: none;
 
-  :hover {
+  &:hover {
     cursor: pointer;
     opacity: 0.7;
   }

@@ -5,7 +5,7 @@ import 'components/analytics'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -44,29 +44,31 @@ function Updaters() {
     </>
   )
 }
-
-ReactDOM.render(
-  <StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <LanguageProvider>
-          <Web3ReactProvider getLibrary={getLibrary}>
-            <Web3ProviderNetwork getLibrary={getLibrary}>
-              <Blocklist>
-                <Updaters />
-                <ThemeProvider>
-                  <ThemedGlobalStyle />
-                  <App />
-                </ThemeProvider>
-              </Blocklist>
-            </Web3ProviderNetwork>
-          </Web3ReactProvider>
-        </LanguageProvider>
-      </BrowserRouter>
-    </Provider>
-  </StrictMode>,
-  document.getElementById('root')
-)
+const container = document.getElementById('root')
+if (container) {
+  const root = createRoot(container)
+  root.render(
+    <StrictMode>
+      <Provider store={store}>
+        <BrowserRouter>
+          <LanguageProvider>
+            <Web3ReactProvider getLibrary={getLibrary}>
+              <Web3ProviderNetwork getLibrary={getLibrary}>
+                <Blocklist>
+                  <Updaters />
+                  <ThemeProvider>
+                    <ThemedGlobalStyle />
+                    <App />
+                  </ThemeProvider>
+                </Blocklist>
+              </Web3ProviderNetwork>
+            </Web3ReactProvider>
+          </LanguageProvider>
+        </BrowserRouter>
+      </Provider>
+    </StrictMode>
+  )
+}
 
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   console.log('Using service worker')

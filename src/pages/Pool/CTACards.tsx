@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TYPE } from 'theme'
 
 import Texture from '../../assets/images/sandtexture.webp'
@@ -43,7 +43,7 @@ const CTA1 = styled(ExternalLink)`
     text-decoration: none !important;
   }
 
-  :hover {
+  &:hover {
     border: 1px solid ${({ theme }) => theme.bg1};
     text-decoration: none;
 
@@ -52,7 +52,7 @@ const CTA1 = styled(ExternalLink)`
     }
   }
 
-  :before {
+  &:before {
     content: '';
     position: absolute;
     width: 800%;
@@ -81,7 +81,7 @@ const CTA2 = styled(ExternalLink)`
     text-decoration: none !important;
   }
 
-  :hover {
+  &:hover {
     border: 1px solid ${({ theme }) => theme.bg1};
     text-decoration: none !important;
 
@@ -90,7 +90,7 @@ const CTA2 = styled(ExternalLink)`
     }
   }
 
-  :before {
+  &:before {
     content: '';
     position: absolute;
     width: 340%;

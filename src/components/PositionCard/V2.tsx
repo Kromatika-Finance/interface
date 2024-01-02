@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'
@@ -79,9 +79,9 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
-      <AutoColumn gap="12px">
+      <AutoColumn $gap="12px">
         <FixedHeightRow>
-          <AutoRow gap="8px">
+          <AutoRow $gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
             <Text fontWeight={400} fontSize={20}>
               {!currency0 || !currency1 ? (
@@ -93,7 +93,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               )}
             </Text>
           </AutoRow>
-          <RowFixed gap="8px">
+          <RowFixed $gap="8px">
             <ButtonEmpty
               padding="6px 8px"
               $borderRadius="20px"
@@ -116,7 +116,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
+          <AutoColumn $gap="8px">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={400}>
                 <Trans>Your total pool tokens:</Trans>

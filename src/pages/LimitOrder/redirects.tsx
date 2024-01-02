@@ -1,41 +1,35 @@
 import { useEffect } from 'react'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 
 import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
 
 // Redirects to swap but only replace the pathname
-export function RedirectPathToLimitOrderOnly({ location }: RouteComponentProps) {
-  return <Redirect to={{ ...location, pathname: '/limitorder' }} />
+export function RedirectPathToLimitOrderOnly() {
+  return <Navigate to="/limitorder" />
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
-export function RedirectToLimitOrder(props: RouteComponentProps<{ outputCurrency: string }>) {
-  const {
-    location: { search },
-    match: {
-      params: { outputCurrency },
-    },
-  } = props
+export function RedirectToLimitOrder() {
+  const params = useParams()
 
   return (
-    <Redirect
+    <Navigate
       to={{
-        ...props.location,
         pathname: '/limitorder',
         search:
-          search && search.length > 1
-            ? `${search}&outputCurrency=${outputCurrency}`
-            : `?outputCurrency=${outputCurrency}`,
+          params.search && params.search.length > 1
+            ? `${params.search}&outputCurrency=${params.outputCurrency}`
+            : `?outputCurrency=${params.outputCurrency}`,
       }}
     />
   )
 }
 
-export function OpenClaimAddressModalAndRedirectToLimitOrder(props: RouteComponentProps) {
+export function OpenClaimAddressModalAndRedirectToLimitOrder() {
   const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(setOpenModal(ApplicationModal.ADDRESS_CLAIM))
   }, [dispatch])
-  return <RedirectPathToLimitOrderOnly {...props} />
+  return <RedirectPathToLimitOrderOnly />
 }

@@ -1,5 +1,5 @@
 import { CheckCircle, Triangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTransactions } from '../../state/transactions/hooks'
@@ -14,7 +14,7 @@ const TransactionStatusText = styled.div`
   display: flex;
   align-items: center;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 `

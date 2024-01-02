@@ -8,7 +8,7 @@ import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon, ExternalLink, TYPE, Z_INDEX } from 'theme'
 
 import { useUnsupportedTokens } from '../../hooks/Tokens'
@@ -68,7 +68,7 @@ export default function UnsupportedCurrencyFooter({
     <DetailsFooter show={show}>
       <Modal isOpen={showDetails} onDismiss={() => setShowDetails(false)}>
         <Card padding="2rem">
-          <AutoColumn gap="lg">
+          <AutoColumn $gap="lg">
             <RowBetween>
               <TYPE.mediumHeader>
                 <Trans>Unsupported Assets</Trans>
@@ -81,8 +81,8 @@ export default function UnsupportedCurrencyFooter({
                 unsupportedTokens &&
                 Object.keys(unsupportedTokens).includes(token.address) && (
                   <OutlineCard key={token.address?.concat('not-supported')}>
-                    <AutoColumn gap="10px">
-                      <AutoRow gap="5px" align="center">
+                    <AutoColumn $gap="10px">
+                      <AutoRow $gap="5px" align="center">
                         <CurrencyLogo currency={token} size={'24px'} />
                         <TYPE.body fontWeight={400}>{token.symbol}</TYPE.body>
                       </AutoRow>
@@ -96,7 +96,7 @@ export default function UnsupportedCurrencyFooter({
                 )
               )
             })}
-            <AutoColumn gap="lg">
+            <AutoColumn $gap="lg">
               <TYPE.body fontWeight={400}>
                 <Trans>
                   Some assets are not available through this interface because they may not work well with the smart

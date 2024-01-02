@@ -25,11 +25,12 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { DefaultTheme } from 'styled-components'
 import { TYPE } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -43,22 +44,18 @@ import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
-export default function RemoveLiquidityV3({
-  location,
-  match: {
-    params: { tokenId },
-  },
-}: RouteComponentProps<{ tokenId: string }>) {
+export default function RemoveLiquidityV3(location: any) {
+  const params = useParams() as { tokenId: any }
   const parsedTokenId = useMemo(() => {
     try {
-      return BigNumber.from(tokenId)
+      return BigNumber.from(params.tokenId)
     } catch {
       return null
     }
-  }, [tokenId])
+  }, [params.tokenId])
 
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
-    return <Redirect to={{ ...location, pathname: '/pool' }} />
+    return <Navigate to={{ ...location, pathname: '/pool' }} />
   }
 
   return <Remove tokenId={parsedTokenId} />
@@ -66,7 +63,7 @@ export default function RemoveLiquidityV3({
 
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
   const { account, chainId, library } = useActiveWeb3React()
 
   // flag for receiving WETH
@@ -204,7 +201,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'sm'} style={{ padding: '16px' }}>
+      <AutoColumn $gap={'sm'} style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight={400}>
             <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
@@ -271,7 +268,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       (liquidityValue0.currency.isNative ||
         liquidityValue1.currency.isNative ||
         liquidityValue0.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]) ||
-        liquidityValue1.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]))
+        liquidityValue1.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId])),
   )
   return (
     <AutoColumn>
@@ -298,7 +295,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         />
         <Wrapper>
           {position ? (
-            <AutoColumn gap="lg">
+            <AutoColumn $gap="lg">
               <RowBetween>
                 <RowFixed>
                   <DoubleCurrencyLogo
@@ -315,7 +312,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <RangeBadge inRange={!outOfRange} closed={false} isUnderfunded={false} />
               </RowBetween>
               <LightCard>
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <TYPE.main fontWeight={400}>
                     <Trans>Amount</Trans>
                   </TYPE.main>
@@ -323,7 +320,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     <ResponsiveHeaderText>
                       <Trans>{percentForSlider}%</Trans>
                     </ResponsiveHeaderText>
-                    <AutoRow gap="4px" justify="flex-end">
+                    <AutoRow $gap="4px" $justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
                         <Trans>25%</Trans>
                       </SmallMaxButton>
@@ -342,7 +339,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 </AutoColumn>
               </LightCard>
               <LightCard>
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <RowBetween>
                     <Text fontSize={16} fontWeight={400}>
                       <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
@@ -409,7 +406,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               )}
 
               <div style={{ display: 'flex' }}>
-                <AutoColumn gap="12px" style={{ flex: '1' }}>
+                <AutoColumn $gap="12px" style={{ flex: '1' }}>
                   <ButtonConfirmed
                     confirmed={false}
                     disabled={removed || percent === 0 || !liquidityValue0}

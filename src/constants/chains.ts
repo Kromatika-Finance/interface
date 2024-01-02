@@ -74,7 +74,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.POLYGON_MUMBAI,
 ] as const
 
-export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
+export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
@@ -83,7 +83,7 @@ export const L2_CHAIN_IDS = [
   SupportedChainId.OPTIMISTIC_KOVAN,
 ] as const
 
-export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
 
 export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
@@ -139,8 +139,7 @@ export interface L2ChainInfo extends BaseChainInfo {
 
 export type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
   readonly [chainId in SupportedL2ChainId]: L2ChainInfo
-} &
-  { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
+} & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.MAINNET]: {

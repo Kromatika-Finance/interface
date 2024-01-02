@@ -1,6 +1,6 @@
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 
 import { useActivePopups } from '../../state/application/hooks'
@@ -39,9 +39,9 @@ const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedi
   MEDIA_WIDTHS.upToMedium + 500
 }px)`
 
-const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: boolean }>`
+const FixedPopupColumn = styled(AutoColumn)<{ $extraPadding: boolean; $xlPadding: boolean }>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '90px' : '56px')};
+  top: ${({ $extraPadding }) => ($extraPadding ? '90px' : '56px')};
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
@@ -53,7 +53,7 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: 
   `};
 
   ${StopOverflowQuery} {
-    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '90px' : extraPadding ? '90px' : '56px')};
+    top: ${({ $extraPadding, $xlPadding }) => ($xlPadding ? '90px' : $extraPadding ? '90px' : '56px')};
   }
 `
 
@@ -69,7 +69,7 @@ export default function Popups() {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
+      <FixedPopupColumn $gap="20px" $extraPadding={urlWarningActive} $xlPadding={isNotOnMainnet}>
         <ClaimPopup />
         {activePopups.map((item) => {
           return (

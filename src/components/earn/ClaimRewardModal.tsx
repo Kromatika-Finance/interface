@@ -1,7 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { ReactNode, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useStakingContract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -72,7 +72,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
-        <ContentWrapper gap="lg">
+        <ContentWrapper $gap="lg">
           <RowBetween>
             <TYPE.mediumHeader>
               <Trans>Claim</Trans>
@@ -80,7 +80,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.earnedAmount && (
-            <AutoColumn justify="center" gap="md">
+            <AutoColumn $justify="center" $gap="md">
               <TYPE.body fontWeight={600} fontSize={[16, 26, 36]}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
               </TYPE.body>
@@ -99,7 +99,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="12px" $justify={'center'}>
             <TYPE.body fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
             </TYPE.body>
@@ -108,7 +108,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="12px" $justify={'center'}>
             <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>

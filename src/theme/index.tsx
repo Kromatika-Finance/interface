@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
+// eslint-disable-next-line no-restricted-imports
 import styled, {
   createGlobalStyle,
   css,
   DefaultTheme,
   ThemeProvider as StyledComponentsThemeProvider,
-} from 'styled-components/macro'
+} from 'styled-components'
 
 import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'

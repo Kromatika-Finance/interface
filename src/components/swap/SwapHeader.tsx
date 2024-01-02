@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Switch } from '@material-ui/core'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useExpertModeManager } from '../../state/user/hooks'
 import { RowFixed } from '../Row'

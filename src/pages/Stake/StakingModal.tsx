@@ -6,7 +6,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
 import ReactGA from 'react-ga'
-import { RouteComponentProps, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
@@ -40,16 +40,12 @@ import { DynamicSection, PageWrapper, ScrollablePage, Wrapper } from '../AddLiqu
 import { Dots } from '../Pool/styleds'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
-export default function StakingModal({
-  match: {
-    params: { tokenId: tokenIdFromUrl },
-  },
-  history,
-}: RouteComponentProps<{ tokenId?: string }>) {
+export default function StakingModal() {
   const { account, chainId, library } = useActiveWeb3React()
   const location = useLocation()
-  const currencyIdA = tokenIdFromUrl
-
+  const navigate = useNavigate()
+  const params = useParams()
+  const currencyIdA = params.tokenIdFromUrl
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -68,7 +64,7 @@ export default function StakingModal({
     baseCurrency ?? undefined,
     withdraw ? fundingBalance : undefined,
     withdraw,
-    stakedBalance
+    stakedBalance,
   )
 
   const { independentField, typedValue } = useV3MintState()
@@ -99,7 +95,7 @@ export default function StakingModal({
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A].reduce(
@@ -109,7 +105,7 @@ export default function StakingModal({
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const argentWalletContract = useArgentWalletContract()
@@ -117,7 +113,7 @@ export default function StakingModal({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    chainId ? STAKING_ADDRESS[chainId] : undefined
+    chainId ? STAKING_ADDRESS[chainId] : undefined,
   )
 
   async function onAdd() {
@@ -136,7 +132,7 @@ export default function StakingModal({
       withdraw
         ? calldatas.push(stake.interface.encodeFunctionData('unstake', [account, toHex(amount0), false, false]))
         : calldatas.push(
-            stake ? stake.interface.encodeFunctionData('stake', [account, toHex(amount0), false, false]) : ''
+            stake ? stake.interface.encodeFunctionData('stake', [account, toHex(amount0), false, false]) : '',
           )
 
       const calldata = calldatas.length === 1 ? calldatas[0] : ''
@@ -190,9 +186,9 @@ export default function StakingModal({
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+      <AutoColumn $gap={'md'} style={{ marginTop: '20px' }}>
         <LightCard padding="12px 16px">
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo
@@ -224,10 +220,10 @@ export default function StakingModal({
     setShowConfirm(false)
     if (txHash) {
       onFieldAInput('')
-      history.push('/stake')
+      navigate('/stake')
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [navigate, onFieldAInput, txHash])
 
   // we need an existence check on parsed amounts for single-asset deposits
   const showApprovalA =
@@ -247,7 +243,7 @@ export default function StakingModal({
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
-      <AutoColumn gap={'md'}>
+      <AutoColumn $gap={'md'}>
         {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) && isValid && (
           <RowBetween>
             {showApprovalA && (
@@ -301,10 +297,10 @@ export default function StakingModal({
             showBackLink={true}
           ></AddRemoveTabs>
           <Wrapper>
-            <AutoColumn gap="lg"></AutoColumn>
+            <AutoColumn $gap="lg"></AutoColumn>
             <div>
               <DynamicSection disabled={false}>
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <TYPE.label>
                     <Trans>Amount</Trans>
                   </TYPE.label>

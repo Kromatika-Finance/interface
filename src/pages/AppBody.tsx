@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme'
 
 export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`

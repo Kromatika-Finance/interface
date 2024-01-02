@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { CheckCircle, Copy } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import useCopyClipboard from '../../hooks/useCopyClipboard'
 import { LinkStyledButton } from '../../theme'
@@ -13,9 +13,9 @@ const CopyIcon = styled(LinkStyledButton)`
   text-decoration: none;
   font-size: 0.825rem;
 
-  :hover,
-  :active,
-  :focus {
+  &:hover,
+  &:active,
+  &:focus {
     text-decoration: none;
     color: ${({ theme }) => theme.text2};
   }

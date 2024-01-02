@@ -11,7 +11,7 @@ import ReactGA from 'react-ga'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import {
   useAllTokens,
@@ -78,7 +78,7 @@ export function CurrencySearch({
   setImportToken,
 }: CurrencySearchProps) {
   const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
@@ -136,7 +136,7 @@ export function CurrencySearch({
       onCurrencySelect(currency)
       onDismiss()
     },
-    [onDismiss, onCurrencySelect]
+    [onDismiss, onCurrencySelect],
   )
 
   // clear the input on open
@@ -146,7 +146,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback((event) => {
+  const handleInput = useCallback((event: { target: { value: string } }) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -169,7 +169,7 @@ export function CurrencySearch({
         }
       }
     },
-    [debouncedQuery, native, filteredSortedTokensWithETH, handleCurrencySelect]
+    [debouncedQuery, native, filteredSortedTokensWithETH, handleCurrencySelect],
   )
 
   // menu ui
@@ -179,12 +179,12 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens = useSearchInactiveTokenLists(
-    filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
+    filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined,
   )
 
   return (
     <ContentWrapper>
-      <PaddedColumn gap="16px">
+      <PaddedColumn $gap="16px">
         <RowBetween>
           <Text fontWeight={400} fontSize={16}>
             <Trans>{title}</Trans>
@@ -215,7 +215,7 @@ export function CurrencySearch({
       ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
         <div style={{ flex: '1' }}>
           <AutoSizer disableWidth>
-            {({ height }) => (
+            {({ height }: { height: number }) => (
               <CurrencyList
                 height={height}
                 currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
@@ -239,7 +239,7 @@ export function CurrencySearch({
         </Column>
       )}
       <Footer>
-        <Row justify="center">
+        <Row $justify="center">
           <ButtonText onClick={showManageView} color={theme.primary1} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>

@@ -3,7 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { darken } from 'polished'
 import { useContext, useState } from 'react'
 import { useSetUserSlippageTolerance, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -30,11 +30,11 @@ const FancyButton = styled.button`
   outline: none;
   background: ${({ theme }) => theme.bg1};
 
-  :hover {
+  &:hover {
     border: 1px solid ${({ theme }) => theme.bg4};
   }
 
-  :focus {
+  &:focus {
     border: 1px solid ${({ theme }) => theme.primary1};
   }
 `
@@ -42,7 +42,7 @@ const FancyButton = styled.button`
 const Option = styled(FancyButton)<{ active: boolean }>`
   margin-right: 8px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 
@@ -73,7 +73,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   border: ${({ theme, active, warning }) =>
     active ? `1px solid ${warning ? theme.red1 : theme.primary1}` : warning && `1px solid ${theme.red1}`};
 
-  :hover {
+  &:hover {
     border: ${({ theme, active, warning }) =>
       active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
   }
@@ -98,7 +98,7 @@ interface TransactionSettingsProps {
 }
 
 export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const userSlippageTolerance = useUserSlippageTolerance()
   const setUserSlippageTolerance = useSetUserSlippageTolerance()
@@ -131,8 +131,8 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   const tooHigh = userSlippageTolerance !== 'auto' && userSlippageTolerance.greaterThan(new Percent(1, 100))
 
   return (
-    <AutoColumn gap="md">
-      <AutoColumn gap="sm">
+    <AutoColumn $gap="md">
+      <AutoColumn $gap="sm">
         <RowFixed>
           <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
             <Trans>Slippage tolerance</Trans>
@@ -167,8 +167,8 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                   slippageInput.length > 0
                     ? slippageInput
                     : userSlippageTolerance === 'auto'
-                    ? ''
-                    : userSlippageTolerance.toFixed(2)
+                      ? ''
+                      : userSlippageTolerance.toFixed(2)
                 }
                 onChange={(e) => parseSlippageInput(e.target.value)}
                 onBlur={() => {

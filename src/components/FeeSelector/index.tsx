@@ -13,7 +13,7 @@ import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Box } from 'rebass'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 import { TYPE } from 'theme'
 
 const pulse = (color: string) => keyframes`
@@ -118,9 +118,9 @@ export default function FeeSelector({
           [FeeAmount.LOW]: PoolState.NOT_EXISTS,
           [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
           [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
-        }
+        },
       ),
-    [pools]
+    [pools],
   )
 
   const [showOptions, setShowOptions] = useState(false)
@@ -131,14 +131,14 @@ export default function FeeSelector({
   const recommended = useRef(false)
 
   const handleFeePoolSelectWithEvent = useCallback(
-    (fee) => {
+    (fee: FeeAmount) => {
       ReactGA.event({
         category: 'FeePoolSelect',
         action: 'Manual',
       })
       handleFeePoolSelect(fee)
     },
-    [handleFeePoolSelect]
+    [handleFeePoolSelect],
   )
 
   useEffect(() => {
@@ -173,8 +173,8 @@ export default function FeeSelector({
   }, [previousFeeAmount, feeAmount])
 
   return (
-    <AutoColumn gap="16px">
-      <DynamicSection gap="md" disabled={disabled}>
+    <AutoColumn $gap="16px">
+      <DynamicSection $gap="md" disabled={disabled}>
         <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
           <RowBetween>
             <AutoColumn id="add-liquidity-selected-fee">
@@ -218,8 +218,8 @@ export default function FeeSelector({
               active={feeAmount === FeeAmount.LOW}
               onClick={() => handleFeePoolSelectWithEvent(FeeAmount.LOW)}
             >
-              <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start" gap="6px">
+              <AutoColumn $gap="sm" $justify="flex-start">
+                <AutoColumn $justify="flex-start" $gap="6px">
                   <ResponsiveText>
                     <Trans>0.05% fee</Trans>
                   </ResponsiveText>
@@ -242,8 +242,8 @@ export default function FeeSelector({
               active={feeAmount === FeeAmount.MEDIUM}
               onClick={() => handleFeePoolSelectWithEvent(FeeAmount.MEDIUM)}
             >
-              <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start" gap="4px">
+              <AutoColumn $gap="sm" $justify="flex-start">
+                <AutoColumn $justify="flex-start" $gap="4px">
                   <ResponsiveText>
                     <Trans>0.3% fee</Trans>
                   </ResponsiveText>
@@ -266,8 +266,8 @@ export default function FeeSelector({
               active={feeAmount === FeeAmount.HIGH}
               onClick={() => handleFeePoolSelectWithEvent(FeeAmount.HIGH)}
             >
-              <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start" gap="4px">
+              <AutoColumn $gap="sm" $justify="flex-start">
+                <AutoColumn $justify="flex-start" $gap="4px">
                   <ResponsiveText>
                     <Trans>1% fee</Trans>
                   </ResponsiveText>

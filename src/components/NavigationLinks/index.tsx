@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import { useTogglePerpModal } from '../../state/application/hooks'
 import Row, { AutoRow } from '../Row'
@@ -33,7 +33,7 @@ const NavLinks = styled(Row)`
     bottom: 0; right: 50%;
     transform: translate(50%,-50%);
     margin: 0 auto;
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => (theme.darkMode ? theme.bg1 : theme.bg3)};
     width: 50%;
   `};
 
@@ -43,9 +43,7 @@ const NavLinks = styled(Row)`
 `
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
+const StyledNavLink = styled(NavLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   display: flex;
   gap: 10px;
@@ -72,14 +70,14 @@ const StyledNavLink = styled(NavLink).attrs({
     }
   }
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0.5rem 1rem;
     &.${activeClassName} {
-      background-color: ${({ theme }) => (theme.darkMode ? theme.bg6 : theme.bg0)};
+      background-color: ${({ theme }: { theme: DefaultTheme }) => (theme.darkMode ? theme.bg6 : theme.bg0)};
     }
   `};
 
@@ -117,7 +115,7 @@ const StyledNavLinkAlt = styled.button`
     font-weight: 600;
   }
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 

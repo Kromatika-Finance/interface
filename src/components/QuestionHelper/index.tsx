@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import Tooltip from '../Tooltip'
 
@@ -19,8 +19,8 @@ const QuestionWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
   color: ${({ theme }) => theme.text2};
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     opacity: 0.7;
   }
 `

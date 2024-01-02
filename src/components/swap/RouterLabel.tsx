@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TYPE } from 'theme'
 
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
@@ -10,7 +10,7 @@ const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
   width: 16px;
 
-  :hover {
+  &:hover {
     filter: brightness(1.3);
   }
 `
@@ -21,7 +21,7 @@ const StyledStaticRouterIcon = styled(StaticRouterIcon)`
 
   fill: ${({ theme }) => theme.text3};
 
-  :hover {
+  &:hover {
     filter: brightness(1.3);
   }
 `

@@ -2,7 +2,7 @@ import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { UNI } from '../../constants/tokens'
@@ -24,13 +24,13 @@ const ContentWrapper = styled(AutoColumn)`
 `
 
 const StyledClosed = styled(X)`
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `
 
 const TextButton = styled.div`
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `
@@ -93,8 +93,8 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
       {!attempting && !hash && (
-        <ContentWrapper gap="lg">
-          <AutoColumn gap="lg" justify="center">
+        <ContentWrapper $gap="lg">
+          <AutoColumn $gap="lg" $justify="center">
             <RowBetween>
               <TYPE.mediumHeader fontWeight={400}>{title}</TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
@@ -119,7 +119,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOndismiss}>
-          <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="12px" $justify={'center'}>
             <TYPE.largeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
             </TYPE.largeHeader>
@@ -129,7 +129,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
-          <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="12px" $justify={'center'}>
             <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>

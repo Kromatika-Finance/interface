@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -29,7 +29,7 @@ export const MenuItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
 
-  :hover {
+  &:hover {
     background-color: ${({ theme, disabled }) => !disabled && theme.shadow2};
   }
 
@@ -58,7 +58,7 @@ export const SearchInput = styled.input`
 
   transition: border 100ms;
 
-  :focus {
+  &:focus {
     border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }

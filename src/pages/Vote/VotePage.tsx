@@ -7,9 +7,9 @@ import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import ReactMarkdown from 'react-markdown'
-import { RouteComponentProps } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import Markdown from 'react-markdown'
+import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -68,7 +68,7 @@ const ArrowWrapper = styled(StyledInternalLink)`
     text-decoration: none;
   }
 
-  :hover {
+  &:hover {
     text-decoration: none;
   }
 `
@@ -123,15 +123,12 @@ const ProposerAddressLink = styled(ExternalLink)`
   word-break: break-all;
 `
 
-export default function VotePage({
-  match: {
-    params: { governorIndex, id },
-  },
-}: RouteComponentProps<{ governorIndex: string; id: string }>) {
+export default function VotePage() {
+  const params = useParams()
   const { chainId, account } = useActiveWeb3React()
 
   // get data for this specific proposal
-  const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
+  const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(params.governorIndex!), params.id!)
 
   // update vote option based on button interactions
   const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
@@ -153,10 +150,10 @@ export default function VotePage({
           currentTimestamp
             .add(
               BigNumber.from(
-                (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
-              ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
+                (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+              ).mul(BigNumber.from(proposalData.endBlock - currentBlock)),
             )
-            .toNumber()
+            .toNumber(),
         )
       : undefined
   const now: DateTime = DateTime.local()
@@ -182,13 +179,13 @@ export default function VotePage({
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    chainId ? UNI[chainId] : undefined,
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
   )
 
   // show links in propsoal details if content is an address
@@ -205,7 +202,7 @@ export default function VotePage({
 
   return (
     <>
-      <PageWrapper gap="lg" justify="center">
+      <PageWrapper $gap="lg" $justify="center">
         <VoteModal
           isOpen={showVoteModal}
           onDismiss={toggleVoteModal}
@@ -213,7 +210,7 @@ export default function VotePage({
           voteOption={voteOption}
         />
         <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
-        <ProposalInfo gap="lg" justify="start">
+        <ProposalInfo $gap="lg" $justify="start">
           <RowBetween style={{ width: '100%' }}>
             <ArrowWrapper to="/vote">
               <Trans>
@@ -222,7 +219,7 @@ export default function VotePage({
             </ArrowWrapper>
             {proposalData && <ProposalStatus status={proposalData.status} />}
           </RowBetween>
-          <AutoColumn gap="10px" style={{ width: '100%' }}>
+          <AutoColumn $gap="10px" style={{ width: '100%' }}>
             <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
             <RowBetween>
               <TYPE.main>
@@ -283,7 +280,7 @@ export default function VotePage({
           <CardWrapper>
             <StyledDataCard>
               <CardSection>
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <WrapSmall>
                     <TYPE.black fontWeight={600}>
                       <Trans>For</Trans>
@@ -300,7 +297,7 @@ export default function VotePage({
             </StyledDataCard>
             <StyledDataCard>
               <CardSection>
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <WrapSmall>
                     <TYPE.black fontWeight={600}>
                       <Trans>Against</Trans>
@@ -316,7 +313,7 @@ export default function VotePage({
               </CardSection>
             </StyledDataCard>
           </CardWrapper>
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <TYPE.mediumHeader fontWeight={600}>
               <Trans>Details</Trans>
             </TYPE.mediumHeader>
@@ -337,15 +334,15 @@ export default function VotePage({
               )
             })}
           </AutoColumn>
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <TYPE.mediumHeader fontWeight={600}>
               <Trans>Description</Trans>
             </TYPE.mediumHeader>
             <MarkDownWrapper>
-              <ReactMarkdown source={proposalData?.description} />
+              <Markdown>proposalData?.description</Markdown>
             </MarkDownWrapper>
           </AutoColumn>
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <TYPE.mediumHeader fontWeight={600}>
               <Trans>Proposer</Trans>
             </TYPE.mediumHeader>
@@ -356,7 +353,7 @@ export default function VotePage({
                   : ''
               }
             >
-              <ReactMarkdown source={proposalData?.proposer} />
+              <Markdown>proposalData?.proposer</Markdown>
             </ProposerAddressLink>
           </AutoColumn>
         </ProposalInfo>

@@ -3,7 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UNI } from '../../constants/tokens'
@@ -35,7 +35,7 @@ const StyledClose = styled(X)`
   right: 16px;
   top: 16px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 `
@@ -58,17 +58,17 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
   const circulation: CurrencyAmount<Token> | undefined = useMemo(
     () =>
       blockTimestamp && uni && chainId === 1 ? computeUniCirculation(uni, blockTimestamp, unclaimedUni) : totalSupply,
-    [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
+    [blockTimestamp, chainId, totalSupply, unclaimedUni, uni],
   )
 
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   return (
-    <ContentWrapper gap="lg">
+    <ContentWrapper $gap="lg">
       <ModalUpper>
         <CardBGImage />
         <CardNoise />
-        <CardSection gap="md">
+        <CardSection $gap="md">
           <RowBetween>
             <TYPE.white color="white">
               <Trans>Your UNI Breakdown</Trans>
@@ -79,14 +79,14 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <Break />
         {account && (
           <>
-            <CardSection gap="sm">
-              <AutoColumn gap="md" justify="center">
+            <CardSection $gap="sm">
+              <AutoColumn $gap="md" $justify="center">
                 <UniTokenAnimated width="48px" src={tokenLogo} />{' '}
                 <TYPE.white fontSize={[16, 24, 48]} fontWeight={600} color="white">
                   {total?.toFixed(2, { groupSeparator: ',' })}
                 </TYPE.white>
               </AutoColumn>
-              <AutoColumn gap="md">
+              <AutoColumn $gap="md">
                 <RowBetween>
                   <TYPE.white color="white">
                     <Trans>Balance:</Trans>
@@ -111,8 +111,8 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
             <Break />
           </>
         )}
-        <CardSection gap="sm">
-          <AutoColumn gap="md">
+        <CardSection $gap="sm">
+          <AutoColumn $gap="md">
             <RowBetween>
               <TYPE.white color="white">
                 <Trans>UNI price:</Trans>

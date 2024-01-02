@@ -5,9 +5,9 @@ import { KROM } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
 import { HelpCircle } from 'react-feather'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import Web3 from 'web3-utils'
 
@@ -126,11 +126,8 @@ function commafy(x: string | number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-export default function Manage({
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+export default function Manage() {
+  const params = useParams()
   const { account, chainId } = useActiveWeb3React()
   const stake = useNewStakingContract()
   const sKrom = useSKromatikaContract()
@@ -164,7 +161,7 @@ export default function Manage({
   const twoWeeksRate = Math.pow(1 + stakingRebase, 14 * 3) - 1
 
   // get currencies and pair
-  const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
+  const [currencyA, currencyB] = [useCurrency(params.currencyIdA), useCurrency(params.currencyIdB)]
   const tokenA = (currencyA ?? undefined)?.wrapped
   const tokenB = (currencyB ?? undefined)?.wrapped
 
@@ -197,10 +194,10 @@ export default function Manage({
       JSBI.divide(
         JSBI.multiply(
           JSBI.multiply(stakingInfo.totalStakedAmount.quotient, stakingTokenPair.reserveOf(WETH).quotient),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
+          JSBI.BigInt(2), // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
         ),
-        totalSupplyOfStakingToken.quotient
-      )
+        totalSupplyOfStakingToken.quotient,
+      ),
     )
   }
 
@@ -223,7 +220,7 @@ export default function Manage({
   }, [account, toggleWalletModal])
 
   return (
-    <PageWrapper gap="lg" justify="center">
+    <PageWrapper $gap="lg" $justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
           <Trans>Staking - style it. Commafy values.</Trans>
@@ -233,7 +230,7 @@ export default function Manage({
 
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
-          <AutoColumn gap="sm">
+          <AutoColumn $gap="sm">
             <TYPE.body style={{ margin: 0 }}>
               <Trans>Staked Balance:</Trans>
             </TYPE.body>
@@ -245,7 +242,7 @@ export default function Manage({
           </AutoColumn>
         </PoolData>
         <PoolData>
-          <AutoColumn gap="sm">
+          <AutoColumn $gap="sm">
             <TYPE.body style={{ margin: 0 }}>
               <Trans>Total Value Locked </Trans>
             </TYPE.body>
@@ -261,7 +258,7 @@ export default function Manage({
           <CardBGImage />
           <CardNoise />
           <CardSection>
-            <AutoColumn gap="md">
+            <AutoColumn $gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
                   <Trans>Step 1. Get UNI-V2 Liquidity tokens</Trans>
@@ -314,13 +311,13 @@ export default function Manage({
         </>
       )}
 
-      <PositionInfo gap="lg" justify="center" dim={showAddLiquidityButton}>
-        <BottomSection gap="lg" justify="center">
+      <PositionInfo $gap="lg" $justify="center" dim={showAddLiquidityButton}>
+        <BottomSection $gap="lg" $justify="center">
           <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
             <CardSection>
               <CardBGImage desaturate />
               <CardNoise />
-              <AutoColumn gap="md">
+              <AutoColumn $gap="md">
                 <RowBetween>
                   <TYPE.white fontWeight={600}>
                     <Trans>APY</Trans>
@@ -347,7 +344,7 @@ export default function Manage({
           <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
             <CardBGImage desaturate />
             <CardNoise />
-            <AutoColumn gap="sm">
+            <AutoColumn $gap="sm">
               <RowBetween>
                 <div>
                   <TYPE.black>
@@ -363,8 +360,8 @@ export default function Manage({
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>
-        <AutoColumn gap="lg">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
+        <AutoColumn $gap="lg">
+          <AutoColumn $gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem', alignContent: 'space-between' }} padding={'10'}>
               <ButtonRow>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/stake/${kromToken?.address}`}>

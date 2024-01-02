@@ -21,7 +21,7 @@ import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 import { shortenAddress } from 'utils'
 import Web3Status from '../../components/Web3Status'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -136,15 +136,15 @@ const NoWalletStyle = styled.div`
 `
 
 const StyledCopyButton = styled.a`
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 
-  :active {
+  &:active {
     color: darkblue;
   }
 
-  :visited {
+  &:visited {
     color: darkblue;
   }
 `
@@ -177,7 +177,7 @@ const StyledInfo = styled(Info)`
   margin-left: 4px;
   color: ${({ theme }) => theme.text3};
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
   }
 `
@@ -238,7 +238,7 @@ export default function SwapWidget() {
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
+    [loadedInputCurrency, loadedOutputCurrency],
   )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
@@ -252,7 +252,7 @@ export default function SwapWidget() {
       return !Boolean(token.address in defaultTokens)
     })
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -329,7 +329,7 @@ export default function SwapWidget() {
     isGaslessMode,
     signatureDataNew,
     feeImpactAccepted,
-    priceImpactAccepted
+    priceImpactAccepted,
   )
 
   if (currencies.OUTPUT == undefined) currencies.OUTPUT = null
@@ -365,7 +365,7 @@ export default function SwapWidget() {
             [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
             [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
           },
-    [independentField, parsedAmount, showWrap, trade?.inputAmount, trade?.outputAmount]
+    [independentField, parsedAmount, showWrap, trade?.inputAmount, trade?.outputAmount],
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
@@ -374,7 +374,7 @@ export default function SwapWidget() {
       V3TradeState.LOADING === v3TradeState,
       V3TradeState.SYNCING === v3TradeState,
     ],
-    [trade, v3TradeState]
+    [trade, v3TradeState],
   )
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
@@ -389,13 +389,13 @@ export default function SwapWidget() {
     (value: string) => {
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   const formattedAmounts = {
@@ -406,7 +406,7 @@ export default function SwapWidget() {
   }
 
   const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0)),
   )
 
   // check whether the user has approved the router on the input token
@@ -461,7 +461,7 @@ export default function SwapWidget() {
     parsedAmounts[Field.INPUT],
     swapTransaction,
     showConfirm,
-    isGaslessMode
+    isGaslessMode,
   )
 
   const handleSwap = useCallback(() => {
@@ -497,8 +497,8 @@ export default function SwapWidget() {
             recipient === null
               ? 'Swap w/o Send'
               : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
+                ? 'Swap w/o Send + recipient'
+                : 'Swap w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -574,11 +574,11 @@ export default function SwapWidget() {
   }, [attemptingTxn, showConfirm, signatureData, swapErrorMessage, swapTransaction, trade, txHash])
 
   const handleInputSelect = useCallback(
-    (inputCurrency) => {
+    (inputCurrency: Currency) => {
       setApprovalSubmitted(false)
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
 
   const handleMaxInput = useCallback(() => {
@@ -586,8 +586,8 @@ export default function SwapWidget() {
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
-    [onCurrencySelection]
+    (outputCurrency: Currency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
+    [onCurrencySelection],
   )
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
@@ -658,7 +658,7 @@ export default function SwapWidget() {
                   feeImpactAccepted={feeImpactAccepted}
                   routeIsNotFound={routeNotFound}
                 />
-                <AutoColumn gap={'md'}>
+                <AutoColumn $gap={'md'}>
                   <div style={{ display: 'relative' }}>
                     <CurrencyInputPanel
                       actionLabel={t`You sell`}
@@ -681,7 +681,7 @@ export default function SwapWidget() {
                       id="swap-currency-input"
                       loading={independentField === Field.OUTPUT && routeIsSyncing}
                     />
-                    <ArrowWrapper clickable>
+                    <ArrowWrapper $clickable>
                       <ArrowDown
                         size="16"
                         onClick={() => {
@@ -712,8 +712,8 @@ export default function SwapWidget() {
                   </div>
                   {recipient !== null && !showWrap ? (
                     <>
-                      <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable={false}>
+                      <AutoRow $justify="space-between" style={{ padding: '0 1rem' }}>
+                        <ArrowWrapper $clickable={false}>
                           <ArrowDown size="16" color={theme.text2} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -724,14 +724,14 @@ export default function SwapWidget() {
                     </>
                   ) : null}
                   {!showWrap && trade && (
-                    <AutoColumn gap="sm">
+                    <AutoColumn $gap="sm">
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltipContent
                             wrap={false}
                             content={
                               <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                                <Row justify={!trade ? 'center' : 'space-between'}>
+                                <Row $justify={!trade ? 'center' : 'space-between'}>
                                   <RowFixed>
                                     <Text fontSize={14} fontWeight={400}>
                                       <Trans>Allowed Slippage:</Trans>
@@ -743,7 +743,7 @@ export default function SwapWidget() {
                                     </Text>
                                   </RowFixed>
                                 </Row>
-                                <Row justify={!trade ? 'center' : 'space-between'}>
+                                <Row $justify={!trade ? 'center' : 'space-between'}>
                                   <RowFixed>
                                     <Text fontSize={14} fontWeight={400}>
                                       <Trans>Minimum Received:</Trans>
@@ -758,9 +758,8 @@ export default function SwapWidget() {
                                       ) : (
                                         <span>
                                           {trade
-                                            ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
-                                                trade?.outputAmount.currency.symbol
-                                              }`
+                                            ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${trade
+                                                ?.outputAmount.currency.symbol}`
                                             : '-'}
                                         </span>
                                       )}
@@ -806,7 +805,7 @@ export default function SwapWidget() {
                               })
                             }
                           >
-                            <AutoRow gap="4px" width="auto">
+                            <AutoRow $gap="4px" width="auto">
                               <AutoRouterLogo />
                               <LoadingOpacityContainer $loading={routeIsSyncing}>
                                 {trade instanceof V3Trade && trade.swaps.length > 1 && (
@@ -818,7 +817,7 @@ export default function SwapWidget() {
                         </RowFixed>
                       </RowBetween>
                       {isGaslessMode && (
-                        <Row justify={!trade ? 'center' : 'space-between'}>
+                        <Row $justify={!trade ? 'center' : 'space-between'}>
                           <RowFixed style={{ position: 'relative' }}>
                             <MouseoverTooltipContent
                               wrap={false}
@@ -867,7 +866,7 @@ export default function SwapWidget() {
                     </AutoColumn>
                   )}
                   {inputTokenShouldBeWrapped && isGaslessMode && (
-                    <AutoColumn gap="lg" justify="center">
+                    <AutoColumn $gap="lg" $justify="center">
                       <WarningDescription>
                         <WarningTitle>
                           <span style={{ position: 'relative', top: '-8px', left: '-5px' }}>
@@ -960,7 +959,7 @@ export default function SwapWidget() {
                     </GreyCard>
                   ) : showApproveFlow ? (
                     <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                      <AutoColumn style={{ width: '100%' }} gap="md">
+                      <AutoColumn style={{ width: '100%' }} $gap="md">
                         <ButtonConfirmed
                           onClick={handleApprove}
                           disabled={
@@ -974,7 +973,7 @@ export default function SwapWidget() {
                             approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                           }
                         >
-                          <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                          <AutoRow $justify="space-between" style={{ flexWrap: 'nowrap' }}>
                             <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                               <CurrencyLogo
                                 currency={currencies[Field.INPUT]}
@@ -1197,7 +1196,7 @@ export default function SwapWidget() {
               feeImpactAccepted={feeImpactAccepted}
               routeIsNotFound={routeNotFound}
             />
-            <AutoColumn gap={'md'}>
+            <AutoColumn $gap={'md'}>
               <div style={{ display: 'relative' }}>
                 <CurrencyInputPanel
                   actionLabel={t`You sell`}
@@ -1216,7 +1215,7 @@ export default function SwapWidget() {
                   id="swap-currency-input"
                   loading={independentField === Field.OUTPUT && routeIsSyncing}
                 />
-                <ArrowWrapper clickable>
+                <ArrowWrapper $clickable>
                   <ArrowDown
                     size="16"
                     onClick={() => {
@@ -1247,8 +1246,8 @@ export default function SwapWidget() {
               </div>
               {recipient !== null && !showWrap ? (
                 <>
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <ArrowWrapper clickable={false}>
+                  <AutoRow $justify="space-between" style={{ padding: '0 1rem' }}>
+                    <ArrowWrapper $clickable={false}>
                       <ArrowDown size="16" color={theme.text2} />
                     </ArrowWrapper>
                     <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -1259,14 +1258,14 @@ export default function SwapWidget() {
                 </>
               ) : null}
               {!showWrap && trade && (
-                <AutoColumn gap="sm">
+                <AutoColumn $gap="sm">
                   <RowBetween>
                     <RowFixed>
                       <MouseoverTooltipContent
                         wrap={false}
                         content={
                           <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                            <Row justify={!trade ? 'center' : 'space-between'}>
+                            <Row $justify={!trade ? 'center' : 'space-between'}>
                               <RowFixed>
                                 <Text fontSize={14} fontWeight={400}>
                                   <Trans>Allowed Slippage:</Trans>
@@ -1278,7 +1277,7 @@ export default function SwapWidget() {
                                 </Text>
                               </RowFixed>
                             </Row>
-                            <Row justify={!trade ? 'center' : 'space-between'}>
+                            <Row $justify={!trade ? 'center' : 'space-between'}>
                               <RowFixed>
                                 <Text fontSize={14} fontWeight={400}>
                                   <Trans>Minimum Received:</Trans>
@@ -1293,9 +1292,8 @@ export default function SwapWidget() {
                                   ) : (
                                     <span>
                                       {trade
-                                        ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
-                                            trade?.outputAmount.currency.symbol
-                                          }`
+                                        ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${trade
+                                            ?.outputAmount.currency.symbol}`
                                         : '-'}
                                     </span>
                                   )}
@@ -1341,7 +1339,7 @@ export default function SwapWidget() {
                           })
                         }
                       >
-                        <AutoRow gap="4px" width="auto">
+                        <AutoRow $gap="4px" width="auto">
                           <AutoRouterLogo />
                           <LoadingOpacityContainer $loading={routeIsSyncing}>
                             {trade instanceof V3Trade && trade.swaps.length > 1 && (
@@ -1353,7 +1351,7 @@ export default function SwapWidget() {
                     </RowFixed>
                   </RowBetween>
                   {isGaslessMode && (
-                    <Row justify={!trade ? 'center' : 'space-between'}>
+                    <Row $justify={!trade ? 'center' : 'space-between'}>
                       <RowFixed style={{ position: 'relative' }}>
                         <MouseoverTooltipContent
                           wrap={false}
@@ -1402,7 +1400,7 @@ export default function SwapWidget() {
                 </AutoColumn>
               )}
               {inputTokenShouldBeWrapped && isGaslessMode && (
-                <AutoColumn gap="lg" justify="center">
+                <AutoColumn $gap="lg" $justify="center">
                   <WarningDescription>
                     <WarningTitle>
                       <span style={{ position: 'relative', top: '-8px', left: '-5px' }}>
@@ -1489,7 +1487,7 @@ export default function SwapWidget() {
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  <AutoColumn style={{ width: '100%' }} gap="md">
+                  <AutoColumn style={{ width: '100%' }} $gap="md">
                     <ButtonConfirmed
                       onClick={handleApprove}
                       disabled={
@@ -1503,7 +1501,7 @@ export default function SwapWidget() {
                         approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                       }
                     >
-                      <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                      <AutoRow $justify="space-between" style={{ flexWrap: 'nowrap' }}>
                         <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                           <CurrencyLogo
                             currency={currencies[Field.INPUT]}

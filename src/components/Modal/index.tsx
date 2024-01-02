@@ -1,9 +1,9 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
+import { animated, useSpring, useTransition } from '@react-spring/web'
 import { transparentize } from 'polished'
 import React from 'react'
-import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 
 import { isMobile } from '../../utils/userAgent'
 
@@ -26,6 +26,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-ignore
 const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
   <AnimatedDialogContent {...rest} />
 )).attrs({
@@ -94,7 +95,7 @@ export default function Modal({
   initialFocusRef,
   children,
 }: ModalProps) {
-  const fadeTransition = useTransition(isOpen, null, {
+  const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -115,12 +116,11 @@ export default function Modal({
 
   return (
     <>
-      {fadeTransition.map(
-        ({ item, key, props }) =>
+      {fadeTransition(
+        (styles, item) =>
           item && (
             <StyledDialogOverlay
-              key={key}
-              style={props}
+              style={styles}
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
@@ -136,13 +136,14 @@ export default function Modal({
                 minHeight={minHeight}
                 maxHeight={maxHeight}
                 mobile={isMobile}
+                isOpen={isOpen}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
                 {children}
               </StyledDialogContent>
             </StyledDialogOverlay>
-          )
+          ),
       )}
     </>
   )

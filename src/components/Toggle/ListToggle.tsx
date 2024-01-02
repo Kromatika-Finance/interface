@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { TYPE } from '../../theme'
 
-const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const Wrapper = styled.button<{ $isActive?: boolean; activeElement?: boolean }>`
   border-radius: 20px;
   border: none;
   background: ${({ theme }) => theme.bg1};
@@ -15,21 +15,21 @@ const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
 `
 
-const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string }>`
+const ToggleElement = styled.span<{ $isActive?: boolean; bgColor?: string }>`
   border-radius: 50%;
   height: 24px;
   width: 24px;
-  background-color: ${({ isActive, bgColor, theme }) => (isActive ? bgColor : theme.bg4)};
+  background-color: ${({ $isActive, bgColor, theme }) => ($isActive ? bgColor : theme.bg4)};
 
-  :hover {
+  &:hover {
     opacity: 0.8;
   }
 `
 
-const StatusText = styled(TYPE.main)<{ isActive?: boolean }>`
+const StatusText = styled(TYPE.main)<{ $isActive?: boolean }>`
   margin: 0 10px;
   width: 24px;
-  color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
+  color: ${({ theme, $isActive }) => ($isActive ? theme.text1 : theme.text3)};
 `
 
 interface ToggleProps {
@@ -41,15 +41,15 @@ interface ToggleProps {
 
 export default function ListToggle({ id, isActive, bgColor, toggle }: ToggleProps) {
   return (
-    <Wrapper id={id} isActive={isActive} onClick={toggle}>
+    <Wrapper id={id} $isActive={isActive} onClick={toggle}>
       {isActive && (
-        <StatusText fontWeight="600" margin="0 6px" isActive={true}>
+        <StatusText fontWeight="600" margin="0 6px" $isActive={true}>
           <Trans>ON</Trans>
         </StatusText>
       )}
-      <ToggleElement isActive={isActive} bgColor={bgColor} />
+      <ToggleElement $isActive={isActive} bgColor={bgColor} />
       {!isActive && (
-        <StatusText fontWeight="600" margin="0 6px" isActive={false}>
+        <StatusText fontWeight="600" margin="0 6px" $isActive={false}>
           <Trans>OFF</Trans>
         </StatusText>
       )}

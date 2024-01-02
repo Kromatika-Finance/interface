@@ -13,7 +13,7 @@ import { HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import Web3 from 'web3-utils'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -64,7 +64,7 @@ const StyledButtonSecondary = styled(BaseButton)`
   background-color: ${({ theme }) => theme.bg1};
   border: 2px solid ${({ theme }) => theme.shadow3};
 
-  :hover {
+  &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
     color: ${({ theme }) => theme.white};
   }
@@ -117,7 +117,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.quotient, JSBI.BigInt(0)) ? (
         <GreyCard border={border}>
-          <AutoColumn gap="12px">
+          <AutoColumn $gap="12px">
             <FixedHeightRow>
               <RowFixed>
                 <Text fontWeight={400} fontSize={16}>
@@ -138,7 +138,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 </Text>
               </RowFixed>
             </FixedHeightRow>
-            <AutoColumn gap="4px">
+            <AutoColumn $gap="4px">
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={400}>
                   <Trans>Your pool share:</Trans>
@@ -215,10 +215,10 @@ export default function FullPositionCard({ fundingBalance, minBalance }: Funding
   }, [depositedAmount, minBalanceNumber, usdcPrice])
 
   return (
-    <AccountStatusWrapper gap="10px">
+    <AccountStatusWrapper $gap="10px">
       <AccountStatusCard>
-        <AutoColumn gap="20px">
-          <AutoColumn gap="5px">
+        <AutoColumn $gap="20px">
+          <AutoColumn $gap="5px">
             <FixedHeightRow>
               <RowFixed>
                 <TYPE.darkGray>
@@ -243,7 +243,7 @@ export default function FullPositionCard({ fundingBalance, minBalance }: Funding
             <RowFixed>
               {isUnderfunded ? (
                 <AutoColumn>
-                  <RowFixed gap="1rem">
+                  <RowFixed $gap="1rem">
                     <TYPE.error error>
                       <Trans>KROM deposit required</Trans>
                     </TYPE.error>
@@ -378,13 +378,13 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
       <CardBGImage />
       <CardNoise />
       <CardSection>
-        <AutoColumn gap="md">
+        <AutoColumn $gap="md">
           <FixedHeightRow>
-            <RowFixed gap="2px" style={{ marginRight: '10px' }} />
+            <RowFixed $gap="2px" style={{ marginRight: '10px' }} />
           </FixedHeightRow>
 
           {showMore && (
-            <AutoColumn gap="8px">
+            <AutoColumn $gap="8px">
               <FixedHeightRow>
                 <RowFixed>
                   <TYPE.body>

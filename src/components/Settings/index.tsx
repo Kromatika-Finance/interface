@@ -6,7 +6,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -29,7 +29,7 @@ const StyledMenuIcon = styled(Settings)`
     stroke: ${({ theme }) => theme.text2};
   }
 
-  :hover {
+  &:hover {
     opacity: 0.7;
   }
 `
@@ -38,7 +38,7 @@ const StyledCloseIcon = styled(X)`
   height: 20px;
   width: 20px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
   }
 
@@ -57,8 +57,8 @@ const StyledMenuButton = styled.button`
   padding: 0;
   border-radius: 20px;
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     cursor: pointer;
     outline: none;
   }
@@ -123,7 +123,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
 
@@ -156,7 +156,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={handleGaslessDismiss} maxHeight={100}>
         <ModalContentWrapper>
-          <AutoColumn gap="lg">
+          <AutoColumn $gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
               <Text fontWeight={400} fontSize={16}>
@@ -165,7 +165,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <StyledCloseIcon onClick={handleGaslessDismiss} />
             </RowBetween>
             <Break />
-            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
+            <AutoColumn $gap="lg" style={{ padding: '0 2rem' }}>
               <Text fontWeight={400} fontSize={16}>
                 <Trans>
                   Gasless mode enables users to send blockchain transactions without paying network gas fees.
@@ -195,7 +195,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
+          <AutoColumn $gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={16}>
               <Trans>Transaction Settings</Trans>
             </Text>

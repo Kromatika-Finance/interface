@@ -5,12 +5,12 @@ import Card from 'components/Card'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import { useListColor } from 'hooks/useColor'
 import { useActiveWeb3React } from 'hooks/web3'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle, Settings } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -44,7 +44,9 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 100;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 150ms linear, opacity 150ms linear;
+  transition:
+    visibility 150ms linear,
+    opacity 150ms linear;
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
@@ -104,7 +106,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     return list.tokens.reduce((acc, cur) => (cur.chainId === chainId ? acc + 1 : acc), 0)
   }, [chainId, list])
 
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
   const listColor = useListColor(list?.logoURI)
   const isActive = useIsListActive(listUrl)
 
@@ -240,7 +242,7 @@ export function ManageLists({
   setListUrl: (url: string) => void
 }) {
   const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
@@ -257,13 +259,13 @@ export function ManageLists({
           [list.name]: list.tokens.reduce((count: number, token) => (token.chainId === chainId ? count + 1 : count), 0),
         }
       }, {}),
-    [chainId, lists]
+    [chainId, lists],
   )
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
 
-  const handleInput = useCallback((e) => {
+  const handleInput = useCallback((e: { target: { value: SetStateAction<string> } }) => {
     setListUrlInput(e.target.value)
   }, [])
 
@@ -302,8 +304,8 @@ export function ManageLists({
           return listA.name.toLowerCase() < listB.name.toLowerCase()
             ? -1
             : listA.name.toLowerCase() === listB.name.toLowerCase()
-            ? 0
-            : 1
+              ? 0
+              : 1
         }
         if (listA) return -1
         if (listB) return 1
@@ -349,7 +351,7 @@ export function ManageLists({
 
   return (
     <Wrapper>
-      <PaddedColumn gap="14px">
+      <PaddedColumn $gap="14px">
         <Row>
           <SearchInput
             type="text"
@@ -371,7 +373,7 @@ export function ManageLists({
             <RowBetween>
               <RowFixed>
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
-                <AutoColumn gap="4px" style={{ marginLeft: '20px' }}>
+                <AutoColumn $gap="4px" style={{ marginLeft: '20px' }}>
                   <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
                   <TYPE.main fontSize={'12px'}>
                     <Trans>{tempList.tokens.length} tokens</Trans>
@@ -403,7 +405,7 @@ export function ManageLists({
       )}
       <Separator />
       <ListContainer>
-        <AutoColumn gap="md">
+        <AutoColumn $gap="md">
           {sortedLists.map((listUrl) => (
             <ListRow key={listUrl} listUrl={listUrl} />
           ))}

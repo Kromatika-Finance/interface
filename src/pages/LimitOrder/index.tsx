@@ -11,12 +11,12 @@ import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
 import { V3TradeState } from 'state/validator/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -78,7 +78,7 @@ const ClassicModeContainer = styled.div`
     padding: 1rem 1rem 8rem;
   `};
 
-  :nth-child(4) {
+  &:nth-child(4) {
     width: 100%;
     flex-wrap: wrap;
     justify-content: center;
@@ -160,7 +160,7 @@ const FundingBalance = () => {
 }
 
 const LimitOrderModal = () => {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
   const toggleWalletModal = useWalletModalToggle()
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -179,7 +179,7 @@ const LimitOrderModal = () => {
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
+    [loadedInputCurrency, loadedOutputCurrency],
   )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
@@ -224,7 +224,7 @@ const LimitOrderModal = () => {
       V3TradeState.LOADING === v3TradeState,
       V3TradeState.SYNCING === v3TradeState,
     ],
-    [trade, v3TradeState]
+    [trade, v3TradeState],
   )
 
   const fiatValueInput = useUSDCValue(parsedAmounts.input)
@@ -238,27 +238,27 @@ const LimitOrderModal = () => {
     (value: string) => {
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
   const handleTypePrice = useCallback(
     (value: string) => {
       onUserInput(Field.PRICE, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   // reset if they close warning without tokens in params
-  const history = useHistory()
+  const navigate = useNavigate()
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/limitorder')
-  }, [history])
+    navigate('/limitorder')
+  }, [navigate])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -278,7 +278,7 @@ const LimitOrderModal = () => {
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] &&
       currencies[Field.OUTPUT] &&
-      (independentField === Field.INPUT || independentField === Field.OUTPUT)
+      (independentField === Field.INPUT || independentField === Field.OUTPUT),
   )
 
   // check whether the user has approved the router on the input token
@@ -331,7 +331,7 @@ const LimitOrderModal = () => {
     signatureData,
     parsedAmounts.input,
     price,
-    serviceFee
+    serviceFee,
   )
 
   const handleSwap = useCallback(() => {
@@ -348,8 +348,8 @@ const LimitOrderModal = () => {
             recipient === null
               ? 'Trade w/o Send'
               : (recipientAddress ?? recipient) === account
-              ? 'Trade w/o Send + recipient'
-              : 'Trade w/ Send',
+                ? 'Trade w/o Send + recipient'
+                : 'Trade w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -399,20 +399,20 @@ const LimitOrderModal = () => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      history.push('/limitorder')
+      navigate('/limitorder')
     }
-  }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, navigate, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
-    (inputCurrency) => {
+    (inputCurrency: Currency) => {
       setApprovalSubmitted(false)
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
 
   const handleMaxInput = useCallback(() => {
@@ -420,10 +420,10 @@ const LimitOrderModal = () => {
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency) => {
+    (outputCurrency: Currency) => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
@@ -454,7 +454,7 @@ const LimitOrderModal = () => {
             inputAmount={parsedAmounts.input}
             outputAmount={parsedAmounts.output}
           />
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
                 currencySearchTitle="Select a token - Uniswap V3 pairs only"
@@ -474,7 +474,7 @@ const LimitOrderModal = () => {
                 id="swap-currency-input"
                 loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
-              <ArrowWrapper clickable={false}>
+              <ArrowWrapper $clickable={false}>
                 <X size="16" />
               </ArrowWrapper>
               <CurrencyInputPanel
@@ -495,7 +495,7 @@ const LimitOrderModal = () => {
                 price={price}
                 loading={independentField === Field.INPUT && routeIsSyncing}
               />
-              <ArrowWrapper clickable>
+              <ArrowWrapper $clickable>
                 <ArrowDown
                   size="16"
                   onClick={() => {
@@ -526,8 +526,8 @@ const LimitOrderModal = () => {
 
             {recipient !== null && !showWrap ? (
               <>
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
+                <AutoRow $justify="space-between" style={{ padding: '0 1rem' }}>
+                  <ArrowWrapper $clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
                   <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -538,8 +538,8 @@ const LimitOrderModal = () => {
               </>
             ) : null}
             {!showWrap && trade && minPrice && (
-              <AutoColumn gap="sm" style={{ margin: '8px' }}>
-                <Row justify={'flex-end'}>
+              <AutoColumn $gap="sm" style={{ margin: '8px' }}>
+                <Row $justify={'flex-end'}>
                   <RowFixed style={{ position: 'relative' }}>
                     <Toggle
                       id="toggle-buy-sell"
@@ -573,8 +573,8 @@ const LimitOrderModal = () => {
               </AutoColumn>
             )}
             {!trade && !minPrice && (
-              <AutoColumn gap="sm">
-                <Row justify={'flex-end'}>
+              <AutoColumn $gap="sm">
+                <Row $justify={'flex-end'}>
                   <RowFixed style={{ position: 'relative' }}>
                     <Toggle
                       id="toggle-buy-sell"
@@ -585,7 +585,7 @@ const LimitOrderModal = () => {
                     />
                   </RowFixed>
                 </Row>
-                <Row justify={'end'} style={{ height: '24px' }}>
+                <Row $justify={'end'} style={{ height: '24px' }}>
                   <RowFixed style={{ position: 'relative' }} />
                   <RowFixed style={{ position: 'relative' }}>
                     <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
@@ -593,7 +593,7 @@ const LimitOrderModal = () => {
                     </TYPE.body>
                   </RowFixed>
                 </Row>
-                <Row justify={'end'} style={{ height: '24px' }}>
+                <Row $justify={'end'} style={{ height: '24px' }}>
                   <RowFixed style={{ position: 'relative' }} />
                   <RowFixed style={{ position: 'relative' }}>
                     <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
@@ -638,7 +638,7 @@ const LimitOrderModal = () => {
               </GreyCard>
             ) : showApproveFlow ? (
               <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                <AutoColumn style={{ width: '100%' }} gap="md">
+                <AutoColumn style={{ width: '100%' }} $gap="md">
                   <ButtonConfirmed
                     onClick={handleApprove}
                     disabled={
@@ -652,7 +652,7 @@ const LimitOrderModal = () => {
                       approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                     }
                   >
-                    <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                    <AutoRow $justify="space-between" style={{ flexWrap: 'nowrap' }}>
                       <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                         <CurrencyLogo
                           currency={currencies[Field.INPUT]}

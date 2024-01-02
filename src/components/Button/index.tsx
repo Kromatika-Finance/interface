@@ -2,7 +2,7 @@ import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import { RowBetween } from '../Row'
 
@@ -100,10 +100,10 @@ export const ButtonLight = styled(BaseButton)`
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
   }
 
-  :disabled {
+  &:disabled {
     opacity: 0.4;
 
-    :hover {
+    &:hover {
       cursor: auto;
       background-color: ${({ theme }) => theme.primary5};
       box-shadow: none;
@@ -423,7 +423,7 @@ const ResponsiveCheck = styled(Check)`
 `
 
 export function ButtonRadioChecked({ active = false, children, ...rest }: { active?: boolean } & ButtonProps) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   if (!active) {
     return (
@@ -439,7 +439,7 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
             {children}
             <CheckboxWrapper>
               <Circle>
-                <ResponsiveCheck size={13} stroke={theme.white} />
+                <ResponsiveCheck size={13} stroke={theme?.white} />
               </Circle>
             </CheckboxWrapper>
           </RowBetween>

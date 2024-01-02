@@ -12,7 +12,7 @@ import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import ReactGA from 'react-ga'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import { TYPE } from '../../theme'
 import { Chart } from './Chart'
@@ -89,7 +89,7 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
 }) {
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
 
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
@@ -103,7 +103,7 @@ export default function LiquidityChartRangeInput({
   })
 
   const onBrushDomainChangeEnded = useCallback(
-    (domain, mode) => {
+    (domain: any, mode: any) => {
       let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 
@@ -129,7 +129,7 @@ export default function LiquidityChartRangeInput({
         }
       })
     },
-    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
+    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
   )
 
   interactive = interactive && Boolean(formattedData?.length)
@@ -154,7 +154,7 @@ export default function LiquidityChartRangeInput({
 
       return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
     },
-    [isSorted, price, ticksAtLimit]
+    [isSorted, price, ticksAtLimit],
   )
 
   if (isError) {
@@ -166,23 +166,23 @@ export default function LiquidityChartRangeInput({
   }
 
   return (
-    <AutoColumn gap="md" style={{ minHeight: '200px' }}>
+    <AutoColumn $gap="md" style={{ minHeight: '200px' }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
-          icon={<Inbox size={56} stroke={theme.text1} />}
+          icon={<Inbox size={56} stroke={theme?.text1} />}
         />
       ) : isLoading ? (
-        <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />
+        <InfoBox icon={<Loader size="40px" stroke={theme?.text4} />} />
       ) : isError ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
-          icon={<CloudOff size={56} stroke={theme.text4} />}
+          icon={<CloudOff size={56} stroke={theme?.text4} />}
         />
       ) : !formattedData || !price ? (
         <InfoBox
           message={<Trans>There is no liquidity data.</Trans>}
-          icon={<BarChart2 size={56} stroke={theme.text4} />}
+          icon={<BarChart2 size={56} stroke={theme?.text4} />}
         />
       ) : (
         <ChartWrapper>
@@ -192,12 +192,12 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
-                selection: theme.blue1,
+                selection: theme?.blue1 as string,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor) ?? theme.red1,
-                  east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                  west: saturate(0.1, tokenAColor) ?? theme?.red1,
+                  east: saturate(0.1, tokenBColor) ?? theme?.blue1,
                 },
               },
             }}

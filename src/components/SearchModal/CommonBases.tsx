@@ -8,7 +8,7 @@ import { COMMON_BASES } from 'constants/routing'
 import { KROM } from 'constants/tokens'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { currencyId } from 'utils/currencyId'
 
 const MobileWrapper = styled(AutoColumn)`
@@ -25,7 +25,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
 
   align-items: center;
 
-  :hover {
+  &:hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
     background-color: ${({ theme, disable }) => !disable && theme.bg2};
   }
@@ -49,14 +49,14 @@ export default function CommonBases({
   chainId && bases[0] != KROM[chainId] && bases.unshift(KROM[chainId])
 
   return bases.length > 0 ? (
-    <MobileWrapper gap="md">
+    <MobileWrapper $gap="md">
       <AutoRow>
         <Text fontWeight={400} fontSize={16}>
           <Trans>Common bases</Trans>
         </Text>
         <QuestionHelper text={<Trans>These tokens are commonly paired with other tokens.</Trans>} />
       </AutoRow>
-      <AutoRow gap="4px">
+      <AutoRow $gap="4px">
         {bases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)
           return (

@@ -12,7 +12,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useContext, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
-import { ThemeContext } from 'styled-components/macro'
+import { DefaultTheme, ThemeContext } from 'styled-components'
 import { TYPE } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
@@ -30,7 +30,7 @@ export const PositionPreview = ({
   baseCurrencyDefault?: Currency | undefined
   ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext) as DefaultTheme
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)
@@ -41,9 +41,9 @@ export const PositionPreview = ({
       ? baseCurrencyDefault === currency0
         ? currency0
         : baseCurrencyDefault === currency1
-        ? currency1
-        : currency0
-      : currency0
+          ? currency1
+          : currency0
+      : currency0,
   )
 
   const sorted = baseCurrency === currency0
@@ -62,7 +62,7 @@ export const PositionPreview = ({
   const closedOrder = false
 
   return (
-    <AutoColumn gap="md" style={{ marginTop: '0.5rem' }}>
+    <AutoColumn $gap="md" style={{ marginTop: '0.5rem' }}>
       <RowBetween style={{ marginBottom: '0.5rem' }}>
         <RowFixed>
           <DoubleCurrencyLogo
@@ -79,7 +79,7 @@ export const PositionPreview = ({
       </RowBetween>
 
       <LightCard>
-        <AutoColumn gap="md">
+        <AutoColumn $gap="md">
           <RowBetween>
             <RowFixed>
               <CurrencyLogo currency={currency0} />
@@ -110,7 +110,7 @@ export const PositionPreview = ({
         </AutoColumn>
       </LightCard>
 
-      <AutoColumn gap="md">
+      <AutoColumn $gap="md">
         <RowBetween>
           {title ? <TYPE.main>{title}</TYPE.main> : <div />}
           <RateToggle
@@ -122,14 +122,14 @@ export const PositionPreview = ({
 
         <RowBetween>
           <LightCard width="48%" padding="8px">
-            <AutoColumn gap="4px" justify="center">
+            <AutoColumn $gap="4px" $justify="center">
               <TYPE.main fontSize="12px">
                 <Trans>Minimum Price</Trans>
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${formatTickPrice(
                 priceLower,
                 ticksAtLimit,
-                Bound.LOWER
+                Bound.LOWER,
               )}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
                 <Trans>
@@ -143,14 +143,14 @@ export const PositionPreview = ({
           </LightCard>
 
           <LightCard width="48%" padding="8px">
-            <AutoColumn gap="4px" justify="center">
+            <AutoColumn $gap="4px" $justify="center">
               <TYPE.main fontSize="12px">
                 <Trans>Max Price</Trans>
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${formatTickPrice(
                 priceUpper,
                 ticksAtLimit,
-                Bound.UPPER
+                Bound.UPPER,
               )}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
                 <Trans>
@@ -164,7 +164,7 @@ export const PositionPreview = ({
           </LightCard>
         </RowBetween>
         <LightCard padding="12px ">
-          <AutoColumn gap="4px" justify="center">
+          <AutoColumn $gap="4px" $justify="center">
             <TYPE.main fontSize="12px">
               <Trans>Current price</Trans>
             </TYPE.main>

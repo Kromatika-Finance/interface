@@ -29,9 +29,9 @@ import { DateTime } from 'luxon/src/luxon'
 import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -88,7 +88,7 @@ const RangeLineItem = styled(DataLineItem)`
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }: DefaultTheme) => theme.bg2};
     border-radius: 20px;
     padding: 8px 0;
 `};
@@ -118,7 +118,7 @@ const LinkRow = styled(ExternalLink)`
     text-align: center;
   }
 
-  :hover {
+  &:hover {
     background-color: ${({ theme }) => darken(0.03, theme.bg6)};
   }
 
@@ -148,7 +148,7 @@ const BadgeText = styled.div`
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: boolean }>`
+const Label = styled(({ end, ...props }: { end: boolean }) => <TYPE.label {...props} />)<{ end?: boolean }>`
   display: flex;
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
@@ -167,7 +167,7 @@ const HoverText = styled(TYPE.main)`
   text-decoration: none;
   color: ${({ theme }) => theme.text3};
 
-  :hover {
+  &:hover {
     color: ${({ theme }) => theme.text1};
     text-decoration: none;
   }
@@ -211,7 +211,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
 function getRatio(
   lower: Price<Currency, Currency>,
   current: Price<Currency, Currency>,
-  upper: Price<Currency, Currency>
+  upper: Price<Currency, Currency>,
 ) {
   try {
     if (!current.greaterThan(lower)) {
@@ -329,16 +329,12 @@ const useInverter = ({
   }
 }
 
-export function PositionPage({
-  match: {
-    params: { tokenId: tokenIdFromUrl },
-  },
-  history,
-}: RouteComponentProps<{ tokenId?: string }>) {
+export function PositionPage() {
   const { chainId, account, library } = useActiveWeb3React()
-  const theme = useTheme()
+  const theme = useTheme() as DefaultTheme
+  const params = useParams()
 
-  const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
+  const parsedTokenId = params.tokenIdFromUrl ? BigNumber.from(params.tokenIdFromUrl) : undefined
   const {
     loading,
     position: positionDetails,
@@ -370,6 +366,7 @@ export function PositionPage({
   const removed = liquidity?.eq(0)
 
   const { gaslessCallback } = useGaslessCallback()
+  const navigate = useNavigate()
 
   const kromatikaRouter = useKromatikaRouter()
 
@@ -409,7 +406,7 @@ export function PositionPage({
       ? getRatio(
           inverted ? priceUpper.invert() : priceLower,
           pool.token0Price,
-          inverted ? priceLower.invert() : priceUpper
+          inverted ? priceLower.invert() : priceUpper,
         )
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
@@ -424,10 +421,10 @@ export function PositionPage({
     // if there was a tx hash, we want to clear the input
     if (collectMigrationHash) {
       // dont jump to pool page if creating
-      history.push('/limitorder')
+      navigate('/limitorder')
     }
     //setCollectMigrationHash('')
-  }, [history, collectMigrationHash])
+  }, [navigate, collectMigrationHash])
 
   // usdc prices always in terms of tokens
   const price0 = useUSDCPrice(currency0 ?? undefined)
@@ -650,11 +647,11 @@ export function PositionPage({
                     return undefined
                   }
                   const blockNumber = await gaslessProvider._getInternalBlockNumber(
-                    100 + 2 * gaslessProvider.pollingInterval
+                    100 + 2 * gaslessProvider.pollingInterval,
                   )
                   return gaslessProvider._wrapTransaction(tx, response, blockNumber)
                 },
-                { oncePoll: gaslessProvider }
+                { oncePoll: gaslessProvider },
               )
 
               setCollectMigrationHash(response)
@@ -673,7 +670,7 @@ export function PositionPage({
                   currencyId1: currencyId(feeValue1.currency),
                 })
               }
-              history.push('/limitorder')
+              navigate('/limitorder')
             })
           })
         } else {
@@ -695,7 +692,7 @@ export function PositionPage({
                 currencyId0: currencyId(feeValue0.currency),
                 currencyId1: currencyId(feeValue1.currency),
               })
-              history.push('/limitorder')
+              navigate('/limitorder')
             })
         }
       })
@@ -710,7 +707,7 @@ export function PositionPage({
     feeValue0,
     feeValue1,
     gaslessCallback,
-    history,
+    navigate,
     isExpertMode,
     kromatikaRouter,
     library,
@@ -760,9 +757,9 @@ export function PositionPage({
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+      <AutoColumn $gap={'md'} style={{ marginTop: '20px' }}>
         <LightCard padding="12px 16px">
-          <AutoColumn gap="md">
+          <AutoColumn $gap="md">
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
@@ -800,8 +797,8 @@ export function PositionPage({
       ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD
       : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
     : token1USD
-    ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
-    : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
+      ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
+      : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
 
   const limitTrade1USD = inverted
     ? currencyCreatedEventAmount && Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * token1USD
@@ -816,8 +813,8 @@ export function PositionPage({
         ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD
         : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
       : token1USD
-      ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
-      : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
+        ? Number(currencyCreatedEventAmount?.toSignificant(4)) * token1USD
+        : Number(currencyCreatedEventAmount?.toSignificant(4)) * currentPriceInUSD
 
   const limitOrder1USD =
     tokenPosition0 == currency0?.symbol
@@ -867,8 +864,8 @@ export function PositionPage({
           )}
           pendingText={isClosed ? <Trans>Collecting tokens</Trans> : <Trans>Cancelling trade</Trans>}
         />
-        <AutoColumn gap="md">
-          <AutoColumn gap="sm">
+        <AutoColumn $gap="md">
+          <AutoColumn $gap="sm">
             <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/limitorder">
               <HoverText>
                 <Trans>← Back to Limit Orders</Trans>
@@ -899,11 +896,11 @@ export function PositionPage({
                       onClick={() => setShowConfirm(true)}
                     >
                       {!!collectMigrationHash && !isCollectPending ? (
-                        <TYPE.main color={theme.text1}>
+                        <TYPE.main color={theme?.text1}>
                           <Trans> Canceled</Trans>
                         </TYPE.main>
                       ) : isCollectPending || collecting ? (
-                        <TYPE.main color={theme.text1}>
+                        <TYPE.main color={theme?.text1}>
                           {' '}
                           <Dots>
                             <Trans>Cancelling</Trans>
@@ -911,7 +908,7 @@ export function PositionPage({
                         </TYPE.main>
                       ) : (
                         <>
-                          <TYPE.main color={theme.white}>
+                          <TYPE.main color={theme?.white}>
                             <Trans>Cancel Trade</Trans>
                           </TYPE.main>
                         </>
@@ -926,7 +923,7 @@ export function PositionPage({
                       padding="4px 8px"
                       onClick={() => setShowConfirm(true)}
                     >
-                      <TYPE.main color={theme.text1}>
+                      <TYPE.main color={theme?.text1}>
                         <Trans> Collected</Trans>
                       </TYPE.main>
                     </ButtonConfirmed>
@@ -937,10 +934,10 @@ export function PositionPage({
             <RowBetween></RowBetween>
           </AutoColumn>
           <PriceDetails>
-            <AutoColumn gap="md">
+            <AutoColumn $gap="md">
               <DarkCard style={{ padding: '0' }}>
-                <AutoColumn gap="md" style={{ width: '100%' }}>
-                  <AutoColumn gap="md">
+                <AutoColumn $gap="md" style={{ width: '100%' }}>
+                  <AutoColumn $gap="md">
                     <Label>
                       <Trans>Amounts</Trans>
                     </Label>
@@ -949,13 +946,13 @@ export function PositionPage({
                         <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
                       </TYPE.largeHeader>
                     ) : (
-                      <TYPE.largeHeader color={theme.text1} fontSize={36} fontWeight={400}>
+                      <TYPE.largeHeader color={theme?.text1} fontSize={36} fontWeight={400}>
                         <Trans>$-</Trans>
                       </TYPE.largeHeader>
                     )}
                   </AutoColumn>
                   <LightCard padding="12px 16px">
-                    <AutoColumn gap="md">
+                    <AutoColumn $gap="md">
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
@@ -1013,7 +1010,7 @@ export function PositionPage({
 
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
-                              <TYPE.main color={theme.text2} fontSize={14}>
+                              <TYPE.main color={theme?.text2} fontSize={14}>
                                 <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
                               </TYPE.main>
                             </Badge>
@@ -1027,6 +1024,7 @@ export function PositionPage({
               <DarkCard style={{ padding: '0' }}>
                 <RowBetween>
                   <RowFixed>
+                    {/* @ts-ignore */}
                     <Label display="flex" style={{ marginRight: '12px' }}>
                       <Trans>Price Details</Trans>
                     </Label>
@@ -1035,7 +1033,7 @@ export function PositionPage({
                 <br />
                 <RowBetween>
                   <LightCard padding="12px" width="100%">
-                    <AutoColumn gap="8px" justify="center">
+                    <AutoColumn $gap="8px" $justify="center">
                       <ExtentsText>
                         <Trans>Current price </Trans>
                       </ExtentsText>
@@ -1075,7 +1073,7 @@ export function PositionPage({
 
                   <DoubleArrow>⟷</DoubleArrow>
                   <LightCard padding="12px" width="100%">
-                    <AutoColumn gap="8px" justify="center">
+                    <AutoColumn $gap="8px" $justify="center">
                       <ExtentsText>
                         <Trans>Target price</Trans>
                       </ExtentsText>
@@ -1103,10 +1101,10 @@ export function PositionPage({
             </AutoColumn>
           </PriceDetails>
           <TradeHistory>
-            <AutoColumn gap="2px" style={{ width: '100%' }}>
-              <AutoColumn gap="2px">
+            <AutoColumn $gap="2px" style={{ width: '100%' }}>
+              <AutoColumn $gap="2px">
                 <RowBetween style={{ alignItems: 'flex-start' }}>
-                  <AutoColumn gap="2px">
+                  <AutoColumn $gap="2px">
                     <Label>
                       <Trans>Trade History</Trans>
                     </Label>

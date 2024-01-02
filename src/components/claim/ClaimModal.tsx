@@ -4,7 +4,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -87,18 +87,18 @@ export default function ClaimModal() {
 
   const nonLPAmount = JSBI.multiply(
     JSBI.BigInt((userClaimData?.flags?.isSOCKS ? SOCKS_AMOUNT : 0) + (userClaimData?.flags?.isUser ? USER_AMOUNT : 0)),
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)),
   )
 
   return (
     <Modal isOpen={isOpen} onDismiss={toggleClaimModal} maxHeight={90}>
       <Confetti start={Boolean(isOpen && claimConfirmed)} />
       {!attempting && !claimConfirmed && (
-        <ContentWrapper gap="lg">
+        <ContentWrapper $gap="lg">
           <ModalUpper>
             <CardBGImage />
             <CardNoise />
-            <CardSection gap="md">
+            <CardSection $gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={400}>
                   <Trans>Claim UNI</Trans>
@@ -110,7 +110,7 @@ export default function ClaimModal() {
               </TYPE.white>
             </CardSection>
             <Break />
-            <CardSection gap="sm">
+            <CardSection $gap="sm">
               {userClaimData?.flags?.isSOCKS && (
                 <RowBetween>
                   <TYPE.subHeader color="white">SOCKS</TYPE.subHeader>
@@ -148,7 +148,7 @@ export default function ClaimModal() {
               )}
             </CardSection>
           </ModalUpper>
-          <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+          <AutoColumn $gap="md" style={{ padding: '1rem', paddingTop: '0' }} $justify="center">
             <TYPE.subHeader fontWeight={400}>
               <Trans>
                 As a member of the Uniswap community you may claim UNI to be used for voting and governance.
@@ -185,8 +185,8 @@ export default function ClaimModal() {
               <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI" />
             )}
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
+          <AutoColumn $gap="100px" $justify={'center'}>
+            <AutoColumn $gap="12px" $justify={'center'}>
               <TYPE.largeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed!</Trans> : <Trans>Claiming</Trans>}
               </TYPE.largeHeader>

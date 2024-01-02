@@ -3,7 +3,7 @@ import { darken } from 'polished'
 import { ReactNode, useEffect, useState } from 'react'
 import { ArrowDownCircle, ArrowLeft } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { BaseButton } from '../Button'
 import { AutoColumn } from '../Column'

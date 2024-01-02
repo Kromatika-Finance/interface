@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TYPE } from 'theme'
 
 const EmptyProposals = styled.div`

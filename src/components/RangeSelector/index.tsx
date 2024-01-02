@@ -41,7 +41,7 @@ export default function RangeSelector({
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   return (
-    <AutoColumn gap="md">
+    <AutoColumn $gap="md">
       <RowBetween>
         <StepCounter
           value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : leftPrice?.toSignificant(5) ?? ''}

@@ -2,7 +2,7 @@ import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 
 import { anonymizeLink } from '../utils/anonymizeLink'
 
@@ -15,11 +15,11 @@ export const ButtonText = styled.button`
   background: none;
   cursor: pointer;
 
-  :hover {
+  &:hover {
     opacity: 0.7;
   }
 
-  :focus {
+  &:focus {
     text-decoration: underline;
   }
 `
@@ -53,16 +53,16 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.primary1)};
   font-weight: 500;
 
-  :hover {
+  &:hover {
     text-decoration: ${({ disabled }) => (disabled ? null : 'underline')};
   }
 
-  :focus {
+  &:focus {
     outline: none;
     text-decoration: ${({ disabled }) => (disabled ? null : 'underline')};
   }
 
-  :active {
+  &:active {
     text-decoration: none;
   }
 `
@@ -74,16 +74,16 @@ export const StyledInternalLink = styled(Link)`
   color: ${({ theme }) => theme.primary1};
   font-weight: 500;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 
-  :focus {
+  &:focus {
     outline: none;
     text-decoration: underline;
   }
 
-  :active {
+  &:active {
     text-decoration: none;
   }
 `
@@ -94,16 +94,16 @@ const StyledLink = styled.a`
   color: ${({ theme }) => theme.primary1};
   font-weight: 500;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 
-  :focus {
+  &:focus {
     outline: none;
     text-decoration: underline;
   }
 
-  :active {
+  &:active {
     text-decoration: none;
   }
 `
@@ -115,17 +115,17 @@ const LinkIconWrapper = styled.a`
   justify-content: center;
   display: flex;
 
-  :hover {
+  &:hover {
     text-decoration: none;
     opacity: 0.7;
   }
 
-  :focus {
+  &:focus {
     outline: none;
     text-decoration: none;
   }
 
-  :active {
+  &:active {
     text-decoration: none;
   }
 `
@@ -148,7 +148,7 @@ export const TrashIcon = styled(Trash)`
   justify-content: center;
   display: flex;
 
-  :hover {
+  &:hover {
     opacity: 0.7;
   }
 `

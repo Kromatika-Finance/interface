@@ -1,51 +1,23 @@
-# Uniswap Interface
+# Kromatika Dapp
 
-[![Unit Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml)
-[![Integration Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/integration-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/integration-tests.yaml)
-[![Lint](https://github.com/Uniswap/uniswap-interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/lint.yml)
-[![Release](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml)
-[![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
+Based on a fork of uniswap-interface, to include advanced features developped by Kromatika DAO.
 
-An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
+- Website: [kromatika.finance](https://kromatika.finance/)
+- Metaswap: [app.kromatika.finance/swap](https://app.kromatika.finance/swap)
+- Fees Earning Limit Orders: [app.kromatika.finance/limitorder](https://app.kromatika.finance/limitorder)
+- Docs: [docs.kromatika.finance](https://docs.kromatika.finance/)
+- Whitepaper: [Kromatika Whitepaper](https://docs.kromatika.finance/fundamentals/white-paper)
+  <br/><br/>
 
-- Website: [uniswap.org](https://uniswap.org/)
-- Interface: [app.uniswap.org](https://app.uniswap.org)
-- Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
-- Twitter: [@Uniswap](https://twitter.com/Uniswap)
-- Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
-- Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
-- Whitepapers:
-  - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
-  - [V2](https://uniswap.org/whitepaper.pdf)
-  - [V3](https://uniswap.org/whitepaper-v3.pdf)
+Kromatika is developped by the Kromatika DAO, a community-driven DAO that aims to build a decentralized financial infrastructure.
 
-## Accessing the Uniswap Interface
+- DAO Manifesto: [Kromatika DAO Manifesto](https://docs.kromatika.finance/fundamentals/kromatika-dao-manifesto)  
+  <br/>
 
-To access the Uniswap Interface, use an IPFS gateway link from the
-[latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
-or visit [app.uniswap.org](https://app.uniswap.org).
+Find more information about Kromatika DAO and Kromatika on our socials.
 
-## Unsupported tokens
-
-Check out `useUnsupportedTokenList()` in [src/state/lists/hooks.ts](./src/state/lists/hooks.ts) for blocking tokens in your instance of the interface.
-
-You can block an entire list of tokens by passing in a tokenlist like [here](./src/constants/lists.ts) or you can block specific tokens by adding them to [unsupported.tokenlist.json](./src/constants/tokenLists/unsupported.tokenlist.json).
-
-## Contributions
-
-For steps on local deployment, development, and code contribution, please see [CONTRIBUTING](./CONTRIBUTING.md).
-
-## Accessing Uniswap V2
-
-The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.
-
-- Swap on Uniswap V2: https://app.uniswap.org/#/swap?use=v2
-- View V2 liquidity: https://app.uniswap.org/#/pool/v2
-- Add V2 liquidity: https://app.uniswap.org/#/add/v2
-- Migrate V2 liquidity to V3: https://app.uniswap.org/#/migrate/v2
-
-## Accessing Uniswap V1
-
-The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
-linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
+- Twitter: [@KromatikaFi](https://twitter.com/KromatikaFi)
+- Discord: [Kromatika.Finance](https://discord.gg/5fWzdmkz9S)
+- Telegram Discussion: [Kromatika.Finance Official](https://t.me/kromatika_finance)
+- Telegram Announcements: [KromatikaNews](https://t.me/KromatikaNews)
+- Medium: [Kromatika DAO](https://kromatika-finance.medium.com/)
