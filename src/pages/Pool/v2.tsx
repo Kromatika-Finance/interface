@@ -136,7 +136,7 @@ export default function Pool() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
+        <SwapPoolTabs />
         <VoteCard>
           <CardBGImage />
           <CardNoise />

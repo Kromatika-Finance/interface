@@ -41,7 +41,7 @@ const NavLinks = styled(Row)`
     width: calc(100% - 32px);
   `};
 `
-const activeClassName = 'ACTIVE'
+const activeClassName = 'active'
 
 const StyledNavLink = styled(NavLink)`
   ${({ theme }) => theme.flexRowNoWrap}

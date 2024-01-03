@@ -1,5 +1,5 @@
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -102,6 +102,7 @@ export default function App() {
                   path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
                   element={<RedirectDuplicateTokenIds />}
                 />
+                <Route index element={<Navigate to="/limitorder" replace />} />
                 <Route path="/limitorder" element={<LimitOrder />} />
                 <Route path="/limitorder/:tokenId" element={<PositionPage />} />
                 <Route path="/swap" element={<Market />} />

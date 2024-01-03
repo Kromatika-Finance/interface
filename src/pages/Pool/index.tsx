@@ -122,7 +122,7 @@ export default function Pool() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
+        <SwapPoolTabs />
         <AutoColumn $gap="lg" $justify="center">
           <AutoColumn $gap="lg" style={{ width: '100%' }}>
             <TitleRow padding={'10'}>
