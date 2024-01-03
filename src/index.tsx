@@ -66,7 +66,7 @@ if (container) {
           </LanguageProvider>
         </BrowserRouter>
       </Provider>
-    </StrictMode>
+    </StrictMode>,
   )
 }
 

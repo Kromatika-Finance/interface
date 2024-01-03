@@ -79,9 +79,7 @@ export default function RoutingDiagram({
       {routes.map(({ percent, path }, index) => (
         <RouteContainerRow key={index}>
           <CurrencyLogo currency={tokenIn} />
-          <Routes>
-            <Route percent={percent} path={path} />
-          </Routes>
+          <Route percent={percent} path={path} />
           <CurrencyLogo currency={tokenOut} />
         </RouteContainerRow>
       ))}

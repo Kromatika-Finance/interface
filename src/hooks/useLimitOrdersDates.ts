@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { DateTime } from 'luxon/src/luxon'
+import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 
 import { useV3PositionFromTokenId } from './useV3Positions'
