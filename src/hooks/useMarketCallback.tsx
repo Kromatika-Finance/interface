@@ -64,7 +64,7 @@ function useMarketCallArguments(
   parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | null | undefined,
   showConfirm: boolean,
-  gasless: boolean
+  gasless: boolean,
 ): {
   state: V3TradeState
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined | null // trade to execute, required
@@ -153,7 +153,6 @@ function marketErrorToUserReadableMessage(error: any): ReactNode {
   }
 
   if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
-
   console.log(reason)
 
   switch (reason) {
@@ -230,7 +229,7 @@ export function useMarketCallback(
   parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | undefined | null,
   showConfirm: boolean,
-  gasless: boolean
+  gasless: boolean,
 ): { state: MarketCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -245,7 +244,7 @@ export function useMarketCallback(
     parsedAmount,
     swapTransaction,
     showConfirm,
-    gasless
+    gasless,
   )
 
   const addTransaction = useTransactionAdder()
@@ -303,13 +302,13 @@ export function useMarketCallback(
                   gas,
                 }
               })
-          })
+          }),
         )
 
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
         let bestCallOption: SuccessfulCall | MarketCallEstimate | undefined = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
+            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1]),
         )
 
         // check if any calls errored with a recognizable error
@@ -317,7 +316,7 @@ export function useMarketCallback(
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
           const firstNoErrorCall = estimatedCalls.find<MarketCallEstimate>(
-            (call): call is MarketCallEstimate => !('error' in call)
+            (call): call is MarketCallEstimate => !('error' in call),
           )
           if (!firstNoErrorCall) throw new Error(t`Unexpected error. Could not estimate gas for the swap.`)
           bestCallOption = firstNoErrorCall
@@ -350,11 +349,11 @@ export function useMarketCallback(
                       return undefined
                     }
                     const blockNumber = await gaslessProvider._getInternalBlockNumber(
-                      100 + 2 * gaslessProvider.pollingInterval
+                      100 + 2 * gaslessProvider.pollingInterval,
                     )
                     return gaslessProvider._wrapTransaction(tx, response, blockNumber)
                   },
-                  { oncePoll: gaslessProvider }
+                  { oncePoll: gaslessProvider },
                 )
                 if (txResponse) {
                   addTransaction(
@@ -377,7 +376,7 @@ export function useMarketCallback(
                           outputCurrencyId: currencyId(trade.outputAmount.currency),
                           outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                           expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                        }
+                        },
                   )
                 }
 
@@ -423,20 +422,21 @@ export function useMarketCallback(
                       outputCurrencyId: currencyId(trade.outputAmount.currency),
                       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                       expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                    }
+                    },
               )
 
               return response.hash
             })
             .catch((error) => {
               // if the user rejected the tx, pass this along
-              if (error?.code === 4001) {
+              if (error?.code === 4001 || error?.code === 'ACTION_REJECTED') {
                 throw new Error(t`Transaction rejected.`)
               } else {
                 // otherwise, the error was unexpected and we need to convey that
                 console.error(`Swap failed`, error, address, calldata, value)
-
-                throw new Error(t`Swap failed: ${marketErrorToUserReadableMessage(error)}`)
+                const reason = marketErrorToUserReadableMessage(error)
+                console.log(reason)
+                throw new Error(t`Swap failed: ${reason}`)
               }
             })
         }
