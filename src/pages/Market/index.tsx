@@ -1,7 +1,4 @@
 // eslint-disable-next-line no-restricted-imports
-import 'react-toastify/dist/ReactToastify.css'
-
-// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -13,7 +10,6 @@ import { AutoRouterLogo } from 'components/swap/RouterLabel'
 import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import Toast, { setToast } from 'components/Toast'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
@@ -644,7 +640,6 @@ export default function Market() {
   const toggleFeeImpactAccepted = () => {
     setFeeImpactAccepted(!feeImpactAccepted)
   }
-  setToast()
   if (expertMode) {
     return (
       <>
@@ -1096,7 +1091,6 @@ export default function Market() {
                 </Wrapper>
               </AppBody>
               <SwitchLocaleLink />
-              <Toast />
 
               {!swapIsUnsupported ? null : (
                 <UnsupportedCurrencyFooter
@@ -1619,7 +1613,6 @@ export default function Market() {
         </AppBody>
       </StyledSwap>
       <SwitchLocaleLink />
-      <Toast />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
           show={swapIsUnsupported}

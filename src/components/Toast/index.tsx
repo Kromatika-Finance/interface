@@ -1,12 +1,20 @@
-import { Trans } from '@lingui/macro'
-import { useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast, ToastContainer as ToastContainerBase } from 'react-toastify'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import CliqueLogo from '../../assets/images/Clique.png'
 import { isMobile } from '../../utils/userAgent'
 
-export const setToast = () => {
+interface ToastInterface {
+  title: string
+  description: string
+  imageUrl: string
+  // could be anything, just make it different from other toast
+  toastId: string
+  ctaText?: string
+  ctaUrl?: string
+}
+
+export const setToast = (props: ToastInterface) => {
   toast(
     <div
       style={{
@@ -16,16 +24,15 @@ export const setToast = () => {
         zIndex: 999,
       }}
     >
-      <div className="" style={{ marginBottom: '10px' }}>
-        <span style={{ fontWeight: 'bold', color: 'white', textAlign: 'center', fontSize: '1.3vw' }}>
-          $CLIQUE: WAR OF DEX
-        </span>
+      <div className="" style={{ marginBottom: '10px', marginTop: '-5px' }}>
+        <Text fontWeight={800} fontSize={17} style={{ whiteSpace: 'pre', color: 'white' }}>
+          {props.title}
+        </Text>
       </div>
       <div>
-        <span style={{ color: 'white', textAlign: 'center', fontSize: '0.9vw' }}>
-          Stand a chance to win <b>25000 OP</b> when you swap
-          <br /> or provide liquidity on Optimism network.
-        </span>
+        <Text fontWeight={300} fontSize={13} style={{ whiteSpace: 'pre', color: 'white' }}>
+          {props.description}
+        </Text>
       </div>
       <div style={{ marginTop: '20px', display: 'flex', width: '100%' }}>
         <div
@@ -37,12 +44,9 @@ export const setToast = () => {
             verticalAlign: 'middle',
           }}
         >
-          <span
-            style={{ color: '#475dc0', textAlign: 'center', fontSize: '1vw', fontWeight: 'bold' }}
-            onClick={() => window.open('https://twitter.com/KromatikaFi/status/1740035551036891541', '_blank')}
-          >
-            More info
-          </span>
+          <Text fontWeight={400} fontSize={15} style={{ color: '#475dc0' }}>
+            {props.ctaText}
+          </Text>
         </div>
         <div
           style={{
@@ -54,29 +58,31 @@ export const setToast = () => {
             marginRight: '-50px',
           }}
         >
-          <img src={CliqueLogo} style={{ display: 'block' }} width="100%" height="100%" />
+          <img src={props.imageUrl} style={{ display: 'block', marginRight: '-10px' }} width="100%" height="100%" />
         </div>
       </div>
     </div>,
     {
-      toastId: 'warofdex', // Prevent duplicate toasts // Closes windows on click
+      position: isMobile ? 'top-center' : 'bottom-right',
+      toastId: props.toastId, // Prevent duplicate toasts // Closes windows on click
       autoClose: false, // Prevents toast from auto closing
-    }
+    },
   )
 }
 
-const StyledToastContainer = styled(ToastContainer).attrs({
+const StyledToastContainer = styled(ToastContainerBase).attrs({
   autoClose: false,
-  position: isMobile ? 'top-left' : 'bottom-right',
+  position: isMobile ? 'top-center' : 'bottom-right',
   toastStyle: {
     background: '#1e1e1e',
     borderRadius: '15px',
     padding: '20px',
     width: '400px',
     height: '160px',
-    position: 'absolute',
-    bottom: 0,
-    right: '0px',
+    marginBottom: '20px',
+    // position: 'absolute',
+    // right: '0px',
+    // bottom: 0,
   },
 })``
 
@@ -86,13 +92,24 @@ const CloseButton = ({ closeToast }: any) => (
   </p>
 )
 
-export default function Toast() {
-  const [closed, setClosed] = useState(false)
+export default function ToastContainer() {
+  // const [closed, setClosed] = useState(false)
+  const ResponsiveToastContainerStyle = isMobile
+    ? {
+        zIndex: 999,
+        width: '100vw',
+      }
+    : {
+        zIndex: 999,
+        width: '400px',
+      }
   return (
     <>
-      {!closed && (
-        <StyledToastContainer style={{ zIndex: 999 }} onClick={() => setClosed(true)} closeButton={CloseButton} />
-      )}
+      <StyledToastContainer
+        style={ResponsiveToastContainerStyle}
+        // onClick={() => setClosed(true)}
+        closeButton={CloseButton}
+      />
     </>
   )
 }
