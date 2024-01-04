@@ -26,10 +26,14 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
 
 export const getTokenLogoURL = (
   address: string,
-  chainId: SupportedChainId = SupportedChainId.MAINNET
+  chainId: SupportedChainId = SupportedChainId.MAINNET,
 ): string | void => {
   const networkName = chainIdToNetworkName(chainId)
+  console.log(address)
   const networksWithUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM]
+  if (address === '0x3af33bEF05C2dCb3C7288b77fe1C8d2AeBA4d789') {
+    return 'https://static.optimism.io/data/KROM/logo.png'
+  }
   if (networksWithUrls.includes(chainId)) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
