@@ -729,7 +729,7 @@ const LimitOrderModal = () => {
                     disabled={
                       !isValid ||
                       !approvalState ||
-                      (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
+                      (approvalState === ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                     }
                     error={!isValid}
                   >
