@@ -689,11 +689,7 @@ const LimitOrderModal = () => {
                       approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                     }
                   >
-                    <AutoRow
-                      // justify="space-between"
-                      noWrap={true}
-                      style={{ textAlign: 'center', alignItems: 'center', display: 'flex' }}
-                    >
+                    <AutoRow noWrap={true} style={{ textAlign: 'center', alignItems: 'center', display: 'flex' }}>
                       <div
                         style={{
                           flexShrink: 0,
@@ -711,7 +707,6 @@ const LimitOrderModal = () => {
                           flexGrow: 1,
                           textAlign: 'center',
                           overflow: 'hidden',
-                          // whiteSpace: 'nowrap',
                         }}
                       >
                         {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (

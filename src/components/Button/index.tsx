@@ -299,7 +299,6 @@ export const ButtonText = styled(BaseButton)`
   }
 
   &:hover {
-    // text-decoration: underline;
     opacity: 0.9;
   }
 
@@ -316,10 +315,8 @@ export const ButtonText = styled(BaseButton)`
 const ButtonConfirmedStyle = styled(BaseButton)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text1};
-  /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {
-    /* opacity: 50%; */
     background-color: ${({ theme }) => theme.bg2};
     color: ${({ theme }) => theme.text2};
     cursor: auto;
