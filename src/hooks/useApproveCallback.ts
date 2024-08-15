@@ -42,18 +42,12 @@ export function useApproveCallback(
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
-    console.log(amountToApprove.toExact())
-    console.log(currentAllowance?.toExact())
-    console.log(isApprovalConfirmed === true && !currentAllowance!.lessThan(amountToApprove))
     if (isApprovalConfirmed === true && !currentAllowance!.lessThan(amountToApprove)) {
-      console.log('approval confirmed')
-      console.log('currentAllowance', currentAllowance?.toExact())
       return ApprovalState.APPROVED
     }
 
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
-    console.log('allowance:', currentAllowance.toExact())
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
       ? hasPendingApproval
@@ -131,7 +125,6 @@ export function useApproveCallbackFromTrade(
     [allowedSlippage, trade]
   )
 
-  console.log('amountToApprove', amountToApprove?.toExact())
   return useApproveCallback(
     amountToApprove,
     chainId
