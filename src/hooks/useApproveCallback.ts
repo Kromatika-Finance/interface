@@ -42,12 +42,12 @@ export function useApproveCallback(
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
+    // we might not have enough data to know whether or not we need to approve
+    if (!currentAllowance) return ApprovalState.UNKNOWN
     if (isApprovalConfirmed === true && !currentAllowance!.lessThan(amountToApprove)) {
       return ApprovalState.APPROVED
     }
 
-    // we might not have enough data to know whether or not we need to approve
-    if (!currentAllowance) return ApprovalState.UNKNOWN
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
       ? hasPendingApproval
