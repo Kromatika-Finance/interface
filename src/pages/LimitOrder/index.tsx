@@ -238,12 +238,14 @@ const LimitOrderModal = () => {
 
   const handleTypeInput = useCallback(
     (value: string) => {
+      setApprovalSubmitted(false)
       onUserInput(Field.INPUT, value)
     },
     [onUserInput]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
+      setApprovalSubmitted(false)
       onUserInput(Field.OUTPUT, value)
     },
     [onUserInput]
@@ -417,6 +419,14 @@ const LimitOrderModal = () => {
     [onCurrencySelection]
   )
 
+  const handleOutputSelect = useCallback(
+    (outputCurrency) => {
+      setApprovalSubmitted(false)
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection]
+  )
+
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
       if (maxInputAmount) {
@@ -437,12 +447,6 @@ const LimitOrderModal = () => {
     [maxInputAmount, onUserInput]
   )
 
-  const handleOutputSelect = useCallback(
-    (outputCurrency) => {
-      onCurrencySelection(Field.OUTPUT, outputCurrency)
-    },
-    [onCurrencySelection]
-  )
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   return (
