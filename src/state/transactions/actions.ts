@@ -12,6 +12,7 @@ export interface SerializableTransactionReceipt {
   transactionHash: string
   blockNumber: number
   status?: number
+  logs?: any
 }
 
 /**
@@ -209,6 +210,7 @@ export const addTransaction = createAction<{
   hash: string
   from: string
   info: TransactionInfo
+  data?: string
 }>('transactions/addTransaction')
 export const clearAllTransactions = createAction<{ chainId: number }>('transactions/clearAllTransactions')
 export const finalizeTransaction = createAction<{

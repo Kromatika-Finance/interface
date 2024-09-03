@@ -1,4 +1,3 @@
-import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -31,7 +30,7 @@ export function useApproveCallback(
   const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
   const hasPendingApproval = useHasPendingApproval(token?.address, spender)
-  const isApprovalConfirmed = useIsTransactionConfirmed(approvalTxHash)
+  const { isApprovalConfirmed, logs } = useIsTransactionConfirmed(approvalTxHash)
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
 
   useEffect(() => {
@@ -40,20 +39,23 @@ export function useApproveCallback(
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
-    if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
+    console.log('normal allowance', currentAllowance?.toExact())
+    if (logs) console.log('logs', Number(logs[0].data as string))
+    if (!amountToApprove || !spender || !token) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
-    if (isApprovalConfirmed === true && !currentAllowance!.lessThan(amountToApprove)) {
+    if (
+      (isApprovalConfirmed === true && !currentAllowance.lessThan(amountToApprove)) ||
+      (isApprovalConfirmed === true &&
+        logs &&
+        CurrencyAmount.fromRawAmount(token, Number(logs[0].data as string)).lessThan(amountToApprove))
+    ) {
       return ApprovalState.APPROVED
     }
 
     // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.lessThan(amountToApprove)
-      ? hasPendingApproval
-        ? ApprovalState.PENDING
-        : ApprovalState.NOT_APPROVED
-      : ApprovalState.APPROVED
+    return hasPendingApproval ? ApprovalState.PENDING : ApprovalState.NOT_APPROVED
   }, [amountToApprove, currentAllowance, isApprovalConfirmed, hasPendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)

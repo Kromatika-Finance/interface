@@ -245,7 +245,7 @@ const LimitOrderModal = () => {
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
-      setApprovalSubmitted(false)
+      // setApprovalSubmitted(false)
       onUserInput(Field.OUTPUT, value)
     },
     [onUserInput]
@@ -421,7 +421,6 @@ const LimitOrderModal = () => {
 
   const handleOutputSelect = useCallback(
     (outputCurrency) => {
-      setApprovalSubmitted(false)
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
     [onCurrencySelection]
