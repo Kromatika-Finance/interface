@@ -30,7 +30,7 @@ export function useApproveCallback(
   const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
   const hasPendingApproval = useHasPendingApproval(token?.address, spender)
-  const { isApprovalConfirmed, logs } = useIsTransactionConfirmed(approvalTxHash)
+  const { isApprovalConfirmed, approvalLogs } = useIsTransactionConfirmed(approvalTxHash)
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
 
   useEffect(() => {
@@ -40,16 +40,16 @@ export function useApproveCallback(
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     console.log('normal allowance', currentAllowance?.toExact())
-    if (logs) console.log('logs', Number(logs[0].data as string))
-    if (!amountToApprove || !spender || !token) return ApprovalState.UNKNOWN
-    if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
+    if (approvalLogs) console.log('logs', Number(approvalLogs[0].data as string))
     // we might not have enough data to know whether or not we need to approve
-    if (!currentAllowance) return ApprovalState.UNKNOWN
+    if (!amountToApprove || !spender || !token || !currentAllowance) return ApprovalState.UNKNOWN
+
     if (
+      amountToApprove.currency.isNative ||
       (isApprovalConfirmed === true && !currentAllowance.lessThan(amountToApprove)) ||
       (isApprovalConfirmed === true &&
-        logs &&
-        CurrencyAmount.fromRawAmount(token, Number(logs[0].data as string)).lessThan(amountToApprove))
+        approvalLogs &&
+        CurrencyAmount.fromRawAmount(token, Number(approvalLogs[0].data as string)).lessThan(amountToApprove))
     ) {
       return ApprovalState.APPROVED
     }
