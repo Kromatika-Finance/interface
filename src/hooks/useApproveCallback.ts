@@ -30,7 +30,7 @@ export function useApproveCallback(
   const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
   const hasPendingApproval = useHasPendingApproval(token?.address, spender)
-  const { confirmed, logs } = useIsTransactionConfirmed(approvalTxHash)
+  const isApprovalConfirmed = useIsTransactionConfirmed(approvalTxHash)
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
 
   useEffect(() => {
@@ -39,26 +39,26 @@ export function useApproveCallback(
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
-    console.log('normal allowance', currentAllowance?.toExact())
-    if (logs) console.log('logs', Number(logs[0].data as string))
     // we might not have enough data to know whether or not we need to approve
+    if (amountToApprove && amountToApprove.currency.isNative) return ApprovalState.APPROVED
     if (!amountToApprove || !spender || !token || !currentAllowance) return ApprovalState.UNKNOWN
 
     // The currentAllowance can lag behind sometimes when it changes,
-    // so let's also use the receipt logs to check for the amount that has been validated by the user
+    // so when we need a faster response, we use the receipt logs to check for the amount that has been validated by the user
     if (
-      amountToApprove.currency.isNative ||
-      (confirmed === true && !currentAllowance.lessThan(amountToApprove)) ||
-      (confirmed === true &&
-        logs &&
-        !CurrencyAmount.fromRawAmount(token, Number(logs[0].data as string)).lessThan(amountToApprove))
+      (isApprovalConfirmed.confirmed === true && !currentAllowance.lessThan(amountToApprove)) ||
+      (isApprovalConfirmed.confirmed === true &&
+        isApprovalConfirmed.logs &&
+        !CurrencyAmount.fromRawAmount(token, Number(isApprovalConfirmed.logs[0].data as string)).lessThan(
+          amountToApprove
+        ))
     ) {
       return ApprovalState.APPROVED
     }
 
     // amountToApprove will be defined if currentAllowance is
     return hasPendingApproval ? ApprovalState.PENDING : ApprovalState.NOT_APPROVED
-  }, [amountToApprove, currentAllowance, confirmed, hasPendingApproval, spender])
+  }, [amountToApprove, currentAllowance, isApprovalConfirmed.confirmed, hasPendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
