@@ -11,7 +11,7 @@ import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA, { set } from 'react-ga'
 import { useHistory } from 'react-router-dom'
 import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
@@ -245,7 +245,6 @@ const LimitOrderModal = () => {
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
-      // setApprovalSubmitted(false)
       onUserInput(Field.OUTPUT, value)
     },
     [onUserInput]
@@ -429,6 +428,7 @@ const LimitOrderModal = () => {
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
       if (maxInputAmount) {
+        setApprovalSubmitted(false)
         if (commonQuantity === '25%') {
           onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 1)).toExact())
         }
