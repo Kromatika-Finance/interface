@@ -666,7 +666,8 @@ const LimitOrderModal = () => {
                   <ButtonConfirmed
                     onClick={handleApprove}
                     disabled={
-                      (approvalState !== ApprovalState.NOT_APPROVED && approvalSubmitted) ||
+                      approvalState !== ApprovalState.NOT_APPROVED ||
+                      approvalSubmitted ||
                       signatureState === UseERC20PermitState.SIGNED
                     }
                     width="100%"
