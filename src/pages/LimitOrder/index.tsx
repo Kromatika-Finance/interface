@@ -238,6 +238,7 @@ const LimitOrderModal = () => {
 
   const handleTypeInput = useCallback(
     (value: string) => {
+      setApprovalSubmitted(false)
       onUserInput(Field.INPUT, value)
     },
     [onUserInput]
@@ -420,6 +421,7 @@ const LimitOrderModal = () => {
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
       if (maxInputAmount) {
+        setApprovalSubmitted(false)
         if (commonQuantity === '25%') {
           onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 1)).toExact())
         }
