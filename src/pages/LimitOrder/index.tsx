@@ -11,7 +11,7 @@ import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
-import ReactGA, { set } from 'react-ga'
+import ReactGA from 'react-ga'
 import { useHistory } from 'react-router-dom'
 import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
@@ -418,13 +418,6 @@ const LimitOrderModal = () => {
     [onCurrencySelection]
   )
 
-  const handleOutputSelect = useCallback(
-    (outputCurrency) => {
-      onCurrencySelection(Field.OUTPUT, outputCurrency)
-    },
-    [onCurrencySelection]
-  )
-
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
       if (maxInputAmount) {
@@ -446,6 +439,12 @@ const LimitOrderModal = () => {
     [maxInputAmount, onUserInput]
   )
 
+  const handleOutputSelect = useCallback(
+    (outputCurrency) => {
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection]
+  )
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   return (
