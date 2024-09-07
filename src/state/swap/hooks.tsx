@@ -281,13 +281,19 @@ export function useDerivedSwapInfo(): {
     const sqrtRatioX96 = sorted
       ? encodeSqrtRatioX96(price.numerator, price.denominator)
       : encodeSqrtRatioX96(price.denominator, price.numerator)
-
     let tick = TickMath.getTickAtSqrtRatio(sqrtRatioX96)
     const tickOffset = userTickOffset ?? 1
     const nextTick = sorted
       ? tick + tickOffset * TICK_SPACINGS[bestTrade.route.pools[0].fee]
       : tick - tickOffset * TICK_SPACINGS[bestTrade.route.pools[0].fee]
-    const nextTickPrice = tickToPrice(price.baseCurrency.wrapped, price.quoteCurrency.wrapped, nextTick)
+    let nextTickPrice
+    try {
+      nextTickPrice = tickToPrice(price.baseCurrency.wrapped, price.quoteCurrency.wrapped, nextTick)
+    } catch (error) {
+      console.debug('Error fetching nextTick, theres most likely an issue with the pool itself.')
+      console.debug(error)
+      return undefined
+    }
     if (!nextTickPrice.lessThan(price)) {
       tick = nextTick
     }
