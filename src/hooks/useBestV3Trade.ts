@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainName } from 'constants/chains'
 import { useMemo } from 'react'
-import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
+//import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
@@ -117,9 +117,32 @@ export function useBestMarketTrade(
   }, [nameOfNetwork])
 
   // use 1inch with only v2,v3
-  const uniswapAPITrade = useInchQuoteAPITrade(
+  // const uniswapAPITrade = useInchQuoteAPITrade(
+  //   tradeType,
+  //   true,
+  //   routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+  //   otherCurrency,
+  //   protocols
+  // )
+
+  //   export function useValidatorAPITrade(
+  //   tradeType: TradeType,
+  //   recipient: string | null | undefined,
+  //   affiliate: string | null | undefined,
+  //   skipValidation: boolean,
+  //   skipRequest: boolean,
+  //   amountSpecified?: CurrencyAmount<Currency>,
+  //   otherCurrency?: Currency,
+  //   signaturePermitData?: string | null | undefined
+  // ): {
+
+  const uniswapAPITrade = useValidatorAPITrade(
     tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+    undefined,
+    undefined,
+    true,
+    false,
+    debouncedAmount,
     otherCurrency,
     protocols
   )
