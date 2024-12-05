@@ -11252,7 +11252,7 @@
   "resolved" "https://registry.npmjs.org/eth-sig-util/-/eth-sig-util-1.4.2.tgz"
   "version" "1.4.2"
   dependencies:
-    "ethereumjs-abi" "git+https://github.com/ethereumjs/ethereumjs-abi.git"
+    "ethereumjs-abi" "^0.6.8"
     "ethereumjs-util" "^5.1.1"
 
 "eth-sig-util@2.5.3":
@@ -22999,4 +22999,4 @@
   "resolved" "https://registry.npmjs.org/zustand/-/zustand-4.0.0-beta.3.tgz"
   "version" "4.0.0-beta.3"
   dependencies:
-    "use-sync-external-store" "1.0.0"
+    "use-sync-external-store" "1.0.0"		
