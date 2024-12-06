@@ -4,6 +4,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
+  ARB_ARBITRUM_ONE,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_BASE,
@@ -14,6 +15,7 @@ import {
   FRAX,
   FXS,
   nativeOnChain,
+  OP_OPTIMISM,
   renBTC,
   TRIBE,
   USDBC_BASE,
@@ -57,12 +59,14 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     DAI_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
+    OP_OPTIMISM,
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.ARBITRUM_ONE],
     DAI_ARBITRUM_ONE,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
+    ARB_ARBITRUM_ONE,
   ],
   [SupportedChainId.POLYGON]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON],
@@ -122,6 +126,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE],
+    ARB_ARBITRUM_ONE,
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
     nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
@@ -133,6 +138,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
+    OP_OPTIMISM,
   ],
   [SupportedChainId.OPTIMISTIC_KOVAN]: [nativeOnChain(SupportedChainId.OPTIMISTIC_KOVAN)],
   [SupportedChainId.POLYGON]: [
