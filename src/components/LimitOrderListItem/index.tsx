@@ -109,12 +109,17 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const token0 = position.amount0.currency
   const token1 = position.amount1.currency
 
+  // const price = new Price({
+  //   baseAmount: position.token0PriceUpper.invert().baseCurrency,
+  //   quoteAmount: position.token0Price
+  // })
+
   // if token0 is a dollar-stable asset, set it as the quote token
   const stables = [DAI, USDC, USDT]
   if (stables.some((stable) => stable && stable.symbol && stable.symbol == token1.symbol)) {
     return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
+      priceLower: position.token0PriceUpper.invert() as Price<Token, Token>,
+      priceUpper: position.token0PriceLower.invert() as Price<Token, Token>,
       quote: token0,
       base: token1,
     }
