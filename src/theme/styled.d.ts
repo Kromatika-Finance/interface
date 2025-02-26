@@ -55,6 +55,7 @@ export interface Colors {
 
   blue4: Color
   purple1: Color
+  purple2: Color
 
   error: Color
   success: Color
