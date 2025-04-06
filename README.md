@@ -77,7 +77,7 @@ nvm use 16
 yarn install
 ```
 
-### 8. run project post install command to installs ABIs of the smart contracts
+### 8. run project post install command to installs ABIs of the smart contracts (only run if you've made changes to any smart contract ABI )
 
 ```bash
   yarn postinstall
