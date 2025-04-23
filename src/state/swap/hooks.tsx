@@ -14,7 +14,7 @@ import {
 } from '@uniswap/v3-sdk'
 import { KROMATIKA_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ChainName, SupportedChainId } from 'constants/chains'
-import { KROM, USDT_POLYGON, WETH } from 'constants/tokens'
+import { KROM, nativeOnChain, USDT, USDT_POLYGON, WETH } from 'constants/tokens'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { PoolState, usePools } from 'hooks/usePools'
@@ -558,8 +558,14 @@ export function usePoolAddress(
 
     // no address; set default
     if (poolAddress == '' || poolAddress == undefined || poolAddress == null) {
-      // poolAddress = (chainId && KROM[chainId].address) || '0x3af33bEF05C2dCb3C7288b77fe1C8d2AeBA4d789'
-      poolAddress = (chainId && WETH[chainId].address) || USDT_POLYGON.address
+      if (chainId === SupportedChainId.POLYGON) {
+        const nativePoly = nativeOnChain(chainId)
+        const POLY_USDT_POOL = Pool.getAddress(nativePoly.wrapped, USDT_POLYGON, FeeAmount.MEDIUM)
+        poolAddress = POLY_USDT_POOL
+      } else {
+        const WETH_USDT_POOL = Pool.getAddress(WETH[chainId || 1], USDT, FeeAmount.MEDIUM)
+        poolAddress = WETH_USDT_POOL
+      }
     }
 
     networkName = (chainId && ChainName[chainId]) || 'ethereum'
