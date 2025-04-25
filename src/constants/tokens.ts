@@ -187,6 +187,20 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
+export const ARB_ARBITRUM_ONE = new Token(
+  SupportedChainId.ARBITRUM_ONE,
+  '0x912CE59144191C1204E64559FE8253a0e49E6548',
+  18,
+  'ARB',
+  'Arbitrum'
+)
+export const OP_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x4200000000000000000000000000000000000042',
+  18,
+  'OP',
+  'Optimism'
+)
 export const KROM: { [chainId: number]: Token } = {
   [SupportedChainId.KOVAN]: new Token(
     SupportedChainId.KOVAN,
