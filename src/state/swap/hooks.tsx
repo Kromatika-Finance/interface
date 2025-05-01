@@ -563,7 +563,7 @@ export function usePoolAddress(
         const POLY_USDT_POOL = Pool.getAddress(nativePoly.wrapped, USDT_POLYGON, FeeAmount.MEDIUM)
         poolAddress = POLY_USDT_POOL
       } else {
-        const WETH_USDT_POOL = Pool.getAddress(WETH[chainId || 1], USDT, FeeAmount.MEDIUM)
+        const WETH_USDT_POOL = Pool.getAddress(WETH[SupportedChainId.MAINNET], USDT, FeeAmount.MEDIUM)
         poolAddress = WETH_USDT_POOL
       }
     }
