@@ -29,17 +29,28 @@ Current working products on ETH L1, Arbitrum, Optimism, Polygon, (BNB on perps)
 
 Products include:
 
-- FELO Fees Earning Limit Orders (no else has perfected this yet)
-  - Place a Limit order, get your limit order filled and earn 1%-9% extra in LP rewards
+- FELO Fees Earning Limit Orders 
+  - No competitor has yet matched or surpassed this feature 
+  - Set a limit order, grab 1 – 9 % extra LP rewards, and avoid slippage, front‑running, pool fees, and UI fees
 - Regular and Gasless Swaps
   - Aggregates from multiple aggregators
   - Essentially it means you won’t need a native chain token to pay for gas fees when swap token A for token B - for example on L1 you won’t need ETH anymore. Instead your swap fees will be paid in the output-token from your swap.
+- MetaSwap
+  - Receive the best swap quote, aggregated from the best aggregators
+  - API powered, easy to integrate 
+  - Off-chain based aggregation. 
+  - Scalable and reliable
+- Gasless MetaSwap:
+  - MetaSwap, but gasless
+  - No need to pay in advance, we pay for you
+  - Trade with 100% of your available capital
+  - CEX-like experience
 - Perpetual Trading
   - on ETH L1, Arbitrum and BNB
   - V1: Orderbook perps with over 72 pairs
   - V2: Onchain perps with degen mode up to 500x + Forex
 - Swapbox
-  - Any Protocol can now integrate Kromatika DEX aggregator on their website with 1 line of code as a widget.
+  - Any Protocol can now integrate Kromatika DEX aggregator on their website with 1 line of code as a widget. Just copy and paste, 30 second integration.
 
 
 ## Setting up Kromatika Interface on local machine
