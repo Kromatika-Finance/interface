@@ -69,14 +69,14 @@ function LimitOrderList() {
   return (
     <LimitOrdersContainer>
       <LimitOrdersWrapper direction={'column'}>
-        <Collapsible label={t`Open Orders`} initState={openPositions.length > 0}>
+        <Collapsible label={t`Open Orders`} initState={false}>
           <AutoColumn gap="1rem">
             {openPositions.map((item, index) => (
               <LimitOrderListItem key={index} limitOrderDetails={item} isUnderfunded={isUnderfunded} />
             ))}
           </AutoColumn>
         </Collapsible>
-        <Collapsible label={t`Executed Orders`} initState={closedPositions.length > 0}>
+        <Collapsible label={t`Executed Orders`} initState={false}>
           <AutoColumn gap="1rem">
             {closedPositions.map((item, index) => (
               <LimitOrderListItem key={index} limitOrderDetails={item} isUnderfunded={isUnderfunded} />
