@@ -432,8 +432,6 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
 export function nativeOnChain(chainId: number): NativeCurrency {
   return (
     cachedNativeCurrency[chainId] ??
-    (cachedNativeCurrency[chainId] = isPoly(chainId)
-      ? new PolyNativeCurrency(chainId)
-      : ExtendedEther.onChain(chainId))
+    (cachedNativeCurrency[chainId] = isPoly(chainId) ? new PolyNativeCurrency(chainId) : ExtendedEther.onChain(chainId))
   )
 }
