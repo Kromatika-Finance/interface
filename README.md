@@ -31,10 +31,7 @@ Products include:
 
 - FELO Fees Earning Limit Orders 
   - No competitor has yet matched or surpassed this feature 
-  - Set a limit order, grab 1 – 9 % extra LP rewards, and avoid slippage, front‑running, pool fees, and UI fees
-- Regular and Gasless Swaps
-  - Aggregates from multiple aggregators
-  - Essentially it means you won’t need a native chain token to pay for gas fees when swap token A for token B - for example on L1 you won’t need ETH anymore. Instead your swap fees will be paid in the output-token from your swap.
+  - Set a limit order, grab 1–9% extra LP rewards, and avoid slippage, front‑running, pool fees, and UI fees
 - MetaSwap
   - Receive the best swap quote, aggregated from the best aggregators
   - API powered, easy to integrate 
