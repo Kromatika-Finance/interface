@@ -2,7 +2,6 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainName } from 'constants/chains'
 import { useMemo } from 'react'
-import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
@@ -116,14 +115,6 @@ export function useBestMarketTrade(
     return nameOfNetwork.toUpperCase().concat('_UNISWAP_V2,').concat(nameOfNetwork.toUpperCase()).concat('_UNISWAP_V3')
   }, [nameOfNetwork])
 
-  // use 1inch with only v2,v3
-  const uniswapAPITrade = useInchQuoteAPITrade(
-    tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency,
-    protocols
-  )
-
   const betterTrade = gasless ? gaslessTrade : quoteTrade
   const isLoading = betterTrade.state === V3TradeState.LOADING
 
@@ -138,7 +129,7 @@ export function useBestMarketTrade(
         !amountSpecified.currency.equals(betterTrade?.trade.outputAmount.currency) ||
         !otherCurrency?.equals(betterTrade?.trade.inputAmount.currency))
 
-  const savings = useUSDCValue(uniswapAPITrade.trade?.outputAmount)
+  const savings = useUSDCValue(betterTrade.trade?.outputAmount)
 
   return useMemo(
     () => ({
