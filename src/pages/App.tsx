@@ -20,6 +20,7 @@ import LimitOrder from './LimitOrder'
 import { RedirectPathToLimitOrderOnly, RedirectPathToSwapOnly } from './LimitOrder/redirects'
 import Market from './Market'
 import { PositionPage } from './Pool/PositionPage'
+import Referral from './Referral'
 import SwapWidget from './SwapWidget'
 
 const AppWrapper = styled.div`
@@ -77,7 +78,10 @@ const TopLevelModals = () => {
 export default function App() {
   const { pathname } = useLocation()
   const showFallbackRoute =
-    !pathname.includes('swap') && !pathname.includes('limitorder') && !pathname.includes('balance')
+    !pathname.includes('swap') &&
+    !pathname.includes('limitorder') &&
+    !pathname.includes('balance') &&
+    !pathname.includes('referral')
   const { chainId } = useActiveWeb3React()
 
   return (
@@ -104,9 +108,13 @@ export default function App() {
                 path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
               />
+              <Route exact path="/referral" component={Referral} />
+
               <Route exact path="/limitorder" component={LimitOrder} />
+
               <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
               <Route exact path="/swap" component={Market} />
+
               {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
             </BodyWrapper>
           </AppWrapper>
