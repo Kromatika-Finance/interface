@@ -7,9 +7,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
-import { useV3Positions } from 'hooks/useV3Positions'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory } from 'react-router-dom'
@@ -22,14 +20,11 @@ import { CommonQuantity } from 'types/main'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import MemoizedCandleSticks from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import LimitOrderList from '../../components/LimitOrderList'
 import Loader from '../../components/Loader'
-import FullPositionCard from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
@@ -37,6 +32,11 @@ import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import Toggle from '../../components/Toggle'
 import TokenWarningModal from '../../components/TokenWarningModal'
+
+// Lazy load heavy components
+const MemoizedCandleSticks = lazy(() => import('../../components/CandleSticks'))
+const LimitOrderList = lazy(() => import('../../components/LimitOrderList'))
+const FullPositionCard = lazy(() => import('../../components/PositionCard'))
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -154,12 +154,24 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const FundingBalance = () => {
+// Import the hook
+import { useV3Positions } from 'hooks/useV3Positions'
+import React from 'react'
+
+// Memoize the component to prevent unnecessary re-renders
+const FundingBalance: React.FC = React.memo(function FundingBalance() {
   const { account } = useActiveWeb3React()
+
+  // Call the hook directly (can't use inside useMemo)
   const { fundingBalance, minBalance, gasPrice } = useV3Positions(account)
 
-  return <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
-}
+  // Use Suspense to handle the lazy-loaded component
+  return (
+    <Suspense fallback={<div>Loading funding balance...</div>}>
+      <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+    </Suspense>
+  )
+})
 
 const LimitOrderModal = () => {
   const theme = useContext(ThemeContext)
@@ -806,32 +818,48 @@ const LimitOrderModal = () => {
 }
 
 export default function LimitOrder() {
+  // State to track if secondary components should be loaded
+  const [loadSecondaryComponents, setLoadSecondaryComponents] = useState(false)
+  // Use hooks directly - can't use inside useMemo
   const { bestTrade, currencies } = useDerivedSwapInfo()
-  const fee = bestTrade?.route.pools[0].fee
+  const fee = bestTrade?.route?.pools?.[0]?.fee
   const aToken = currencies && currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined
   const bToken = currencies && currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined
-  const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
-  const [expertMode] = useExpertModeManager()
 
-  if (expertMode) {
-    return (
-      <>
-        <GridContainer>
-          <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
-          <LimitOrderModal />
-          <LimitOrderList />
-          <FundingBalance />
-          <SwitchLocaleLink />
-        </GridContainer>
-      </>
-    )
-  }
+  const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadSecondaryComponents(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const [expertMode] = useExpertModeManager()
 
   return (
     <ClassicModeContainer>
-      <FundingBalance />
+      {expertMode && (
+        <Suspense fallback={<div>Loading charts...</div>}>
+          <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+        </Suspense>
+      )}
+
+      {/* Secondary UI with Suspense */}
+      {loadSecondaryComponents && (
+        <Suspense fallback={<div>Loading orders...</div>}>
+          <LimitOrderList />
+        </Suspense>
+      )}
+
+      {/* Primary UI */}
       <LimitOrderModal />
-      <LimitOrderList />
+
+      {/* Secondary UI with Suspense */}
+      {loadSecondaryComponents && (
+        <Suspense fallback={<div>Loading balance...</div>}>
+          <FundingBalance />
+        </Suspense>
+      )}
       <SwitchLocaleLink />
     </ClassicModeContainer>
   )
