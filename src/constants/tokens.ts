@@ -117,6 +117,13 @@ export const USDT_ARBITRUM_ONE = new Token(
   'USDT',
   'Tether USD'
 )
+export const USDT_BASE = new Token(
+  SupportedChainId.BASE,
+  '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
+  6,
+  'USDT',
+  'Tether USD'
+)
 export const USDT_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
@@ -129,13 +136,7 @@ export const SUPPORTED_USDT: { [chainId: number]: Token } = {
   [SupportedChainId.POLYGON]: USDT_POLYGON,
   [SupportedChainId.ARBITRUM_ONE]: USDT_ARBITRUM_ONE,
   [SupportedChainId.OPTIMISM]: USDT_OPTIMISM,
-  [SupportedChainId.BASE]: new Token(
-    SupportedChainId.BASE,
-    '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
-    6,
-    'USDT',
-    'Tether USD'
-  ),
+  [SupportedChainId.BASE]: USDT_BASE,
 }
 export const WBTC = new Token(
   SupportedChainId.MAINNET,
