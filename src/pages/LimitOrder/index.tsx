@@ -9,7 +9,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip } from 'components/Tooltip'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory } from 'react-router-dom'
@@ -17,12 +17,11 @@ import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
 import { V3TradeState } from 'state/validator/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { css, ThemeContext } from 'styled-components/macro'
 import { CommonQuantity } from 'types/main'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import MemoizedCandleSticks from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -62,6 +61,94 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
+const MemoizedCandleSticks = lazy(() => import('../../components/CandleSticks'))
+
+const MemoizedCandleStickLoader = styled.div`
+  width: 1000%;
+  height: 100%;
+  background-color: white;
+`
+
+const FELOWrapper = styled.div<{ expert: boolean }>`
+  ${(props) =>
+    props.expert
+      ? css`
+          display: grid;
+          grid-template-rows: 1fr fit-content();
+          grid-template-columns: minmax(min(100%, 475px), 1fr) minmax(min(100%, 475px), 475px);
+          row-gap: 2rem;
+          column-gap: 2rem;
+
+          border: none;
+          padding: 1rem 1rem 7rem;
+          width: 100%;
+          height: 100%;
+          min-height: 90vh;
+          z-index: 0;
+
+          & > :nth-child(n + 2) {
+            height: fit-content;
+          }
+
+          ${({ theme }) => theme.mediaWidth.upToMedium`
+          grid-template-columns: minmax(min(100%, 475px), 1fr);
+          padding: 1rem 1rem 8rem;
+        `};
+        `
+      : css`
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 2rem;
+          border: none;
+          padding: 1rem 1rem 7rem;
+          width: calc(100% - 1rem);
+          height: 100%;
+          min-height: 90vh;
+          z-index: 0;
+
+          ${({ theme }) => theme.mediaWidth.upToMedium`
+                  padding: 1rem 1rem 8rem;
+              `};
+          main:nth-child(1) {
+            order: 2;
+          }
+          :nth-child(4) {
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+
+            > div:nth-child(2) {
+              flex: 1;
+              min-width: 280px;
+              max-width: 475px;
+              order: 3;
+              ${({ theme }) => theme.mediaWidth.upToMedium`
+                      min-width: 100%;
+                      max-width: 100%;
+                      order: 2;
+                    `};
+            }
+
+            > div:nth-child(1) {
+              flex: 2;
+              order: 2;
+            }
+
+            > div:nth-child(3) {
+              flex: 1;
+              min-width: 280px;
+              max-width: 475px;
+              ${({ theme }) => theme.mediaWidth.upToMedium`
+                      min-width: 100%;
+                      max-width: 100%;
+                      order: 2;
+                    `};
+            }
+          }
+        `}
+`
 
 const ClassicModeContainer = styled.div`
   display: flex;
@@ -114,17 +201,6 @@ const ClassicModeContainer = styled.div`
   }
 `
 
-const SwapModalContainer = styled(AppBody)`
-  flex: 1;
-  width: 100%;
-  min-width: 280px;
-  max-width: 475px;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    width: 100%;
-    max-width: 100%;
-  `};
-`
-
 const GridContainer = styled.div`
   display: grid;
   grid-template-rows: 1fr fit-content();
@@ -146,6 +222,17 @@ const GridContainer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: minmax(min(100%, 475px), 1fr);
     padding: 1rem 1rem 8rem;
+  `};
+`
+
+const SwapModalContainer = styled(AppBody)`
+  flex: 1;
+  width: 100%;
+  min-width: 280px;
+  max-width: 475px;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    width: 100%;
+    max-width: 100%;
   `};
 `
 
@@ -341,10 +428,22 @@ const LimitOrderModal = () => {
     if (!swapCallback) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({
+      attemptingTxn: true,
+      tradeToConfirm,
+      showConfirm,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+    })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          swapErrorMessage: undefined,
+          txHash: hash,
+        })
         ReactGA.event({
           category: 'Trade',
           action:
@@ -399,7 +498,13 @@ const LimitOrderModal = () => {
       (approvalSubmitted && approvalState === ApprovalState.APPROVED))
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({
+      showConfirm: false,
+      tradeToConfirm,
+      attemptingTxn,
+      swapErrorMessage,
+      txHash,
+    })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       history.push('/limitorder')
@@ -407,7 +512,13 @@ const LimitOrderModal = () => {
   }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+    setSwapState({
+      tradeToConfirm: trade,
+      swapErrorMessage,
+      txHash,
+      attemptingTxn,
+      showConfirm,
+    })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -690,7 +801,14 @@ const LimitOrderModal = () => {
                       approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                     }
                   >
-                    <AutoRow noWrap={true} style={{ textAlign: 'center', alignItems: 'center', display: 'flex' }}>
+                    <AutoRow
+                      noWrap={true}
+                      style={{
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                      }}
+                    >
                       <div
                         style={{
                           display: 'flex',
@@ -702,7 +820,13 @@ const LimitOrderModal = () => {
                           whiteSpace: 'break-spaces',
                         }}
                       >
-                        <CurrencyLogo currency={currencies[Field.INPUT]} size={'20px'} style={{ marginRight: '8px' }} />
+                        <CurrencyLogo
+                          currency={currencies[Field.INPUT]}
+                          size={'20px'}
+                          style={{
+                            marginRight: '8px',
+                          }}
+                        />
                       </div>
                       <div
                         style={{
@@ -740,7 +864,13 @@ const LimitOrderModal = () => {
                               </Trans>
                             }
                           >
-                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                            <HelpCircle
+                              size="20"
+                              color={'white'}
+                              style={{
+                                marginLeft: '8px',
+                              }}
+                            />
                           </MouseoverTooltip>
                         )}
                       </div>
@@ -813,26 +943,31 @@ export default function LimitOrder() {
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
   const [expertMode] = useExpertModeManager()
 
-  if (expertMode) {
-    return (
-      <>
-        <GridContainer>
-          <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
-          <LimitOrderModal />
-          <LimitOrderList />
-          <FundingBalance />
-          <SwitchLocaleLink />
-        </GridContainer>
-      </>
-    )
-  }
+  //   if (expertMode) {
+  //     return (
+  //       <>
+  //         <GridContainer>
+  //           <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+  //           <LimitOrderModal />
+  //           <LimitOrderList />
+  //           <FundingBalance />
+  //           <SwitchLocaleLink />
+  //         </GridContainer>
+  //       </>
+  //     )
+  //   }
 
   return (
-    <ClassicModeContainer>
-      <FundingBalance />
+    <FELOWrapper expert={expertMode}>
+      {expertMode && (
+        <Suspense fallback={<MemoizedCandleStickLoader>chart is loading</MemoizedCandleStickLoader>}>
+          <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+        </Suspense>
+      )}
       <LimitOrderModal />
       <LimitOrderList />
+      <FundingBalance />
       <SwitchLocaleLink />
-    </ClassicModeContainer>
+    </FELOWrapper>
   )
 }
