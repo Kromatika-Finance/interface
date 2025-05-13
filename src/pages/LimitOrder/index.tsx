@@ -3,13 +3,16 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import AddTokenToWallet from 'components/AddTokenToWallet'
+// New imports for lazy loading and error handling
+import ErrorBoundary from 'components/ErrorBoundary'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
+import SkeletonLoader from 'components/SkeletonLoader'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { lazy, memo, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory } from 'react-router-dom'
@@ -22,14 +25,15 @@ import { CommonQuantity } from 'types/main'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import MemoizedCandleSticks from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import LimitOrderList from '../../components/LimitOrderList'
+// REMOVE these eager imports
+// import MemoizedCandleSticks from '../../components/CandleSticks'
+// import LimitOrderList from '../../components/LimitOrderList'
+// import FullPositionCard from '../../components/PositionCard'
 import Loader from '../../components/Loader'
-import FullPositionCard from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
@@ -62,6 +66,11 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
+
+// Lazy loaded components
+const LazyCandleSticks = lazy(() => import('../../components/CandleSticks'))
+const LazyLimitOrderList = lazy(() => import('../../components/LimitOrderList'))
+const LazyPositionCard = lazy(() => import('../../components/PositionCard'))
 
 const ClassicModeContainer = styled.div`
   display: flex;
@@ -154,12 +163,18 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const FundingBalance = () => {
+const FundingBalance = memo(function FundingBalance() {
   const { account } = useActiveWeb3React()
   const { fundingBalance, minBalance, gasPrice } = useV3Positions(account)
 
-  return <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
-}
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<SkeletonLoader type="card" />}>
+        <LazyPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+      </Suspense>
+    </ErrorBoundary>
+  )
+})
 
 const LimitOrderModal = () => {
   const theme = useContext(ThemeContext)
@@ -807,31 +822,42 @@ const LimitOrderModal = () => {
 
 export default function LimitOrder() {
   const { bestTrade, currencies } = useDerivedSwapInfo()
-  const fee = bestTrade?.route.pools[0].fee
+  const fee = bestTrade?.route.pools[0]?.fee
   const aToken = currencies && currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined
   const bToken = currencies && currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
   const [expertMode] = useExpertModeManager()
+  const [showCharts, setShowCharts] = useState(false)
 
-  if (expertMode) {
-    return (
-      <>
-        <GridContainer>
-          <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
-          <LimitOrderModal />
-          <LimitOrderList />
-          <FundingBalance />
-          <SwitchLocaleLink />
-        </GridContainer>
-      </>
-    )
-  }
+  useEffect(() => {
+    if (expertMode) {
+      const timer = setTimeout(() => setShowCharts(true), 300)
+      return () => clearTimeout(timer)
+    }
+
+    return undefined // Add this line for non-expertMode case
+  }, [expertMode])
 
   return (
     <ClassicModeContainer>
-      <FundingBalance />
+      {expertMode && showCharts && (
+        <ErrorBoundary>
+          <Suspense fallback={<SkeletonLoader type="chart" />}>
+            <LazyCandleSticks networkName={networkName} poolAddress={poolAddress} />
+          </Suspense>
+        </ErrorBoundary>
+      )}
+
       <LimitOrderModal />
-      <LimitOrderList />
+
+      <ErrorBoundary>
+        <Suspense fallback={<SkeletonLoader type="list" />}>
+          <LazyLimitOrderList />
+        </Suspense>
+      </ErrorBoundary>
+
+      <FundingBalance />
+
       <SwitchLocaleLink />
     </ClassicModeContainer>
   )
