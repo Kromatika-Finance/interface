@@ -65,13 +65,13 @@ git clone https://github.com/Kromatika-Finance/interface.git
 npm install -g yarn
 ```
 
-### 4. Install the correct node version
+### 4. Install the correct node version (using .mvnrc to reference the correct version)
 
 ```bash
 nvm install 
 ```
 
-### 5. Switch to the correct node version
+### 5. Switch to the correct node version (using .mvnrc to reference the correct version)
 
 ```bash
 nvm use
