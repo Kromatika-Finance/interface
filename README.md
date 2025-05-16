@@ -59,22 +59,22 @@ git clone https://github.com/Kromatika-Finance/interface.git
 
 ### 2. [install nvm (node version manager)](https://github.com/nvm-sh/nvm) to manage node versions on your machine (if not already installed)
 
-### 3. install yarn package manager globally(if not already installed)
+### 3. install yarn package manager globally (if not already installed)
 
 ```bash
 npm install -g yarn
 ```
 
-### 4. install node version 16 (if not already installed)
+### 4. Install the correct node version
 
 ```bash
-nvm install 16
+nvm install 
 ```
 
-### 5. switch node version to 16
+### 5. Switch to the correct node version
 
 ```bash
-nvm use 16
+nvm use
 ```
 
 ### 6. open terminal for kromatika interface directory
