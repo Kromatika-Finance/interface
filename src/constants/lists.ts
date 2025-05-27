@@ -13,15 +13,13 @@ const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
 const UNI_LIST = 'https://tokens.uniswap.org'
-const UNI_EXTENDED_LIST = 'https://cloudflare-ipfs.com/ipns/extendedtokens.uniswap.org'
-const UNI_UNSUPPORTED_LIST = 'https://cloudflare-ipfs.com/ipns/unsupportedtokens.uniswap.org'
 
 const COINGECKO_LIST = 'https://tokens.coingecko.com/uniswap/all.json'
 const COINGECKO_ARBITRUM_LIST = 'https://tokens.coingecko.com/arbitrum-one/all.json'
 const COINGECKO_OPTIMISM_LIST = 'https://tokens.coingecko.com/optimistic-ethereum/all.json'
 const COINGECKO_POLYGON_LIST = 'https://tokens.coingecko.com/polygon-pos/all.json'
 
-export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
+export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
 // this is the default list of lists that are exposed to users
 // lower index == higher priority for token import
@@ -39,7 +37,6 @@ const DEFAULT_LIST_OF_LISTS_TO_DISPLAY: string[] = [
   ARBITRUM_LIST,
   OPTIMISM_LIST,
   GEMINI_LIST,
-  UNI_EXTENDED_LIST,
   COINGECKO_LIST,
   COINGECKO_ARBITRUM_LIST,
   COINGECKO_OPTIMISM_LIST,
