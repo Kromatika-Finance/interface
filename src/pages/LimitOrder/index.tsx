@@ -9,7 +9,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip } from 'components/Tooltip'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory } from 'react-router-dom'
@@ -154,12 +154,14 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const FundingBalance = () => {
-  const { account } = useActiveWeb3React()
-  const { fundingBalance, minBalance, gasPrice } = useV3Positions(account)
+type FundingBalanceProps = { v3Position: ReturnType<typeof useV3Positions> }
+
+const FundingBalance = React.memo(({ v3Position }: FundingBalanceProps) => {
+  const { fundingBalance, minBalance, gasPrice } = v3Position
 
   return <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
-}
+})
+FundingBalance.displayName = 'FundingBalance'
 
 const LimitOrderModal = () => {
   const theme = useContext(ThemeContext)
@@ -813,14 +815,17 @@ export default function LimitOrder() {
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
   const [expertMode] = useExpertModeManager()
 
+  const { account } = useActiveWeb3React()
+  const v3Positions = useV3Positions(account)
+
   if (expertMode) {
     return (
       <>
         <GridContainer>
           <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
           <LimitOrderModal />
-          <LimitOrderList />
-          <FundingBalance />
+          <LimitOrderList account={account} v3Position={v3Positions} />
+          <FundingBalance v3Position={v3Positions} />
           <SwitchLocaleLink />
         </GridContainer>
       </>
@@ -829,9 +834,9 @@ export default function LimitOrder() {
 
   return (
     <ClassicModeContainer>
-      <FundingBalance />
+      <FundingBalance v3Position={v3Positions} />
       <LimitOrderModal />
-      <LimitOrderList />
+      <LimitOrderList account={account} v3Position={v3Positions} />
       <SwitchLocaleLink />
     </ClassicModeContainer>
   )
