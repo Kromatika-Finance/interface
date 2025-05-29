@@ -2,6 +2,7 @@ import ToastContainer, { setToast } from 'components/Toast'
 import { SupportedChainId } from 'constants/chains'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useActiveWeb3React } from 'hooks/web3'
+import { lazy, Suspense } from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -15,12 +16,14 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import LimitOrder from './LimitOrder'
-import { RedirectPathToLimitOrderOnly, RedirectPathToSwapOnly } from './LimitOrder/redirects'
-import Market from './Market'
-import { PositionPage } from './Pool/PositionPage'
+import AppPageLoader from './AppPageLoader'
+import { RedirectPathToLimitOrderOnly } from './LimitOrder/redirects'
 import SwapWidget from './SwapWidget'
+
+const RedirectDuplicateTokenIds = lazy(() => import('./AddLiquidity/redirects'))
+const LimitOrder = lazy(() => import('./LimitOrder'))
+const PositionPage = lazy(() => import('./Pool/PositionPage'))
+const Market = lazy(() => import('./Market'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -68,6 +71,7 @@ const BodyWrapper = styled.div`
     background-size: 100% auto;
   }
 `
+
 const TopLevelModals = () => {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
@@ -82,36 +86,38 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <Route component={GoogleAnalyticsReporter} />
-      <Route component={DarkModeQueryParamReader} />
-      <Route component={ApeModeQueryParamReader} />
-      <Web3ReactManager>
-        <Switch>
-          <Route exact strict path="/darkswapwidget" component={SwapWidget} />
-          <Route exact strict path="/lightswapwidget" component={SwapWidget} />
-          <AppWrapper>
-            <ToastContainer />
-            <HeaderWrapper>
-              <Header />
-            </HeaderWrapper>
-            <BodyWrapper>
-              <Popups />
-              <Polling />
-              <TopLevelModals />
-              <Route
-                exact
-                strict
-                path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                component={RedirectDuplicateTokenIds}
-              />
-              <Route exact path="/limitorder" component={LimitOrder} />
-              <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
-              <Route exact path="/swap" component={Market} />
-              {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
-            </BodyWrapper>
-          </AppWrapper>
-        </Switch>
-      </Web3ReactManager>
+      <Suspense fallback={<AppPageLoader />}>
+        <Route component={GoogleAnalyticsReporter} />
+        <Route component={DarkModeQueryParamReader} />
+        <Route component={ApeModeQueryParamReader} />
+        <Web3ReactManager>
+          <Switch>
+            <Route exact strict path="/darkswapwidget" component={SwapWidget} />
+            <Route exact strict path="/lightswapwidget" component={SwapWidget} />
+            <AppWrapper>
+              <ToastContainer />
+              <HeaderWrapper>
+                <Header />
+              </HeaderWrapper>
+              <BodyWrapper>
+                <Popups />
+                <Polling />
+                <TopLevelModals />
+                <Route
+                  exact
+                  strict
+                  path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                  component={RedirectDuplicateTokenIds}
+                />
+                <Route exact path="/limitorder" component={LimitOrder} />
+                <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
+                <Route exact path="/swap" component={Market} />
+                {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
+              </BodyWrapper>
+            </AppWrapper>
+          </Switch>
+        </Web3ReactManager>
+      </Suspense>
     </ErrorBoundary>
   )
 }

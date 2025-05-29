@@ -58,9 +58,6 @@ type Props = {
 }
 
 function LimitOrderList({ account, v3Position }: Props) {
-  // const { account } = useActiveWeb3React()
-  // const { positions, fundingBalance, minBalance } = useV3Positions(account)
-
   const { positions, fundingBalance, minBalance } = v3Position
   const isUnderfunded = minBalance && fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : false
 
