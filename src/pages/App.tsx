@@ -17,11 +17,11 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AppPageLoader from './AppPageLoader'
+import LimitOrder from './LimitOrder'
 import { RedirectPathToLimitOrderOnly } from './LimitOrder/redirects'
 import SwapWidget from './SwapWidget'
 
 const RedirectDuplicateTokenIds = lazy(() => import('./AddLiquidity/redirects'))
-const LimitOrder = lazy(() => import('./LimitOrder'))
 const PositionPage = lazy(() => import('./Pool/PositionPage'))
 const Market = lazy(() => import('./Market'))
 
