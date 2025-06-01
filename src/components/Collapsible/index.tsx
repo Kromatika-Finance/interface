@@ -78,9 +78,9 @@ const StyledArrow = styled(ArrowDownCircle)<{ isOpen: boolean }>`
 `
 
 interface CollapsibleProps {
-  label: string
+  label: React.ReactNode // <-- this is the fix
   initState?: boolean
-  children?: ReactNode
+  children: React.ReactNode
 }
 
 export default function Collapsible({ label, children, initState = false }: CollapsibleProps) {
