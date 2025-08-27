@@ -43,7 +43,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
   const perpRedirectionHandler = () => {
     if (checked) localStorage.setItem('KromTOUTicked', Date.now().toString())
     onDismiss()
-    window.open('https://perp.kromatika.finance/', '_blank')
+    window.open('https://perpetual.kromatika.finance/', '_blank')
   }
 
   return (

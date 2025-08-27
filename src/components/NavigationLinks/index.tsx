@@ -146,7 +146,7 @@ export default function NavigationLinks() {
       const millis = Date.now() - (tickingDate as unknown as number)
       // External redirection
       if (Math.floor(millis / 1000 / 60 / 60 / 24) < 30) {
-        window.open('https://perp.kromatika.finance/', '_blank')
+        window.open('https://perpetual.kromatika.finance/', '_blank')
       } else {
         togglePerpModal()
       }
