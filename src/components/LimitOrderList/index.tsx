@@ -38,6 +38,39 @@ const LimitOrdersWrapper = styled(AutoColumn)<{ direction?: string }>`
   `};
 `
 
+const OrderCountWrapper = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+`
+
+const OrderCountBadge = styled.span`
+  background-color: ${({ theme }) => theme.primary1};
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+`
+
+const OrderCountZero = styled.span`
+  color: ${({ theme }) => theme.text3};
+  font-size: 12px;
+  font-weight: 500;
+`
+
+const StyledCount = styled.div`
+  background-color: ${({ theme }) => theme.primary1};
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+  margin-left: 8px;
+`
+
 export interface OrderDetails {
   owner: string
   tokenId: BigNumber
@@ -66,10 +99,20 @@ function LimitOrderList() {
   ) ?? [[], []]
   Boolean(!account)
 
+  const openOrdersLabel = `${t`Open Orders`} (${openPositions.length})`
+
   return (
     <LimitOrdersContainer>
       <LimitOrdersWrapper direction={'column'}>
-        <Collapsible label={t`Open Orders`} initState={false}>
+        <Collapsible
+          label={
+            <AutoRow justify="space-between" align="center" width="100%">
+              <Text fontWeight={500}>Open Orders</Text>
+              <StyledCount>{openPositions.length}</StyledCount>
+            </AutoRow>
+          }
+          initState={false}
+        >
           <AutoColumn gap="1rem">
             {openPositions.map((item, index) => (
               <LimitOrderListItem key={index} limitOrderDetails={item} isUnderfunded={isUnderfunded} />
