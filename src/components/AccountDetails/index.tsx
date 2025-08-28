@@ -230,9 +230,16 @@ export default function AccountDetails({
   ENSName,
   openOptions,
 }: AccountDetailsProps) {
-  const { chainId, account, connector } = useActiveWeb3React()
+  const { chainId, account, connector, deactivate } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useAppDispatch()
+  const disconnectWallet = useCallback(() => {
+    if ((connector as any).close) {
+      ;(connector as any).close()
+    }
+    connector?.deactivate()
+    deactivate()
+  }, [connector])
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -313,16 +320,13 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== walletlink && (
-                    <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                      onClick={() => {
-                        ;(connector as any).close()
-                      }}
-                    >
-                      <Trans>Disconnect</Trans>
-                    </WalletAction>
-                  )}
+                  <WalletAction
+                    style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                    onClick={disconnectWallet}
+                  >
+                    <Trans>Disconnect</Trans>
+                  </WalletAction>
+
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
