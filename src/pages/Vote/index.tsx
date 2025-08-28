@@ -6,7 +6,7 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/s
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import SwitchLocaleLink from 'components/SwitchLocaleLink'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
 import { useActiveWeb3React } from 'hooks/web3'

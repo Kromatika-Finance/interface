@@ -9,7 +9,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip } from 'components/Tooltip'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory } from 'react-router-dom'
@@ -27,14 +27,12 @@ import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import LimitOrderList from '../../components/LimitOrderList'
 import Loader from '../../components/Loader'
 import FullPositionCard from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import Toggle from '../../components/Toggle'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
@@ -62,6 +60,8 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
+const LimitOrderList = lazy(() => import('../../components/LimitOrderList'))
+const SwitchLocaleLink = lazy(() => import('../../components/SwitchLocaleLink'))
 
 const ClassicModeContainer = styled.div`
   display: flex;
@@ -154,12 +154,14 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const FundingBalance = () => {
-  const { account } = useActiveWeb3React()
-  const { fundingBalance, minBalance, gasPrice } = useV3Positions(account)
+type FundingBalanceProps = { v3Position: ReturnType<typeof useV3Positions> }
+
+const FundingBalance = React.memo(({ v3Position }: FundingBalanceProps) => {
+  const { fundingBalance, minBalance, gasPrice } = v3Position
 
   return <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
-}
+})
+FundingBalance.displayName = 'FundingBalance'
 
 const LimitOrderModal = () => {
   const theme = useContext(ThemeContext)
@@ -813,15 +815,24 @@ export default function LimitOrder() {
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
   const [expertMode] = useExpertModeManager()
 
+  const { account } = useActiveWeb3React()
+  const v3Positions = useV3Positions(account)
+
   if (expertMode) {
     return (
       <>
         <GridContainer>
           <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
           <LimitOrderModal />
-          <LimitOrderList />
-          <FundingBalance />
-          <SwitchLocaleLink />
+          <Suspense fallback="...loading">
+            <LimitOrderList account={account} v3Position={v3Positions} />
+          </Suspense>
+          <Suspense fallback="...loading">
+            <FundingBalance v3Position={v3Positions} />
+          </Suspense>
+          <Suspense fallback="...loading">
+            <SwitchLocaleLink />
+          </Suspense>
         </GridContainer>
       </>
     )
@@ -829,9 +840,9 @@ export default function LimitOrder() {
 
   return (
     <ClassicModeContainer>
-      <FundingBalance />
+      <FundingBalance v3Position={v3Positions} />
       <LimitOrderModal />
-      <LimitOrderList />
+      <LimitOrderList account={account} v3Position={v3Positions} />
       <SwitchLocaleLink />
     </ClassicModeContainer>
   )

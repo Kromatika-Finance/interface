@@ -27,7 +27,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
 import { darken } from 'polished'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -39,7 +39,7 @@ import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import SwitchLocaleLink from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
 import { TransactionType } from '../../state/transactions/actions'
@@ -329,7 +329,7 @@ const useInverter = ({
   }
 }
 
-export function PositionPage({
+const PositionPage = React.memo(function ({
   match: {
     params: { tokenId: tokenIdFromUrl },
   },
@@ -1197,4 +1197,6 @@ export function PositionPage({
       <SwitchLocaleLink />
     </>
   )
-}
+})
+
+export default PositionPage
