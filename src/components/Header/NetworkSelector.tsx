@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { NetworkContextName } from 'constants/misc'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
@@ -10,7 +12,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { useAppDispatch } from '../../state/hooks'
-import { switchToNetwork } from '../../utils/switchToNetwork'
+import { switchToNetwork, switchToNetworkWithRPC } from '../../utils/switchToNetwork'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -243,8 +245,10 @@ function Row({
   return rowContent
 }
 
-export default function NetworkSelector() {
-  const { chainId, library } = useActiveWeb3React()
+const NetworkSelector = memo(() => {
+  const { chainId, library, active, connector } = useActiveWeb3React()
+  const { account: walletAccount } = useWeb3React()
+  const { activate: activateNetwork } = useWeb3React(NetworkContextName)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -255,15 +259,30 @@ export default function NetworkSelector() {
   const dispatch = useAppDispatch()
 
   const handleRowClick = useCallback(
-    (targetChain: number) => {
-      if (!library) return
-      switchToNetwork({ library, chainId: targetChain })
-        .then(() => toggle())
-        .catch((error) => {
-          console.error('Failed to switch networks', error)
-          toggle()
-          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-        })
+    async (targetChain: number) => {
+      if (!library) {
+        return
+      }
+      try {
+        if (walletAccount) {
+          await switchToNetwork({ library, chainId: targetChain })
+        } else {
+          if (!connector) return
+          const newConnector = await switchToNetworkWithRPC({ connector, chainId: targetChain })
+          await activateNetwork(connector)
+        }
+      } catch (error) {
+        console.error('Failed to switch networks', error)
+        toggle()
+        dispatch(
+          addPopup({
+            content: { failedSwitchNetwork: targetChain },
+            key: `failed-network-switch`,
+          })
+        )
+      } finally {
+        toggle()
+      }
     },
     [dispatch, library, toggle]
   )
@@ -275,8 +294,8 @@ export default function NetworkSelector() {
   return (
     <SelectorWrapper ref={node as any}>
       <SelectorControls onClick={toggle} interactive tabIndex={0}>
-        <SelectorLogo interactive src={info.logoUrl} />
-        <SelectorLabel>{info.label}</SelectorLabel>
+        <SelectorLogo interactive src={info?.logoUrl} />
+        <SelectorLabel>{info?.label}</SelectorLabel>
         <StyledChevronDown />
       </SelectorControls>
       {open && (
@@ -293,4 +312,6 @@ export default function NetworkSelector() {
       )}
     </SelectorWrapper>
   )
-}
+})
+NetworkSelector.displayName = 'NetworkSelector'
+export default NetworkSelector
