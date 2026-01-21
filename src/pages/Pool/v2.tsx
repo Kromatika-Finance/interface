@@ -15,7 +15,7 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import SwitchLocaleLink from '../../components/SwitchLocaleLink'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'

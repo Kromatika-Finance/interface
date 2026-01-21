@@ -52,9 +52,13 @@ export interface OrderDetails {
   tokensOwed1: BigNumber
 }
 
-function LimitOrderList() {
-  const { account } = useActiveWeb3React()
-  const { positions, fundingBalance, minBalance } = useV3Positions(account)
+type Props = {
+  account: string | null | undefined
+  v3Position: ReturnType<typeof useV3Positions>
+}
+
+function LimitOrderList({ account, v3Position }: Props) {
+  const { positions, fundingBalance, minBalance } = v3Position
   const isUnderfunded = minBalance && fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : false
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(

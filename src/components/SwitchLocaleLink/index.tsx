@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import styled from 'styled-components/macro'
 
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
@@ -32,7 +32,7 @@ const useTargetLocale = (activeLocale: SupportedLocale) => {
   return null
 }
 
-export function SwitchLocaleLink() {
+const SwitchLocaleLink = memo(() => {
   const activeLocale = useActiveLocale()
   const targetLocale = useTargetLocale(activeLocale)
 
@@ -50,4 +50,7 @@ export function SwitchLocaleLink() {
       </Trans>
     </Container>
   )
-}
+})
+
+export default SwitchLocaleLink
+SwitchLocaleLink.displayName = 'SwitchLocaleLink'

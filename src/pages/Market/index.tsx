@@ -48,7 +48,7 @@ import {
   SwapCallbackError,
   Wrapper,
 } from '../../components/swap/styleds'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import SwitchLocaleLink from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
