@@ -9,6 +9,11 @@ const Card = styled(Box)<{ width?: string; padding?: string; border?: string; $b
 `
 export default Card
 
+export const PurpleCard = styled(Card)`
+  background-color: ${({ theme }) => theme.purple2};
+  border: 0.5px solid ${({ theme }) => theme.purple2};
+  padding: 0px;
+`
 export const LightCard = styled(Card)`
   border: 2px solid ${({ theme }) => theme.bg2};
   background-color: ${({ theme }) => theme.bg6};
@@ -44,4 +49,22 @@ export const BlueCard = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.blue2};
   border-radius: 20px;
+`
+
+export const StatsCard = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 0.5px solid ${({ theme }) => theme.purple2};
+`
+
+export const StatsLabel = styled.div`
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+`
+
+export const StatsValue = styled.div`
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
 `

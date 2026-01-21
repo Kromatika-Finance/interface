@@ -104,6 +104,7 @@ function colors(darkMode: boolean): Colors {
     blue1: darkMode ? '#2172E5' : '#0068FC',
     blue2: darkMode ? '#5199FF' : '#0068FC',
     purple1: darkMode ? '#945DC8' : '#764aa0',
+    purple2: darkMode ? '#583a76' : '#764aa0', // new colors for v2
     error: darkMode ? '#EB5757' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',
     warning: '#FF8F00',
