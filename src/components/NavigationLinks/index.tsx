@@ -180,6 +180,11 @@ export default function NavigationLinks() {
             <Trans>Perpetuals</Trans>
           </Text>
         </StyledNavLinkAlt>
+        <StyledNavLink id={`referral-nav-link`} to={'/referral'}>
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>Referral</Trans>
+          </Text>
+        </StyledNavLink>
       </NavLinks>
     </NavFrame>
   )
