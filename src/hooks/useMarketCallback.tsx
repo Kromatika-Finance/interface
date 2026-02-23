@@ -8,12 +8,14 @@ import { poll } from 'ethers/lib/utils'
 import { ReactNode, useMemo } from 'react'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 
+import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
+import { addTransactionToMetadex, verifyTransactionWithMetadex } from '../utils/metadexApi'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
@@ -75,7 +77,6 @@ function useMarketCallArguments(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
-  const affiliate = referer === null || referer == account ? null : referer
   const deadline = useTransactionDeadline()
   const argentWalletContract = useArgentWalletContract()
 
@@ -379,6 +380,37 @@ export function useMarketCallback(
                           expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
                         }
                   )
+                  // Metadex: notify pending tx, then verify once confirmed
+                  const tokenFrom = trade.inputAmount.currency.isToken
+                    ? trade.inputAmount.currency.address
+                    : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
+                  addTransactionToMetadex({
+                    transactionHash: txResponse.hash,
+                    referrer: referer ?? '',
+                    from: account,
+                    chainId: chainId.toString(),
+                    amount: { hex: '0x' + trade.inputAmount.quotient.toString(16) },
+                    tokenFrom,
+                    adapterData: swapTransaction?.data ?? '',
+                  }).catch((error) => {
+                    console.error('Error adding transaction to Metadex', error)
+                  })
+                  txResponse
+                    .wait()
+                    .then((receipt) => {
+                      if (receipt.status === 1) {
+                        verifyTransactionWithMetadex({
+                          chainId: chainId.toString(),
+                          transactionHash: txResponse.hash,
+                          from: account,
+                        }).catch((error) => {
+                          console.error('Error verifying transaction with Metadexa', error)
+                        })
+                      }
+                    })
+                    .catch((error) => {
+                      console.error('Error waiting for gasless transaction', error)
+                    })
                 }
 
                 return response
@@ -426,6 +458,38 @@ export function useMarketCallback(
                     }
               )
 
+              // Metadex: notify pending tx, then verify once confirmed
+              const tokenFrom = trade.inputAmount.currency.isToken
+                ? trade.inputAmount.currency.address
+                : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
+              addTransactionToMetadex({
+                transactionHash: response.hash,
+                referrer: referer ?? '',
+                from: account,
+                chainId: chainId.toString(),
+                amount: { hex: '0x' + trade.inputAmount.quotient.toString(16) },
+                tokenFrom,
+                adapterData: swapTransaction?.data ?? '',
+              }).catch((error) => {
+                console.error('Error adding transaction to Metadexa', error)
+              })
+              response
+                .wait()
+                .then((receipt) => {
+                  if (receipt.status === 1) {
+                    verifyTransactionWithMetadex({
+                      chainId: chainId.toString(),
+                      transactionHash: response.hash,
+                      from: account,
+                    }).catch((error) => {
+                      console.error('Error verifying transaction with Metadexa', error)
+                    })
+                  }
+                })
+                .catch((error) => {
+                  console.error('Error waiting for transaction', error)
+                })
+
               return response.hash
             })
             .catch((error) => {
@@ -434,7 +498,7 @@ export function useMarketCallback(
                 throw new Error(t`Transaction rejected.`)
               } else {
                 // otherwise, the error was unexpected and we need to convey that
-                console.error(`Swap failed`, error, address, calldata, value)
+                console.error(`Swap failed`, error, address, value)
 
                 throw new Error(t`Swap failed: ${marketErrorToUserReadableMessage(error)}`)
               }
@@ -453,6 +517,7 @@ export function useMarketCallback(
     library,
     recipient,
     recipientAddressOrName,
+    referer,
     swapCalls.marketcall,
     swapCalls.state,
     swapTransaction,

@@ -11,7 +11,7 @@ import { useWalletModalToggle } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { shortenAddress } from 'utils'
-
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 // ─── Styled Components ───────────────────────────────────────────────────────
 
@@ -187,7 +187,7 @@ const ConnectWalletWrapper = styled.div`
 
 const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   width: 100%;
 
@@ -229,16 +229,16 @@ interface ReferralTransaction {
   txHash: string
 }
 
-// ─── Placeholder API call ─────────────────────────────────────────────────────
+// ─── Referrer registration API ────────────────────────────────────────────────
 
-const REFERRAL_API_BASE = 'https://api.kromatika.finance/v1/referral' // placeholder    // TODO EDIT
+const REFERRER_API_URL = 'https://api.metadexa.io/v1/referrer'
 
-async function registerReferral(account: string): Promise<{ success: boolean; message: string }> {
-  // Template: replace with real API endpoint when provided
-  const response = await fetch(`${REFERRAL_API_BASE}/register`, {
+/** Registers the connected EOA as a referrer. Called when the user clicks Register. */
+async function registerReferrer(referrerAddress: string): Promise<{ success: boolean; message?: string }> {
+  const response = await fetch(REFERRER_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ address: account }),
+    body: JSON.stringify({ from: referrerAddress }),
   })
   if (!response.ok) throw new Error('Registration failed')
   return response.json()
@@ -247,7 +247,7 @@ async function registerReferral(account: string): Promise<{ success: boolean; me
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Referral() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
   const [isRegistered, setIsRegistered] = useState(false)
@@ -265,7 +265,7 @@ export default function Referral() {
     setIsRegistering(true)
     setRegisterError(null)
     try {
-      await registerReferral(account)
+      await registerReferrer(account)
       setIsRegistered(true)
     } catch (err: any) {
       setRegisterError(err?.message ?? 'Registration failed. Please try again.')
@@ -330,13 +330,9 @@ export default function Referral() {
                 <StatLabel>
                   <Trans>Total Rewards</Trans>
                 </StatLabel>
-                <StatValue>$0.00</StatValue>
-              </StatCard>
-              <StatCard>
-                <StatLabel>
-                  <Trans>Pending Rewards</Trans>
-                </StatLabel>
-                <StatValue>$0.00</StatValue>
+                <StatValue>
+                  <Trans>0 points</Trans>
+                </StatValue>
               </StatCard>
             </StatsGrid>
 
@@ -442,7 +438,15 @@ export default function Referral() {
                       </Text>
                     </TableCell>
                     <TableCell>
-                      <TxLink href={`https://etherscan.io/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer">
+                      <TxLink
+                        href={
+                          chainId
+                            ? getExplorerLink(chainId, tx.txHash, ExplorerDataType.TRANSACTION)
+                            : `https://etherscan.io/tx/${tx.txHash}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {tx.txHash.slice(0, 8)}…
                         <ExternalLink size={12} />
                       </TxLink>

@@ -19,6 +19,7 @@ import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMarketCallback } from 'hooks/useMarketCallback'
+import { useReferral } from 'hooks/useReferral'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
@@ -282,11 +283,8 @@ export default function Market({ history }: RouteComponentProps) {
     chainId !== SupportedChainId.BASE &&
     chainId !== SupportedChainId.MAINNET
 
-  const obj = sessionStorage.getItem('referral')
-
+  const referer = useReferral(account)
   const [copied, setCopied] = useState(false)
-
-  const [referer, setReferer] = useState<string | null>(null)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`${window.location.href}/r/${account}`)
@@ -294,16 +292,7 @@ export default function Market({ history }: RouteComponentProps) {
     setTimeout(() => setCopied(false), 15000)
   }
 
-  if (obj && obj != '' && referer == null && account && obj != account) setReferer(obj)
-
   const toggledVersion = Version.v2
-  if (window.location.hash.includes('/r/0x')) {
-    const index = window.location.hash.search('0x')
-    const ref = window.location.hash.substring(index, index + 42)
-
-    sessionStorage.setItem('referral', ref)
-    window.location.hash = '#/swap'
-  }
 
   // swap state
   const { independentField, typedValue, recipient } = useMarketState()
@@ -516,6 +505,7 @@ export default function Market({ history }: RouteComponentProps) {
           swapErrorMessage: undefined,
           txHash: hash,
         })
+
         ReactGA.event({
           category: 'Swap',
           action:
@@ -561,6 +551,7 @@ export default function Market({ history }: RouteComponentProps) {
     priceImpact,
     recipient,
     recipientAddress,
+    referer,
     showConfirm,
     signatureData,
     swapCallback,

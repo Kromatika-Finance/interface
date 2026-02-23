@@ -19,6 +19,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import LimitOrder from './LimitOrder'
 import { RedirectPathToLimitOrderOnly, RedirectPathToSwapOnly } from './LimitOrder/redirects'
 import Market from './Market'
+import { RedirectToSwapWithReferral } from './Market/redirects'
 import { PositionPage } from './Pool/PositionPage'
 import Referral from './Referral'
 import SwapWidget from './SwapWidget'
@@ -110,6 +111,7 @@ export default function App() {
               />
               <Route exact path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
+              <Route exact strict path="/swap/r/:referralAddress" component={RedirectToSwapWithReferral} />
               <Route exact path="/swap" component={Market} />
               <Route exact path="/referral" component={Referral} />
               {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
