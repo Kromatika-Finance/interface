@@ -4,14 +4,14 @@ import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, CheckCircle, Copy, ExternalLink } from 'react-feather'
 import { Text } from 'rebass'
 import { useWalletModalToggle } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { shortenAddress } from 'utils'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { checkReferrer, getReferrerStats, ReferrerTransaction, registerReferrer } from 'utils/metadexApi'
 
 // ─── Styled Components ───────────────────────────────────────────────────────
 
@@ -47,7 +47,8 @@ const SectionTitle = styled(Text)`
 const SectionSubtitle = styled(Text)`
   font-size: 14px;
   color: ${({ theme }) => theme.text2};
-  margin-bottom: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 `
 
 const StatusBadge = styled.div<{ variant: 'success' | 'warning' | 'idle' }>`
@@ -108,7 +109,7 @@ const Divider = styled.div`
   width: 100%;
   height: 1px;
   background: ${({ theme }) => theme.bg3};
-  margin: 1rem 0;
+  margin: 0.4rem 0;
 `
 
 const TableWrapper = styled.div`
@@ -175,6 +176,67 @@ const TxLink = styled.a`
   }
 `
 
+const PaginationRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+`
+
+const PaginationInfo = styled(Text)`
+  font-size: 13px;
+  color: ${({ theme }) => theme.text3};
+`
+
+const PaginationControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`
+
+const PageButton = styled.button<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme, active }) => (active ? theme.primary1 : theme.bg3)};
+  background: ${({ theme, active }) => (active ? `${theme.primary1}22` : 'transparent')};
+  color: ${({ theme, active }) => (active ? theme.primary1 : theme.text2)};
+  font-size: 13px;
+  font-weight: ${({ active }) => (active ? 600 : 400)};
+  cursor: pointer;
+
+  :hover:not(:disabled) {
+    border-color: ${({ theme }) => theme.primary1};
+    color: ${({ theme }) => theme.primary1};
+  }
+
+  :disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+`
+
+const RowsPerPageSelect = styled.select`
+  background: ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-radius: 8px;
+  color: ${({ theme }) => theme.text2};
+  font-size: 13px;
+  padding: 4px 8px;
+  cursor: pointer;
+  outline: none;
+
+  :hover {
+    border-color: ${({ theme }) => theme.primary1};
+  }
+`
+
 const ConnectWalletWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -187,7 +249,7 @@ const ConnectWalletWrapper = styled.div`
 
 const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 100%;
 
@@ -218,47 +280,71 @@ const StatValue = styled(Text)`
   color: ${({ theme }) => theme.text1};
 `
 
-// ─── Mock transaction data type ───────────────────────────────────────────────
-
-interface ReferralTransaction {
-  id: string
-  date: string
-  referee: string
-  action: string
-  reward: string
-  txHash: string
-}
-
-// ─── Referrer registration API ────────────────────────────────────────────────
-
-const REFERRER_API_URL = 'https://api.metadexa.io/v1/referrer'
-
-/** Registers the connected EOA as a referrer. Called when the user clicks Register. */
-async function registerReferrer(referrerAddress: string): Promise<{ success: boolean; message?: string }> {
-  const response = await fetch(REFERRER_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: referrerAddress }),
-  })
-  if (!response.ok) throw new Error('Registration failed')
-  return response.json()
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Referral() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
   const [isRegistered, setIsRegistered] = useState(false)
+  const [isCheckingRegistration, setIsCheckingRegistration] = useState(false)
   const [isRegistering, setIsRegistering] = useState(false)
   const [registerError, setRegisterError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
-  // Template: replace with real fetch from API
-  const transactions: ReferralTransaction[] = []
+  const [transactions, setTransactions] = useState<ReferrerTransaction[]>([])
+  const [totalReferrals, setTotalReferrals] = useState(0)
+  const [totalRewards, setTotalRewards] = useState<number>(0)
+  const [cumulativeVolume, setCumulativeVolume] = useState<number>(0)
+  const [isFetchingStats, setIsFetchingStats] = useState(false)
 
-  const referralLink = account ? `${window.location.origin}/#/swap/r/${account}` : ''
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  useEffect(() => {
+    let cancelled = false
+    setIsCheckingRegistration(true)
+    checkReferrer(account ?? '')
+      .then((result) => {
+        if (result.isReferrer) setIsRegistered(true)
+        else setIsRegistered(false)
+      })
+      .catch(() => {
+        if (!cancelled) setIsRegistered(false)
+      })
+      .finally(() => {
+        if (!cancelled) setIsCheckingRegistration(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [account])
+
+  useEffect(() => {
+    if (!account) return
+    let cancelled = false
+    setIsFetchingStats(true)
+    getReferrerStats(account)
+      .then((data) => {
+        if (cancelled) return
+        const s = data.stats
+        setTransactions(s.referredTransactions ?? [])
+        setTotalReferrals(s.referredUsers ?? 0)
+        setTotalRewards(s.earnedRewards ?? 0)
+        setCumulativeVolume(s.cumulativeVolume ?? 0)
+      })
+      .catch(() => {
+        if (!cancelled) setTransactions([])
+      })
+      .finally(() => {
+        if (!cancelled) setIsFetchingStats(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [account])
+
+  const referralLink = account ? `${window.location.origin}/swap/r/${account}` : ''
 
   const handleRegister = useCallback(async () => {
     if (!account) return
@@ -281,6 +367,30 @@ export default function Referral() {
     setTimeout(() => setCopied(false), 3000)
   }, [referralLink])
 
+  // Reset to first page whenever the dataset or page size changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [transactions, rowsPerPage])
+
+  const totalPages = Math.max(1, Math.ceil(transactions.length / rowsPerPage))
+  const paginatedTransactions = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage
+    return transactions.slice(start, start + rowsPerPage)
+  }, [transactions, currentPage, rowsPerPage])
+
+  const pageNumbers = useMemo(() => {
+    const delta = 2
+    const pages: (number | '...')[] = []
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
+        pages.push(i)
+      } else if (pages[pages.length - 1] !== '...') {
+        pages.push('...')
+      }
+    }
+    return pages
+  }, [totalPages, currentPage])
+
   return (
     <PageWrapper>
       {/* ── Registration Card ── */}
@@ -296,7 +406,9 @@ export default function Referral() {
           </AutoColumn>
           {account && (
             <StatusBadge variant={isRegistered ? 'success' : 'idle'}>
-              {isRegistered ? (
+              {isCheckingRegistration ? (
+                <Trans>Checking...</Trans>
+              ) : isRegistered ? (
                 <>
                   <CheckCircle size={13} />
                   <Trans>Registered</Trans>
@@ -324,21 +436,36 @@ export default function Referral() {
                 <StatLabel>
                   <Trans>Total Referrals</Trans>
                 </StatLabel>
-                <StatValue>0</StatValue>
+                <StatValue>{isFetchingStats ? '—' : totalReferrals}</StatValue>
               </StatCard>
               <StatCard>
                 <StatLabel>
-                  <Trans>Total Rewards</Trans>
+                  <Trans>Total Volume</Trans>
                 </StatLabel>
                 <StatValue>
-                  <Trans>0 points</Trans>
+                  {isFetchingStats
+                    ? '—'
+                    : `$${Number(cumulativeVolume).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}`}
                 </StatValue>
+              </StatCard>
+              <StatCard>
+                <StatLabel>
+                  <Trans>Rewards</Trans>
+                </StatLabel>
+                <StatValue>{isFetchingStats ? '—' : `${totalRewards} points`}</StatValue>
               </StatCard>
             </StatsGrid>
 
             <Divider />
 
-            {!isRegistered ? (
+            {isCheckingRegistration ? (
+              <TYPE.body color="text3" fontSize={14}>
+                <Trans>Checking registration status...</Trans>
+              </TYPE.body>
+            ) : !isRegistered ? (
               <AutoColumn gap="sm">
                 <TYPE.body color="text2" fontSize={14}>
                   <Trans>
@@ -401,7 +528,10 @@ export default function Referral() {
                   <Trans>Action</Trans>
                 </TableHeaderCell>
                 <TableHeaderCell>
-                  <Trans>Reward</Trans>
+                  <Trans>Volume</Trans>
+                </TableHeaderCell>
+                <TableHeaderCell>
+                  <Trans>Token</Trans>
                 </TableHeaderCell>
                 <TableHeaderCell>
                   <Trans>Tx</Trans>
@@ -409,9 +539,17 @@ export default function Referral() {
               </tr>
             </TableHead>
             <TableBody>
-              {transactions.length === 0 ? (
+              {isFetchingStats ? (
                 <EmptyTableRow>
-                  <EmptyTableCell colSpan={5}>
+                  <EmptyTableCell colSpan={6}>
+                    <TYPE.body color="text3">
+                      <Trans>Loading transactions...</Trans>
+                    </TYPE.body>
+                  </EmptyTableCell>
+                </EmptyTableRow>
+              ) : transactions.length === 0 ? (
+                <EmptyTableRow>
+                  <EmptyTableCell colSpan={6}>
                     <AutoColumn justify="center" style={{ gap: '8px' }}>
                       <TYPE.body color="text3">
                         <Trans>No referral transactions yet.</Trans>
@@ -423,40 +561,93 @@ export default function Referral() {
                   </EmptyTableCell>
                 </EmptyTableRow>
               ) : (
-                transactions.map((tx) => (
-                  <TableRow key={tx.id}>
-                    <TableCell>{tx.date}</TableCell>
-                    <TableCell>
-                      <Text fontSize={13} fontFamily="monospace">
-                        {shortenAddress(tx.referee)}
-                      </Text>
-                    </TableCell>
-                    <TableCell>{tx.action}</TableCell>
-                    <TableCell>
-                      <Text color="green1" fontSize={13} fontWeight={500}>
-                        {tx.reward}
-                      </Text>
-                    </TableCell>
-                    <TableCell>
-                      <TxLink
-                        href={
-                          chainId
-                            ? getExplorerLink(chainId, tx.txHash, ExplorerDataType.TRANSACTION)
-                            : `https://etherscan.io/tx/${tx.txHash}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {tx.txHash.slice(0, 8)}…
-                        <ExternalLink size={12} />
-                      </TxLink>
-                    </TableCell>
-                  </TableRow>
-                ))
+                paginatedTransactions.map((tx) => {
+                  const date = tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '—'
+                  return (
+                    <TableRow key={tx.id}>
+                      <TableCell>{date}</TableCell>
+                      <TableCell>
+                        <Text fontSize={13} fontFamily="monospace">
+                          {tx.from ? shortenAddress(tx.from) : '—'}
+                        </Text>
+                      </TableCell>
+                      <TableCell>{tx.status ?? '—'}</TableCell>
+                      <TableCell>
+                        <Text fontSize={13} fontWeight={500}>
+                          {tx.volume != null
+                            ? `$${Number(tx.volume).toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}`
+                            : '—'}
+                        </Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text fontSize={13} fontFamily="monospace">
+                          {tx.tokenFrom ? shortenAddress(tx.tokenFrom) : '—'}
+                        </Text>
+                      </TableCell>
+                      <TableCell>
+                        {tx.transaction_hash ? (
+                          <TxLink
+                            href={`https://optimistic.etherscan.io/tx/${tx.transaction_hash}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {tx.transaction_hash.slice(0, 8)}…
+                            <ExternalLink size={12} />
+                          </TxLink>
+                        ) : (
+                          '—'
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </StyledTable>
         </TableWrapper>
+
+        {transactions.length > 0 && (
+          <PaginationRow>
+            <PaginationInfo>
+              {(() => {
+                const start = (currentPage - 1) * rowsPerPage + 1
+                const end = Math.min(currentPage * rowsPerPage, transactions.length)
+                return `${start}–${end} of ${transactions.length}`
+              })()}
+            </PaginationInfo>
+
+            <PaginationControls>
+              <PageButton onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage === 1}>
+                ‹
+              </PageButton>
+              {pageNumbers.map((p, i) =>
+                p === '...' ? (
+                  <PageButton key={`ellipsis-${i}`} disabled>
+                    …
+                  </PageButton>
+                ) : (
+                  <PageButton key={p} active={p === currentPage} onClick={() => setCurrentPage(p as number)}>
+                    {p}
+                  </PageButton>
+                )
+              )}
+              <PageButton onClick={() => setCurrentPage((p) => p + 1)} disabled={currentPage === totalPages}>
+                ›
+              </PageButton>
+            </PaginationControls>
+
+            <RowsPerPageSelect value={rowsPerPage} onChange={(e) => setRowsPerPage(Number(e.target.value))}>
+              {[5, 10, 20, 50].map((n) => (
+                <option key={n} value={n}>
+                  {n} / page
+                </option>
+              ))}
+            </RowsPerPageSelect>
+          </PaginationRow>
+        )}
       </SectionCard>
     </PageWrapper>
   )

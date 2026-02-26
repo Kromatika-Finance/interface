@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { poll } from 'ethers/lib/utils'
@@ -398,7 +398,7 @@ export function useMarketCallback(
                   txResponse
                     .wait()
                     .then((receipt) => {
-                      if (receipt.status === 1) {
+                      if (receipt.status === 1 && chainId === ChainId.OPTIMISM) {
                         verifyTransactionWithMetadex({
                           chainId: chainId.toString(),
                           transactionHash: txResponse.hash,
@@ -476,7 +476,7 @@ export function useMarketCallback(
               response
                 .wait()
                 .then((receipt) => {
-                  if (receipt.status === 1) {
+                  if (receipt.status === 1 && chainId === ChainId.OPTIMISM) {
                     verifyTransactionWithMetadex({
                       chainId: chainId.toString(),
                       transactionHash: response.hash,
