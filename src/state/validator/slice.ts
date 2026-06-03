@@ -28,7 +28,10 @@ export const routingApiKromatika = createApi({
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/getQuote?${qs.stringify(queryArg, { skipNulls: true })}`
+        return `/${chainId}/getQuote?${qs.stringify(
+          { ...queryArg, affiliate: '0x3510D70e9fFcF31C2Cb7c000CD65B0Ff2272CE66' },
+          { skipNulls: true }
+        )}`
       },
       extraOptions: { maxRetries: 3 }, // You can o
     }),
