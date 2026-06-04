@@ -22,6 +22,7 @@ const PageWrapper = styled.div`
   width: 100%;
   max-width: 960px;
   padding: 1.5rem 1rem 8rem 1rem;
+  min-width: 0;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 1rem 8rem 1rem;
@@ -34,6 +35,7 @@ const SectionCard = styled.div`
   border-radius: 20px;
   width: 100%;
   padding: 1.5rem;
+  min-width: 0;
 `
 
 const SectionTitle = styled(Text)`

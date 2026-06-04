@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import { darken } from 'polished'
+import { Activity, Repeat, TrendingUp, Users } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -40,6 +41,7 @@ const NavLinks = styled(Row)`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: calc(100% - 32px);
+    gap: 0.5rem;
   `};
 `
 const activeClassName = 'ACTIVE'
@@ -66,8 +68,8 @@ const StyledNavLink = styled(NavLink).attrs({
   height: 40px;
 
   &.${activeClassName} {
-    color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+    color: ${({ theme }) => theme.primary1};
+    background-color: ${({ theme }) => `${theme.primary1}22`};
     div {
       font-weight: 700;
     }
@@ -77,16 +79,40 @@ const StyledNavLink = styled(NavLink).attrs({
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
+  svg {
+    display: none;
+  }
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0.5rem 1rem;
     &.${activeClassName} {
-      background-color: ${({ theme }) => (theme.darkMode ? theme.bg6 : theme.bg0)};
+      background-color: ${({ theme }) => `${theme.primary1}22`};
     }
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    div:nth-child(2) {
-      display: none;
+    flex-direction: column;
+    gap: 4px;
+    height: auto;
+    padding: 8px;
+    
+    svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+
+    div.nav-text {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    &.${activeClassName} {
+      background-color: ${({ theme }) => `${theme.primary1}22`};
+      
+      div.nav-text {
+        font-weight: 700;
+      }
     }
   `};
 `
@@ -112,8 +138,8 @@ const StyledNavLinkAlt = styled.button`
   height: 40px;
 
   &.${activeClassName} {
-    color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+    color: ${({ theme }) => theme.primary1};
+    background-color: ${({ theme }) => `${theme.primary1}22`};
     border-radius: 20px;
     font-weight: 600;
   }
@@ -122,13 +148,37 @@ const StyledNavLinkAlt = styled.button`
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
+  svg {
+    display: none;
+  }
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0.5rem 1rem;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    div:nth-child(2) {
-      display: none;
+    flex-direction: column;
+    gap: 4px;
+    height: auto;
+    padding: 8px;
+    
+    svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+
+    div.nav-text {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    &.${activeClassName} {
+      background-color: ${({ theme }) => `${theme.primary1}22`};
+      
+      div.nav-text {
+        font-weight: 700;
+      }
     }
   `};
 `
@@ -157,17 +207,15 @@ export default function NavigationLinks() {
     <NavFrame>
       <NavLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-          <Text fontSize={16} fontWeight={400}>
-            <Trans>Limit/FELO</Trans>
-          </Text>
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Text fontSize={16} fontWeight={400}>
-            <Trans>Swap</Trans>
+          <TrendingUp size={20} />
+          <Text className="nav-text" fontSize={16} fontWeight={400}>
+            <Trans>Limit</Trans>
           </Text>
         </StyledNavLink>
         <StyledNavLinkAlt id={`perp-nav-link`} onClick={() => handleTogglePerpModal()}>
+          <Activity size={20} />
           <Text
+            className="nav-text"
             fontSize={16}
             fontWeight={400}
             overflow={'hidden'}
@@ -177,11 +225,18 @@ export default function NavigationLinks() {
               textOverflow: 'ellipsis',
             }}
           >
-            <Trans>Perpetuals</Trans>
+            <Trans>Perps</Trans>
           </Text>
         </StyledNavLinkAlt>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Repeat size={20} />
+          <Text className="nav-text" fontSize={16} fontWeight={400}>
+            <Trans>Swap</Trans>
+          </Text>
+        </StyledNavLink>
         <StyledNavLink id={`referral-nav-link`} to={'/referral'}>
-          <Text fontSize={16} fontWeight={400}>
+          <Users size={20} />
+          <Text className="nav-text" fontSize={16} fontWeight={400}>
             <Trans>Referral</Trans>
           </Text>
         </StyledNavLink>

@@ -23,6 +23,7 @@ const PageWrapper = styled.div`
   width: 100%;
   max-width: 800px;
   padding: 1.5rem 1rem 8rem 1rem;
+  min-width: 0;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 1rem 8rem 1rem;
@@ -35,6 +36,7 @@ const SectionCard = styled.div`
   border-radius: 20px;
   width: 100%;
   padding: 1.5rem;
+  min-width: 0;
 `
 
 const SectionTitle = styled(Text)`
@@ -74,6 +76,8 @@ const ReferralLinkBox = styled.div`
   padding: 10px 14px;
   gap: 10px;
   margin-top: 1rem;
+  width: 100%;
+  min-width: 0;
 `
 
 const ReferralLinkText = styled(Text)`
@@ -83,6 +87,7 @@ const ReferralLinkText = styled(Text)`
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1;
+  min-width: 0;
 `
 
 const CopyButton = styled.button`
@@ -430,7 +435,7 @@ export default function Referral() {
             </ButtonLight>
           </ConnectWalletWrapper>
         ) : (
-          <AutoColumn gap="md">
+          <AutoColumn gap="md" style={{ width: '100%' }}>
             <StatsGrid>
               <StatCard>
                 <StatLabel>
@@ -486,7 +491,7 @@ export default function Referral() {
                 </ButtonPrimary>
               </AutoColumn>
             ) : (
-              <AutoColumn gap="sm">
+              <AutoColumn gap="sm" style={{ width: '100%' }}>
                 <TYPE.body color="text2" fontSize={14}>
                   <Trans>Share your referral link to start earning rewards.</Trans>
                 </TYPE.body>
