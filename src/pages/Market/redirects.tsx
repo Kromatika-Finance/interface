@@ -2,11 +2,28 @@ import { useEffect } from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 
+import { saveReferral } from '../../hooks/useReferral'
 import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
 
 // Redirects to swap but only replace the pathname
 export function RedirectPathToMarketOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/market' }} />
+}
+
+// Captures the referral address from the URL, persists it, then redirects to /swap
+export function RedirectToSwapWithReferral({
+  match: {
+    params: { referralAddress },
+  },
+  location,
+}: RouteComponentProps<{ referralAddress: string }>) {
+  useEffect(() => {
+    if (referralAddress && /^0x[a-fA-F0-9]{40}$/i.test(referralAddress)) {
+      saveReferral(referralAddress)
+    }
+  }, [referralAddress])
+
+  return <Redirect to={{ ...location, pathname: '/swap' }} />
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
