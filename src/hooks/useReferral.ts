@@ -6,13 +6,13 @@ const ETH_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/i
 const REFERRAL_TTL_MS = 24 * 60 * 60 * 1000 // 1 day
 
 interface StoredReferral {
-  address: string
+  referral: string // Can be either an address (0x...) or a referralCode
   expiresAt: number
 }
 
-/** Persists a referral address with a 1-day TTL. */
-export function saveReferral(address: string): void {
-  const payload: StoredReferral = { address, expiresAt: Date.now() + REFERRAL_TTL_MS }
+/** Persists a referral address or code with a 1-day TTL. */
+export function saveReferral(referral: string): void {
+  const payload: StoredReferral = { referral, expiresAt: Date.now() + REFERRAL_TTL_MS }
   localStorage.setItem(REFERRAL_ADDRESS_KEY, JSON.stringify(payload))
 }
 
@@ -22,51 +22,51 @@ function loadReferral(): string | null {
     const raw = localStorage.getItem(REFERRAL_ADDRESS_KEY)
     if (!raw) return null
     const parsed: StoredReferral = JSON.parse(raw)
-    if (!ETH_ADDRESS_RE.test(parsed.address)) return null
+    if (!parsed.referral) return null
     if (Date.now() > parsed.expiresAt) {
       localStorage.removeItem(REFERRAL_ADDRESS_KEY)
       return null
     }
-    return parsed.address
+    return parsed.referral
   } catch {
     return null
   }
 }
 
 /**
- * Parses a referral Ethereum address from the current URL.
+ * Parses a referral code or Ethereum address from the current URL.
  *
  * Supported patterns (all hash-router based):
- *   /#/swap/r/0x...                   (path segment, handled by router redirect)
- *   /#/swap?ref=0x...                 (query param, short form)
- *   /#/swap?referral=0x...            (query param, long form)
- *   /#/swap/referral=0x...            (legacy fragment path form)
+ *   /#/swap/r/referralCode            (path segment, handled by router redirect)
+ *   /#/swap/r/0x...                   (path segment with address, handled by router redirect)
+ *   /#/swap?ref=code                  (query param, short form)
+ *   /#/swap?referral=code             (query param, long form)
+ *   /#/swap/referral=code             (legacy fragment path form)
  */
 function parseReferralFromUrl(): string | null {
   const hash = window.location.hash
   const href = window.location.href
 
-  // Path segment: #/swap/r/0x... (normally intercepted by the router, but kept as fallback)
-  const pathMatch = hash.match(/\/r\/(0x[a-fA-F0-9]{40})\b/i)
-  if (pathMatch && ETH_ADDRESS_RE.test(pathMatch[1])) return pathMatch[1]
+  // Path segment: #/swap/r/... (normally intercepted by the router, but kept as fallback)
+  const pathMatch = hash.match(/\/r\/([^/?&#]+)/i)
+  if (pathMatch && pathMatch[1]) return pathMatch[1]
 
   // Query / fragment param: ?ref= | &ref= | ?referral= | &referral= | /referral=
-  const paramMatch =
-    hash.match(/[/?&]ref(?:erral)?=(0x[a-fA-F0-9]{40})\b/i) ?? href.match(/[/?&]ref(?:erral)?=(0x[a-fA-F0-9]{40})\b/i)
-  if (paramMatch && ETH_ADDRESS_RE.test(paramMatch[1])) return paramMatch[1]
+  const paramMatch = hash.match(/[/?&]ref(?:erral)?=([^/?&#]+)/i) ?? href.match(/[/?&]ref(?:erral)?=([^/?&#]+)/i)
+  if (paramMatch && paramMatch[1]) return paramMatch[1]
 
   return null
 }
 
 /**
- * Returns the referrer address for the current session.
+ * Returns the referrer code or address for the current session.
  *
  * Priority:
- *  1. A valid address found in the current URL (persisted to localStorage with 1-day TTL)
- *  2. A previously persisted address from localStorage (if not expired)
+ *  1. A valid referral code/address found in the current URL (persisted to localStorage with 1-day TTL)
+ *  2. A previously persisted referral code/address from localStorage (if not expired)
  *
- * Self-referral is automatically excluded: if the stored address equals
- * `currentAccount` it is ignored and null is returned.
+ * Self-referral is automatically excluded: if the stored referral equals
+ * `currentAccount` (case-insensitive Ethereum address comparison) it is ignored and null is returned.
  */
 export function useReferral(currentAccount?: string | null): string | null {
   const [referer, setReferer] = useState<string | null>(loadReferral)
@@ -79,8 +79,13 @@ export function useReferral(currentAccount?: string | null): string | null {
     }
   }, [])
 
-  // Never return self-referral
-  if (referer && currentAccount && referer.toLowerCase() === currentAccount.toLowerCase()) {
+  // Never return self-referral (if the referral is an Ethereum address matching current account)
+  if (
+    referer &&
+    currentAccount &&
+    ETH_ADDRESS_RE.test(referer) &&
+    referer.toLowerCase() === currentAccount.toLowerCase()
+  ) {
     return null
   }
   return referer

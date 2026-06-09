@@ -108,6 +108,15 @@ const CopyButton = styled.button`
   :hover {
     background: ${({ theme }) => theme.primary1}22;
   }
+
+  :disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  :disabled:hover {
+    background: transparent;
+  }
 `
 
 const Divider = styled.div`
@@ -302,6 +311,7 @@ export default function Referral() {
   const [totalRewards, setTotalRewards] = useState<number>(0)
   const [cumulativeVolume, setCumulativeVolume] = useState<number>(0)
   const [isFetchingStats, setIsFetchingStats] = useState(false)
+  const [referralCode, setReferralCode] = useState<string | null>(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -337,6 +347,7 @@ export default function Referral() {
         setTotalReferrals(s.referredUsers ?? 0)
         setTotalRewards(s.earnedRewards ?? 0)
         setCumulativeVolume(s.cumulativeVolume ?? 0)
+        setReferralCode(s.referralCode ?? null)
       })
       .catch(() => {
         if (!cancelled) setTransactions([])
@@ -349,7 +360,8 @@ export default function Referral() {
     }
   }, [account])
 
-  const referralLink = account ? `${window.location.origin}/swap/r/${account}` : ''
+  const referralLink =
+    account && referralCode ? `${window.location.origin}/swap/r/${referralCode}` : account ? 'Fetching code...' : ''
 
   const handleRegister = useCallback(async () => {
     if (!account) return
@@ -358,6 +370,9 @@ export default function Referral() {
     try {
       await registerReferrer(account)
       setIsRegistered(true)
+      // Fetch stats to get the referralCode
+      const data = await getReferrerStats(account)
+      setReferralCode(data.stats.referralCode ?? null)
     } catch (err: any) {
       setRegisterError(err?.message ?? 'Registration failed. Please try again.')
     } finally {
@@ -366,11 +381,11 @@ export default function Referral() {
   }, [account])
 
   const handleCopy = useCallback(() => {
-    if (!referralLink) return
+    if (!referralLink || !referralCode) return
     navigator.clipboard.writeText(referralLink)
     setCopied(true)
     setTimeout(() => setCopied(false), 3000)
-  }, [referralLink])
+  }, [referralLink, referralCode])
 
   // Reset to first page whenever the dataset or page size changes
   useEffect(() => {
@@ -497,7 +512,7 @@ export default function Referral() {
                 </TYPE.body>
                 <ReferralLinkBox>
                   <ReferralLinkText>{referralLink}</ReferralLinkText>
-                  <CopyButton onClick={handleCopy}>
+                  <CopyButton onClick={handleCopy} disabled={!referralCode || isFetchingStats}>
                     <Copy size={13} />
                     {copied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
                   </CopyButton>
