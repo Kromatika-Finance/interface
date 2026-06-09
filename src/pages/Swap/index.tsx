@@ -53,6 +53,7 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+import { useReferral } from '../../hooks/useReferral'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -246,6 +247,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
+  const referer = useReferral(account)
 
   const { positions, loading: positionsLoading, fundingBalance, minBalance, gasPrice } = useV3Positions(account)
 
@@ -437,6 +439,7 @@ export default function Swap({ history }: RouteComponentProps) {
     trade,
     gasAmount,
     recipient,
+    referer,
     signatureData,
     parsedAmounts.input,
     price,

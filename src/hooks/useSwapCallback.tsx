@@ -16,6 +16,7 @@ import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
+import { addTransactionToMetadex } from '../utils/metadexApi'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import { useKromatikaRouter, useLimitOrderManager } from './useContract'
 import useENS from './useENS'
@@ -338,6 +339,7 @@ export function useSwapCallback(
   trade: V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   gasAmount: CurrencyAmount<Currency> | undefined,
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  referer: string | null, // referral code or address
   signatureData: SignatureData | undefined | null,
   parsedAmount: CurrencyAmount<Currency> | undefined,
   priceAmount: Price<Currency, Currency> | undefined,
@@ -499,6 +501,22 @@ export function useSwapCallback(
                           expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
                         }
                   )
+
+                  // Metadex: notify pending tx with referral code
+                  // const tokenFrom = trade.inputAmount.currency.isToken
+                  //   ? trade.inputAmount.currency.address
+                  //   : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
+                  // addTransactionToMetadex({
+                  //   transactionHash: txResponse.hash,
+                  //   referralCode: referer ?? '',
+                  //   from: account,
+                  //   chainId: chainId.toString(),
+                  //   amount: { hex: '0x' + trade.inputAmount.quotient.toString(16) },
+                  //   tokenFrom,
+                  //   adapterData: routerCalldata,
+                  // }).catch((error) => {
+                  //   console.error('Error adding transaction to Metadex', error)
+                  // })
                 }
 
                 return response
@@ -545,6 +563,22 @@ export function useSwapCallback(
                     }
               )
 
+              // // Metadex: notify pending tx with referral code
+              // const tokenFrom = trade.inputAmount.currency.isToken
+              //   ? trade.inputAmount.currency.address
+              //   : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
+              // addTransactionToMetadex({
+              //   transactionHash: response.hash,
+              //   referralCode: referer ?? '',
+              //   from: account,
+              //   chainId: chainId.toString(),
+              //   amount: { hex: '0x' + trade.inputAmount.quotient.toString(16) },
+              //   tokenFrom,
+              //   adapterData: calldata,
+              // }).catch((error) => {
+              //   console.error('Error adding transaction to Metadex', error)
+              // })
+
               return response.hash
             })
             .catch((error) => {
@@ -574,6 +608,7 @@ export function useSwapCallback(
     priceAmount,
     recipient,
     recipientAddressOrName,
+    referer,
     swapCalls,
     trade,
   ])
