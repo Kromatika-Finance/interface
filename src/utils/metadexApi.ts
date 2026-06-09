@@ -116,6 +116,7 @@ export interface ReferrerStats {
   hasClaimedFunds: boolean
   cumulativeVolume: number
   referredTransactions: ReferrerTransaction[]
+  referralCode?: string
 }
 
 export interface ReferrerStatsResponse {

@@ -10,7 +10,7 @@ export function RedirectPathToMarketOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/market' }} />
 }
 
-// Captures the referral address from the URL, persists it, then redirects to /swap
+// Captures the referral address/code from the URL, persists it, then redirects to /swap
 export function RedirectToSwapWithReferral({
   match: {
     params: { referralAddress },
@@ -18,7 +18,8 @@ export function RedirectToSwapWithReferral({
   location,
 }: RouteComponentProps<{ referralAddress: string }>) {
   useEffect(() => {
-    if (referralAddress && /^0x[a-fA-F0-9]{40}$/i.test(referralAddress)) {
+    if (referralAddress) {
+      // Save both referralCode (string) and Ethereum addresses (0x...)
       saveReferral(referralAddress)
     }
   }, [referralAddress])
