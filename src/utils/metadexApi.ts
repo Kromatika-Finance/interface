@@ -10,7 +10,7 @@ export const METADEXA_API_BASE =
 
 export interface AddTransactionBody {
   transactionHash: string
-  referrer: string
+  referralCode: string
   from: string
   chainId: string
   amount: { hex: string }

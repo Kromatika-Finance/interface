@@ -386,7 +386,7 @@ export function useMarketCallback(
                     : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
                   addTransactionToMetadex({
                     transactionHash: txResponse.hash,
-                    referrer: referer ?? '',
+                    referralCode: referer ?? '',
                     from: account,
                     chainId: chainId.toString(),
                     amount: { hex: '0x' + trade.inputAmount.quotient.toString(16) },
@@ -464,7 +464,7 @@ export function useMarketCallback(
                 : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
               addTransactionToMetadex({
                 transactionHash: response.hash,
-                referrer: referer ?? '',
+                referralCode: referer ?? '',
                 from: account,
                 chainId: chainId.toString(),
                 amount: { hex: '0x' + trade.inputAmount.quotient.toString(16) },
