@@ -10,7 +10,6 @@ import { useIsGaslessMode } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
-import { shortenAddress } from '../../utils'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { TransactionDetailsLabel } from './styleds'
@@ -119,7 +118,7 @@ export function AdvancedMarketDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
             <TYPE.black textAlign="right" fontSize={14}>
-              {referer ? shortenAddress(referer) : '-'}
+              {referer ?? '-'}
             </TYPE.black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
