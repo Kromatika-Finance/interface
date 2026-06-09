@@ -399,13 +399,15 @@ export function useMarketCallback(
                     .wait()
                     .then((receipt) => {
                       if (receipt.status === 1 && chainId === ChainId.OPTIMISM) {
-                        verifyTransactionWithMetadex({
-                          chainId: chainId.toString(),
-                          transactionHash: txResponse.hash,
-                          from: account,
-                        }).catch((error) => {
-                          console.error('Error verifying transaction with Metadexa', error)
-                        })
+                        setTimeout(() => {
+                          verifyTransactionWithMetadex({
+                            chainId: chainId.toString(),
+                            transactionHash: txResponse.hash,
+                            from: account,
+                          }).catch((error) => {
+                            console.error('Error verifying transaction with Metadexa', error)
+                          })
+                        }, 30_000)
                       }
                     })
                     .catch((error) => {
@@ -477,13 +479,15 @@ export function useMarketCallback(
                 .wait()
                 .then((receipt) => {
                   if (receipt.status === 1 && chainId === ChainId.OPTIMISM) {
-                    verifyTransactionWithMetadex({
-                      chainId: chainId.toString(),
-                      transactionHash: response.hash,
-                      from: account,
-                    }).catch((error) => {
-                      console.error('Error verifying transaction with Metadexa', error)
-                    })
+                    setTimeout(() => {
+                      verifyTransactionWithMetadex({
+                        chainId: chainId.toString(),
+                        transactionHash: response.hash,
+                        from: account,
+                      }).catch((error) => {
+                        console.error('Error verifying transaction with Metadexa', error)
+                      })
+                    }, 30_000)
                   }
                 })
                 .catch((error) => {
