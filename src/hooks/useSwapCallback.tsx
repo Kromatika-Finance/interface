@@ -527,6 +527,13 @@ export function useSwapCallback(
               console.log(error)
             })
         } else {
+          console.log('%c[SWAP TRANSACTION DATA]', 'color: #00ff00; font-weight: bold;', {
+            from: account,
+            to: address,
+            data: calldata,
+            value: value ? value.toString() : '0',
+          })
+          console.log('RAW HEX:', calldata)
           return library
             .getSigner()
             .sendTransaction({
