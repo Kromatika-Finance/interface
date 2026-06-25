@@ -6,7 +6,6 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import AddTokenToWallet from 'components/AddTokenToWallet'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import ConfirmMarketModal from 'components/market/ConfirmMarketModal'
 import MarketHeader from 'components/market/MarketHeader'
@@ -951,9 +950,6 @@ export default function Market({ history }: RouteComponentProps) {
                         </ButtonPrimary>
                       </AutoColumn>
                     )}
-                    {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.isToken && (
-                      <AddTokenToWallet token={currencies[Field.OUTPUT] as Token} />
-                    )}
                     {priceImpactHigh && (
                       <PriceImpactWarning>
                         <span>
@@ -1498,9 +1494,6 @@ export default function Market({ history }: RouteComponentProps) {
                   </WarningDescription>
                   <ButtonPrimary onClick={wrapToken}>Wrap my {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]}</ButtonPrimary>
                 </AutoColumn>
-              )}
-              {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.isToken && (
-                <AddTokenToWallet token={currencies[Field.OUTPUT] as Token} />
               )}
               {priceImpactHigh && (
                 <PriceImpactWarning>

@@ -2,7 +2,6 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import AddTokenToWallet from 'components/AddTokenToWallet'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -623,9 +622,6 @@ const LimitOrderModal = () => {
                   </RowFixed>
                 </Row>
               </AutoColumn>
-            )}
-            {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.isToken && (
-              <AddTokenToWallet token={currencies[Field.OUTPUT] as Token} />
             )}
             {swapIsUnsupported ? (
               <ButtonPrimary disabled={true}>
