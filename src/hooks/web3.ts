@@ -54,7 +54,7 @@ export function useEagerConnect() {
         }
       })
     }
-  }, [activate, active, triedSafe])
+  }, [activate, triedSafe])
 
   // wait until we get confirmation of a connection to flip the flag
   useEffect(() => {
