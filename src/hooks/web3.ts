@@ -13,7 +13,7 @@ export function useActiveWeb3React() {
 }
 
 export function useEagerConnect() {
-  const { activate, active } = useWeb3React()
+  const { activate, active, error } = useWeb3React()
   const [tried, setTried] = useState(false)
 
   // gnosisSafe.isSafeApp() races a timeout against postMessage, so it delays pageload if we are not in a safe app;

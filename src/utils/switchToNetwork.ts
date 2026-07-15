@@ -1,6 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexStripZeros } from '@ethersproject/bytes'
 import { Web3Provider } from '@ethersproject/providers'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { useWeb3React } from '@web3-react/core'
+import { NetworkConnector } from 'connectors/NetworkConnector'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 
 import { addNetwork } from './addNetwork'
@@ -8,6 +11,11 @@ import { addNetwork } from './addNetwork'
 interface SwitchNetworkArguments {
   library: Web3Provider
   chainId?: SupportedChainId
+  connector?: AbstractConnector
+}
+interface SwitchNetworkWithRPCArguments {
+  chainId: SupportedChainId
+  connector: AbstractConnector
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
@@ -38,5 +46,19 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
     } else {
       throw error
     }
+  }
+}
+
+//this handles chain switch with network
+export async function switchToNetworkWithRPC({ chainId, connector }: SwitchNetworkWithRPCArguments) {
+  try {
+    if (!connector || !('switchChain' in connector)) {
+      return
+    }
+    ;(connector as NetworkConnector).switchChain(chainId as number)
+
+    return connector
+  } catch (error) {
+    throw error
   }
 }

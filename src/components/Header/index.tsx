@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import PerpModal from 'components/Perpetual'
 import { SupportedChainId } from 'constants/chains'
+import { lazy, Suspense } from 'react'
 import { useModalOpen, useShowClaimPopup, useTogglePerpModal, useToggleSelfClaimModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
@@ -20,7 +21,7 @@ import Menu from '../Menu'
 import NavigationLinks from '../NavigationLinks'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
-import NetworkSelector from './NetworkSelector'
+const NetworkSelector = lazy(() => import('./NetworkSelector'))
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -240,7 +241,9 @@ export default function Header() {
         <NavigationLinks />
         <HeaderControls>
           <HeaderElement>
-            <NetworkSelector />
+            <Suspense fallback="loading...">
+              <NetworkSelector />
+            </Suspense>
           </HeaderElement>
           <HeaderElement>
             {availableClaim && !showClaimPopup && (

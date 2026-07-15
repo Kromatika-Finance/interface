@@ -171,6 +171,10 @@ export class NetworkConnector extends AbstractConnector {
     return this.currentChainId
   }
 
+  public switchChain(chainId: number): void {
+    this.currentChainId = chainId
+  }
+
   public async getAccount(): Promise<null> {
     return null
   }
