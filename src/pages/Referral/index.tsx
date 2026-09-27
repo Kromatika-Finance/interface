@@ -4,14 +4,21 @@ import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AlertCircle, CheckCircle, Copy, ExternalLink } from 'react-feather'
 import { Text } from 'rebass'
 import { useWalletModalToggle } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { shortenAddress } from 'utils'
-import { checkReferrer, getReferrerStats, ReferrerTransaction, registerReferrer } from 'utils/metadexApi'
+import {
+  checkReferrer,
+  getReferrerStats,
+  ReferrerPagination,
+  ReferrerStatsResponse,
+  ReferrerTransaction,
+  registerReferrer,
+} from 'utils/metadexApi'
 
 // ─── Styled Components ───────────────────────────────────────────────────────
 
@@ -311,10 +318,19 @@ export default function Referral() {
   const [totalRewards, setTotalRewards] = useState<number>(0)
   const [cumulativeVolume, setCumulativeVolume] = useState<number>(0)
   const [isFetchingStats, setIsFetchingStats] = useState(false)
+  const [isFetchingPage, setIsFetchingPage] = useState(false)
   const [referralCode, setReferralCode] = useState<string | null>(null)
+  const [pagination, setPagination] = useState<ReferrerPagination>({
+    page: 1,
+    rows: 5,
+    total: 0,
+    totalPages: 0,
+  })
 
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const prevAccountRef = useRef<string | null | undefined>(undefined)
+  const statsLoadedForAccountRef = useRef<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -335,30 +351,59 @@ export default function Referral() {
     }
   }, [account])
 
+  const applyReferrerStats = useCallback((data: ReferrerStatsResponse) => {
+    const s = data.stats
+    setTransactions(s.referredTransactions ?? [])
+    setTotalReferrals(s.referredUsers ?? 0)
+    setTotalRewards(s.earnedRewards ?? 0)
+    setCumulativeVolume(s.cumulativeVolume ?? 0)
+    setReferralCode(s.referralCode ?? null)
+    setPagination(data.pagination)
+  }, [])
+
   useEffect(() => {
-    if (!account) return
+    if (!account) {
+      prevAccountRef.current = account
+      statsLoadedForAccountRef.current = null
+      return
+    }
+
+    const accountChanged = prevAccountRef.current !== account
+    prevAccountRef.current = account
+
+    if (accountChanged && currentPage !== 1) {
+      setIsFetchingStats(true)
+      setCurrentPage(1)
+      return
+    }
+
     let cancelled = false
-    setIsFetchingStats(true)
-    getReferrerStats(account)
+    const isFirstForAccount = statsLoadedForAccountRef.current !== account
+    if (isFirstForAccount) {
+      setIsFetchingStats(true)
+    } else {
+      setIsFetchingPage(true)
+    }
+
+    getReferrerStats(account, { page: currentPage, rows: rowsPerPage })
       .then((data) => {
         if (cancelled) return
-        const s = data.stats
-        setTransactions(s.referredTransactions ?? [])
-        setTotalReferrals(s.referredUsers ?? 0)
-        setTotalRewards(s.earnedRewards ?? 0)
-        setCumulativeVolume(s.cumulativeVolume ?? 0)
-        setReferralCode(s.referralCode ?? null)
+        applyReferrerStats(data)
+        statsLoadedForAccountRef.current = account
       })
       .catch(() => {
         if (!cancelled) setTransactions([])
       })
       .finally(() => {
-        if (!cancelled) setIsFetchingStats(false)
+        if (!cancelled) {
+          setIsFetchingStats(false)
+          setIsFetchingPage(false)
+        }
       })
     return () => {
       cancelled = true
     }
-  }, [account])
+  }, [account, currentPage, rowsPerPage, applyReferrerStats])
 
   const referralLink =
     account && referralCode ? `${window.location.origin}/swap/r/${referralCode}` : account ? 'Fetching code...' : ''
@@ -370,15 +415,16 @@ export default function Referral() {
     try {
       await registerReferrer(account)
       setIsRegistered(true)
-      // Fetch stats to get the referralCode
-      const data = await getReferrerStats(account)
-      setReferralCode(data.stats.referralCode ?? null)
+      const data = await getReferrerStats(account, { page: 1, rows: rowsPerPage })
+      applyReferrerStats(data)
+      statsLoadedForAccountRef.current = account
+      if (currentPage !== 1) setCurrentPage(1)
     } catch (err: any) {
       setRegisterError(err?.message ?? 'Registration failed. Please try again.')
     } finally {
       setIsRegistering(false)
     }
-  }, [account])
+  }, [account, applyReferrerStats, currentPage, rowsPerPage])
 
   const handleCopy = useCallback(() => {
     if (!referralLink || !referralCode) return
@@ -387,16 +433,13 @@ export default function Referral() {
     setTimeout(() => setCopied(false), 3000)
   }, [referralLink, referralCode])
 
-  // Reset to first page whenever the dataset or page size changes
-  useEffect(() => {
+  const handleRowsPerPageChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value))
     setCurrentPage(1)
-  }, [transactions, rowsPerPage])
+  }, [])
 
-  const totalPages = Math.max(1, Math.ceil(transactions.length / rowsPerPage))
-  const paginatedTransactions = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage
-    return transactions.slice(start, start + rowsPerPage)
-  }, [transactions, currentPage, rowsPerPage])
+  const totalPages = pagination.totalPages
+  const isTableLoading = isFetchingStats || isFetchingPage
 
   const pageNumbers = useMemo(() => {
     const delta = 2
@@ -559,7 +602,7 @@ export default function Referral() {
               </tr>
             </TableHead>
             <TableBody>
-              {isFetchingStats ? (
+              {isTableLoading ? (
                 <EmptyTableRow>
                   <EmptyTableCell colSpan={6}>
                     <TYPE.body color="text3">
@@ -570,21 +613,23 @@ export default function Referral() {
               ) : transactions.length === 0 ? (
                 <EmptyTableRow>
                   <EmptyTableCell colSpan={6}>
-                    <AutoColumn justify="center" style={{ gap: '8px' }}>
-                      <TYPE.body color="text3">
-                        <Trans>No referral transactions yet.</Trans>
-                      </TYPE.body>
-                      <TYPE.small color="text3">
-                        <Trans>Transactions from your referees will appear here.</Trans>
-                      </TYPE.small>
-                    </AutoColumn>
+                    {pagination.total === 0 ? (
+                      <AutoColumn justify="center" style={{ gap: '8px' }}>
+                        <TYPE.body color="text3">
+                          <Trans>No referral transactions yet.</Trans>
+                        </TYPE.body>
+                        <TYPE.small color="text3">
+                          <Trans>Transactions from your referees will appear here.</Trans>
+                        </TYPE.small>
+                      </AutoColumn>
+                    ) : null}
                   </EmptyTableCell>
                 </EmptyTableRow>
               ) : (
-                paginatedTransactions.map((tx) => {
+                transactions.map((tx) => {
                   const date = tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '—'
                   return (
-                    <TableRow key={tx.id}>
+                    <TableRow key={tx.transaction_hash || tx.id}>
                       <TableCell>{date}</TableCell>
                       <TableCell>
                         <Text fontSize={13} fontFamily="monospace">
@@ -629,18 +674,18 @@ export default function Referral() {
           </StyledTable>
         </TableWrapper>
 
-        {transactions.length > 0 && (
+        {pagination.total > 0 && (
           <PaginationRow>
             <PaginationInfo>
               {(() => {
-                const start = (currentPage - 1) * rowsPerPage + 1
-                const end = Math.min(currentPage * rowsPerPage, transactions.length)
-                return `${start}–${end} of ${transactions.length}`
+                const start = (pagination.page - 1) * pagination.rows + 1
+                const end = Math.min(pagination.page * pagination.rows, pagination.total)
+                return `${start}–${end} of ${pagination.total}`
               })()}
             </PaginationInfo>
 
             <PaginationControls>
-              <PageButton onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage === 1}>
+              <PageButton onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage <= 1}>
                 ‹
               </PageButton>
               {pageNumbers.map((p, i) =>
@@ -654,12 +699,15 @@ export default function Referral() {
                   </PageButton>
                 )
               )}
-              <PageButton onClick={() => setCurrentPage((p) => p + 1)} disabled={currentPage === totalPages}>
+              <PageButton
+                onClick={() => setCurrentPage((p) => p + 1)}
+                disabled={currentPage >= totalPages || totalPages === 0}
+              >
                 ›
               </PageButton>
             </PaginationControls>
 
-            <RowsPerPageSelect value={rowsPerPage} onChange={(e) => setRowsPerPage(Number(e.target.value))}>
+            <RowsPerPageSelect value={rowsPerPage} onChange={handleRowsPerPageChange}>
               {[5, 10, 20, 50].map((n) => (
                 <option key={n} value={n}>
                   {n} / page

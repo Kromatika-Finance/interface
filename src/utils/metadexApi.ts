@@ -119,20 +119,36 @@ export interface ReferrerStats {
   referralCode?: string
 }
 
+export interface ReferrerPagination {
+  page: number
+  rows: number
+  total: number
+  totalPages: number
+}
+
 export interface ReferrerStatsResponse {
   stats: ReferrerStats
+  pagination: ReferrerPagination
 }
 
 /**
- * Fetches referral transaction history for the given referrer address.
- * POST /v1/referrer  { from: referrerAddress }
+ * Fetches referral stats and one page of referred transactions.
+ * POST /v1/referrer  { from, page, rows }
  */
-export async function getReferrerStats(referrerAddress: string): Promise<ReferrerStatsResponse> {
+export async function getReferrerStats(
+  from: string,
+  opts?: { page?: number; rows?: number }
+): Promise<ReferrerStatsResponse> {
+  const page = opts?.page != null ? Math.trunc(Number(opts.page)) : 1
+  const resolvedPage = Number.isFinite(page) && page > 0 ? page : 1
+  const rawRows = opts?.rows != null ? Math.trunc(Number(opts.rows)) : 5
+  const resolvedRows = Math.min(100, Math.max(1, Number.isFinite(rawRows) ? rawRows : 5))
+
   const url = `${METADEXA_API_BASE}/v1/referrer`
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: referrerAddress }),
+    body: JSON.stringify({ from, page: resolvedPage, rows: resolvedRows }),
   })
   if (!res.ok) {
     console.warn('[Metadex] getReferrerStats failed:', res.status, await res.text())
@@ -146,6 +162,7 @@ export async function getReferrerStats(referrerAddress: string): Promise<Referre
         cumulativeVolume: 0,
         referredTransactions: [],
       },
+      pagination: { page: 1, rows: resolvedRows, total: 0, totalPages: 0 },
     }
   }
   return res.json()
