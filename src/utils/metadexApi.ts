@@ -8,6 +8,9 @@ export const METADEXA_API_BASE =
     ? process.env.REACT_APP_METADEXA_API_BASE.replace(/\/$/, '')
     : 'https://api.metadexa.io'
 
+// Address the Metadex API expects for native ETH
+export const METADEX_NATIVE_TOKEN = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
 export interface AddTransactionBody {
   transactionHash: string
   referralCode: string
