@@ -8,14 +8,13 @@ import { poll } from 'ethers/lib/utils'
 import { ReactNode, useMemo } from 'react'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 
-import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
-import { addTransactionToMetadex, verifyTransactionWithMetadex } from '../utils/metadexApi'
+import { addTransactionToMetadex, METADEX_NATIVE_TOKEN, verifyTransactionWithMetadex } from '../utils/metadexApi'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
@@ -383,7 +382,7 @@ export function useMarketCallback(
                   // Metadex: notify pending tx, then verify once confirmed
                   const tokenFrom = trade.inputAmount.currency.isToken
                     ? trade.inputAmount.currency.address
-                    : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
+                    : METADEX_NATIVE_TOKEN
                   addTransactionToMetadex({
                     transactionHash: txResponse.hash,
                     referralCode: referer ?? '',
@@ -470,7 +469,7 @@ export function useMarketCallback(
               // Metadex: notify pending tx, then verify once confirmed
               const tokenFrom = trade.inputAmount.currency.isToken
                 ? trade.inputAmount.currency.address
-                : WRAPPED_NATIVE_CURRENCY[chainId]?.address ?? ''
+                : METADEX_NATIVE_TOKEN
               addTransactionToMetadex({
                 transactionHash: response.hash,
                 referralCode: referer ?? '',
